@@ -7,4 +7,7 @@ import com.te.timex.model.User;
 
 public interface UserRepository extends JpaRepository<User, Integer> {
 	
+	
+	
+	
 }
