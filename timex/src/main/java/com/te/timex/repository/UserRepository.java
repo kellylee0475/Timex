@@ -1,16 +1,10 @@
-package com.te.timex.login.repository;
+package com.te.timex.repository;
 
-import org.apache.ibatis.annotations.Mapper;
-import org.springframework.stereotype.Repository;
+import org.springframework.data.jpa.repository.JpaRepository;
 
-import com.te.timex.commons.TimexMap;
-
+import com.te.timex.model.User;
 
 
-@Mapper
-@Repository
-public interface LoginRepository {
-	
-	TimexMap selectUser(String user_id,String user_passwd);
+public interface UserRepository extends JpaRepository<User, Integer> {
 	
 }
