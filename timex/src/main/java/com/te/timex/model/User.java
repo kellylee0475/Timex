@@ -32,9 +32,12 @@ public class User{
 	private int zipcode;
 	private String memo;
 	private String city;
+	private Boolean enabled;
 	
 	@ManyToMany
-	@JoinTable(name = "User_Role", joinColumns = @JoinColumn(name = "user_id"), inverseJoinColumns = @JoinColumn(name = "role_id"))
+	@JoinTable(name = "User_Role", 
+				joinColumns = @JoinColumn(name = "user_id"), 
+				inverseJoinColumns = @JoinColumn(name = "role_id"))
 
 	private List<Role> roles = new ArrayList<>();
 
@@ -116,6 +119,16 @@ public class User{
 
 	public void setCity(String city) {
 		this.city = city;
+	}
+
+	
+	
+	public Boolean getEnabled() {
+		return enabled;
+	}
+
+	public void setEnabled(Boolean enabled) {
+		this.enabled = enabled;
 	}
 
 	public List<Role> getRoles() {

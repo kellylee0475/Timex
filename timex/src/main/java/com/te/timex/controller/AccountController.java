@@ -19,13 +19,13 @@ public class AccountController{
 	
 	@GetMapping("/login")
 	public String login() {
-		return "account/login";
+		return "account/login";//login 페이지로 이동
 	}
 	
 	@GetMapping("/register")
 	public String register() {
 
-		return "account/register";
+		return "account/register";//register페이지로 이동
 	}
 	
 	
@@ -34,6 +34,6 @@ public class AccountController{
 		System.out.println("here");
 		System.out.println(user);
 		userService.save(user);
-		return "rediret:/";
+		return "redirect:/";
 	}
 }

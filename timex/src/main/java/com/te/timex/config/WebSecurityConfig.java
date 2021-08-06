@@ -37,8 +37,10 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {// WebSecur
 		.formLogin()
 				.loginPage("/account/login")
 				.permitAll()
+				.defaultSuccessUrl("/home") // 로그인 성공 후 리다이렉트 주소
 				//.failureUrl("/login?error=true")//if login fail
 				.and()
+				
 		.logout().permitAll();
 	}
 	
@@ -48,13 +50,12 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {// WebSecur
 	    auth.jdbcAuthentication()
 	      .dataSource(dataSource)
 	      .passwordEncoder(passwordEncoder())
-	      .usersByUsernameQuery("select email,password "
-	        + "from User "
-	        + "where email = ?")
-	      .authoritiesByUsernameQuery("select email,firstname "
-	        + "from User_Role ur inner join User u on ur.user_id=u.id "
+	      .usersByUsernameQuery("select email, password, enabled from users where email=?")
+
+	      .authoritiesByUsernameQuery("select u.email, r.name "
+	        + "from user_role ur inner join users u on ur.user_id=u.id "
 	        + "inner join role r on ur.role_id=r.id "
-	        + "where role_id = ?");
+	        + "where u.email = ?;");
 	}
 	
 	@Bean

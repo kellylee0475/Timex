@@ -17,23 +17,18 @@ public class UserService{
 	private PasswordEncoder passwordEncoder;
 	
 	public User save(User user) {
-		System.out.println("USer SErvice");
-		System.out.println(user.getId());
-		System.out.println(user.getEmail());
-		System.out.println(user.getPassword());
-		
-		String encodedPassword = passwordEncoder.encode(user.getPassword());//password encoding
+
+		String encodedPassword = passwordEncoder.encode(user.getPassword());//password encoding and saved in database
 		user.setPassword(encodedPassword);
 		user.setEmail(user.getEmail());
 		user.setFirstname(user.getFirstname());
 		user.setLastname(user.getLastname());
+		user.setEnabled(true);
 		
-		Role role = new Role();//role table에 함께 입력
-		System.out.println("hi????");
-		role.setId(1);
+		Role role = new Role();//to add the data in user_role at the same time
+		role.setId(1);//default is role id 1(user)
 		user.getRoles().add(role);
 		
-		System.out.println("woo????");
 		return userRepository.save(user);
 	}
 		

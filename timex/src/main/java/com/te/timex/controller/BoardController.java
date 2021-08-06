@@ -7,14 +7,14 @@ import org.springframework.web.bind.annotation.RequestMapping;
 
 
 @Controller
-@RequestMapping("/home")
-public class HomeController{
+@RequestMapping("/board")
+public class BoardController{
 
 	
-	@GetMapping
-	public String index() {
-		return "home";
+	@GetMapping("/list")
+	public String list() {
+		return "board/list";//login 페이지로 이동
 	}
 	
-
+	
 }
