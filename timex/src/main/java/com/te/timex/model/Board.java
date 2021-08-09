@@ -12,12 +12,13 @@ import com.sun.istack.NotNull;
 @Entity
 @Table(name="board")
 public class Board{
+	
 	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	@GeneratedValue(strategy = GenerationType.IDENTITY)	
+	private int id;
 	
 	@NotNull
-	@Size(min=2, max=50)
-	private int id;
+	@Size(min=2, max=30, message = "title is over 2 ")
 	private String title;
 	private String content;
 	public int getId() {

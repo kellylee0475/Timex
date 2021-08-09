@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 import com.te.timex.model.Board;
 import com.te.timex.repository.BoardRepository;
+import com.te.timex.validator.BoardValidator;
 
 
 @Controller
@@ -24,6 +25,9 @@ public class BoardController{
 
 	@Autowired
 	private BoardRepository boardRepository;
+	
+	@Autowired
+	private BoardValidator boardValidator;
 	
 	@GetMapping("/list")
 	public String list(Model model) {
@@ -34,12 +38,16 @@ public class BoardController{
 	}
 	
 	@GetMapping("/form")//requestParam => list.html에서 "@{/board/form(id=${board.id})}" 로 넘겨주는 값 
-	public String form(Model model, @RequestParam(required=false) int id) {
-	
+	public String form(Model model, @RequestParam(required=false, defaultValue = "0") int id) {
+		System.out.println("here! "+id);
 		if(id==0) {
+			System.out.println("id is null");
 			model.addAttribute("board",new Board());
 		}else {
+			System.out.println("id is not null");
+
 			Board board = boardRepository.findById(id).orElse(null);//key 값 기준으로 찾을수있는 메소드
+			System.out.println("here2 "+board);
 			model.addAttribute("board", board);
 		}
 
@@ -48,7 +56,10 @@ public class BoardController{
 	
 	@PostMapping("/form")
 	public String formSubmit(@Valid Board board, BindingResult bindingResult) {
+		System.out.println("postmapping");
+		boardValidator.validate(board,bindingResult);
 		if(bindingResult.hasErrors()) {
+			System.out.println("has errors");
 			return "board/form";
 		}
 		
