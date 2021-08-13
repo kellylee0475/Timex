@@ -3,6 +3,7 @@ package com.te.timex.model;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -10,6 +11,7 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
 @Entity
@@ -36,10 +38,24 @@ public class User{
 	
 	@ManyToMany
 	@JoinTable(name = "User_Role", 
-				joinColumns = @JoinColumn(name = "user_id"), 
-				inverseJoinColumns = @JoinColumn(name = "role_id"))
-
+				joinColumns = @JoinColumn(name = "userId"), 
+				inverseJoinColumns = @JoinColumn(name = "roleId"))
 	private List<Role> roles = new ArrayList<>();
+	
+	@OneToMany(mappedBy="user", cascade=CascadeType.ALL)//Board에서 한거 그대로 사용 (양방향매핑)//ManyToOne쪽에서 작성, OneToMany쪽에서는 mappedby키워드로 사용
+	private List<Board> boards=new ArrayList<>();
+
+	
+//	@OneToMany(mappedBy = "user")
+//	private List<ExpenseList> userExpense = new ArrayList<>();
+	
+	public List<Board> getBoards() {
+		return boards;
+	}
+
+	public void setBoards(List<Board> boards) {
+		this.boards = boards;
+	}
 
 	public int getId() {
 		return id;

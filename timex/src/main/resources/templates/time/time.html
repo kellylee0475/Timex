@@ -1,22 +1,196 @@
 <!DOCTYPE html>
-<html xmlns="http://www.w3.org/1999/xhtml"
-      xmlns:th="http://www.thymeleaf.org"
-      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
-      layout:decorator="layout/layout"
-        th:with="title='Time'">
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org"
+    xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" layout:decorator="layout/layout" th:with="title='Time'">
+<style>
 
-  
+</style>
 
-    <div layout:fragment="content">
-            <main>
 
-        <div class="container-fluid px-4">
-            <h1 class="mt-4">Time</h1>
+<div layout:fragment="content">
 
-            
-            
+    <!---add project modal-->
+    <div class="modal fade" id="addProjectModel" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"
+        role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4 class="modal-title" id="myModalLabel">New Project</h4>
+                </div>
+                <div class="modal-body">
+                    <div class="dropdown">
+                        <table>
+                             <tr>
+                                    <td>
+                                        <h5>Project &nbsp;&nbsp; &nbsp; </h5>
+                                    </td>
 
+                                    <td>
+                                        <select class="form-control" aria-label="Default select example"
+                                            id="selectProject" name="selectProject">
+                                            <option value="-" id="loading">Please select project!</option>
+                                        </select>
+                                    </td>
+                                </tr>
+
+                                <tr>
+                                    <td>
+                                        <h5>Task &nbsp;&nbsp; &nbsp; </h5>
+                                    </td>
+
+                                    <td>
+                                        <select class="form-control" aria-label="Default select example"
+                                            id="selectTask" name="selectTask">
+                                            <option value="-" id="loading2">Please select task!</option>
+                                        </select>
+                                    </td>
+                                </tr>
+
+
+
+                        </table>
+
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-primary">Save Project</button>
+                    <button type="button" class="btn btn-default" data-bs-dismiss="modal">Cancel</button>
+
+                </div>
+            </div>
         </div>
-    </main>
     </div>
+
+    <main>
+        <div class="container-fluid px-4">
+            <h1 class="mt-4">My TimeSheet</h1>
+
+            <div>
+                <ul class="pagination justify-content-end">
+                    <li class="page-item">
+                        <a class="page-link" href="#" aria-label="Previous">
+                            <span aria-hidden="true">&laquo;</span>
+                        </a>
+                    </li>
+                    <li class="page-item">
+                        <a class="page-link" href="#" aria-label="Next">
+                            <span aria-hidden="true">&raquo;</span>
+                        </a>
+                    </li>
+                    <li class="page-item">
+                        <a class="page-link" href="#" aria-label="current">
+                            <span aria-hidden="true">current</span>
+                        </a>
+                    </li>
+                </ul>
+            </div>
+            <div class="card mb-4">
+
+                <div class="card-header">
+                    <i class="fas fa-table me-1"></i>
+                    Current Week
+                </div>
+
+                <div class="card-body">
+                    <table style="width: 100%;">
+                        <thead class="table-secondary">
+                            <tr>
+                                <th> </th>
+                                <th>Monday</th>
+                                <th>Tuesday</th>
+                                <th>Wedensday</th>
+                                <th>Thursday</th>
+                                <th>Friday</th>
+                                <th>Saturyday</th>
+                                <th>Sunday</th>
+                            </tr>
+                        </thead>
+
+                        <tbody>
+
+                        </tbody>
+                    </table>
+                </div>
+
+            </div>
+            <div>
+                <button type="button" id="addProjectButton" class="btn btn-primary">Add Project</button>
+
+
+
+    </main>
+
+</div>
+
+
 </html>
+
+<script>
+    //var projectLists;
+    var project_id;
+    var taskLists;
+   
+    $(function () {
+        //	initComponent();
+        initButton();
+
+           var url = "/time/selectProject";
+        $.ajax({
+            type: "GET",
+            url: url,
+            success: function (data) {
+                projectLists = data;
+                console.log(projectLists)
+                $(projectLists).each(function (i) {
+                    $("select[name='selectProject']").append("<option value='" + projectLists[i].id + "'>" + projectLists[i].id + projectLists[i].number + projectLists[i].title + "  </option>");
+                });
+
+                //Change the text of the default "loading" option.
+                $('#loading').text('select project');
+
+            }
+        });
+
+        $("#selectProject").change(function () {
+            project_id = $(this).val();
+            projectTaskLists = getProjectTaskLists();
+        })
+
+    });
+
+    function initButton() {
+        //addProjectModal button
+        $("#addProjectButton").click(function () {
+            $("#addProjectModel").modal("toggle");
+        });
+
+    }
+
+  function getProjectTaskLists() {
+        var url = "/time/selectTask";
+      
+        $.ajax({
+            type: "GET",
+            url: url,
+           data : "project_id=" + project_id,
+           dataType: "json",
+            success: function (data) {
+                console.log(data)
+                projectTaskLists = data;
+                console.log(projectTaskLists);
+                $(projectTaskLists).each(function (i) {
+                 //   alert(JSON.stringify(data))
+                    console.log(projectTaskLists[0].task_id)
+                    $("select[name='selectTask']").append("<option value='" + projectTaskLists[i].id + "'>" + projectTaskLists[i].id + projectTaskLists[i].id + projectTaskLists[i].name + "  </option>");
+                });
+
+                //Change the text of the default "loading" option.
+                $('#loading2').text('select task');
+
+            }
+        });
+    };
+
+
+
+    
+</script>

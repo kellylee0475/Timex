@@ -4,9 +4,12 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 import javax.validation.constraints.Size;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.sun.istack.NotNull;
 
 @Entity
@@ -21,6 +24,20 @@ public class Board{
 	@Size(min=2, max=30, message = "title is over 2 ")
 	private String title;
 	private String content;
+	
+	
+	@ManyToOne
+	@JoinColumn(name="userId", referencedColumnName = "id")
+	@JsonIgnore
+	private User user;
+	
+
+	public User getUser() {
+		return user;
+	}
+	public void setUser(User user) {
+		this.user = user;
+	}
 	public int getId() {
 		return id;
 	}

@@ -1,24 +1,126 @@
 <!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org"
     xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" layout:decorator="layout/layout"
-    th:with="title='expenses'"><!--passing title to layout.html-->
+    th:with="title='expenses'">
+<!--passing title to layout.html-->
 
 
 
 <th:block layout:fragment="content">
+
+
+    <!---add expense modal-->
+    <div class="modal fade" id="addExpenseModel" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"
+        role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4 class="modal-title" id="myModalLabel">New Expense</h4>
+                </div>
+                <div class="modal-body">
+                    <div class="dropdown">
+                        <form class="form-inline d-flex justify-content-end" method="GET"
+                            th:action="@{/expenses/selectProject}">
+                            <table>
+                                <tr>
+                                    <td>Date</td>
+                                    <td>
+                                        <div class="md-form">
+                                            <input type="date" id="inputMDEx" class="form-control">
+                                            <!--  <label for="inputMDEx">Choose your date</label> -->
+                                        </div>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        <h5>Project &nbsp;&nbsp; &nbsp; </h5>
+                                    </td>
+
+                                    <td>
+                                        <select class="form-control" aria-label="Default select example"
+                                            id="selectProject" name="selectProject">
+                                            <option value="-" id="loading">Please select project!</option>
+                                        </select>
+                                    </td>
+                                </tr>
+
+                                <tr>
+                                    <td>
+                                        <h5>Expense &nbsp;&nbsp; &nbsp; </h5>
+                                    </td>
+
+                                    <td>
+                                        <select class="form-control" aria-label="Default select example"
+                                            id="selectExpense" name="selectExpense">
+                                            <option value="-" id="loading2">Please select expense!</option>
+                                        </select>
+                                    </td>
+                                </tr>
+
+
+                            </table>
+                        </form>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" id="saveExpenseButton" class="btn btn-primary">Save Expenses</button>
+                    <button type="button" class="btn btn-default" data-bs-dismiss="modal">Cancel</button>
+
+                </div>
+            </div>
+        </div>
+    </div>
+
+
     <main>
 
         <div class="container-fluid px-4">
             <h1 class="mt-4">Expenses</h1>
 
-            
-            
+
+            <div class="card mb-4">
+                <div class="card-body">
+                    <button type="button" id="addExpenseButton" class="btn btn-primary">Add Expense</button>
+                </div>
+            </div>
+            <div class="card mb-4">
+                <div class="card-header">
+                    <i class="fas fa-table me-1"></i>
+                    DataTable Example
+                </div>
+                <div class="card-body">
+                    <table id="myTable">
+                        <thead>
+                            <tr>
+                                <th>Date</th>
+                                <th>Status</th>
+                                <th>Project</th>
+                                <th>Total Amount</th>
+
+                            </tr>
+                        </thead>
+
+                        <tbody>
+                            <tr>
+                                <td>08/12/2021</td>
+                                <td>Pending</td>
+                                <td>2021-001 Agilox Project</td>
+                                <td>$50.00</td>
+
+                            </tr>
+
+
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
 
         </div>
     </main>
 
-       <!--  <th:block th:replace="fragments/footer :: footer"></th:block> -->
- 
+    <!--  <th:block th:replace="fragments/footer :: footer"></th:block> -->
+
 
 
 
@@ -26,3 +128,123 @@
 
 
 </html>
+
+<script>
+
+    var projectLists;
+    var projectTaskLists;
+    var project_id;
+    var expenseLists;
+    $(document).ready(function () {
+        $('#myTable').DataTable();
+
+        $(function () {
+            initButton();
+        });
+
+
+        var url = "/time/selectProject";
+        $.ajax({
+            type: "GET",
+            url: url,
+            success: function (data) {
+                projectLists = data;
+                console.log(projectLists)
+                $(projectLists).each(function (i) {
+                    $("select[name='selectProject']").append("<option value='" + projectLists[i].id + "'>" + projectLists[i].id + projectLists[i].number + projectLists[i].title + "  </option>");
+                });
+
+                //Change the text of the default "loading" option.
+                $('#loading').text('select project');
+
+            }
+        });
+
+
+
+        $("#selectProject").change(function () {
+            project_id = $(this).val();
+          //  projectTaskLists = getProjectTaskLists();
+        });
+
+
+
+
+        var url = "/expenses/selectExpense";
+        $.ajax({
+            type: "GET",
+            url: url,
+            success: function (data) {
+                expenseLists = data;
+                console.log(expenseLists)
+                $(expenseLists).each(function (i) {
+                    $("select[name='selectExpense']").append("<option value='" + expenseLists[i].id + "'>" + expenseLists[i].id + expenseLists[i].name + "  </option>");
+                });
+
+                //Change the text of the default "loading" option.
+                $('#loading2').text('select expense');
+
+            }
+        });
+
+
+
+        $("#selectExpense").change(function () {
+            expense_id = $(this).val();
+       
+        });
+
+
+
+
+
+
+    });
+
+ 
+    
+   
+  
+
+    function initButton() {
+        //addExpense button
+        $("#addExpenseButton").click(function () {
+            $("#addExpenseModel").modal("toggle");
+        });
+
+        //saveExpenseButton
+        $("#saveExpenseButton").click(function(){
+             var url = "/expenses/saveExpenses";
+                 var params = {};
+                 
+                 params["date"] = $("#inputMDEx").val();
+        
+			params["project_id"] = $("#selectProject option:selected").val();
+            params["expense_id"] = $("#selectExpense option:selected").val();
+            
+
+            $.ajax({
+				type : "POST",
+				url : url,
+				data : JSON.stringify(params),
+				contentType : "application/json",
+				success : function(data) {
+
+					if(!data){
+						alert("select data");
+					}else{
+						alert("success!")
+					 $("#addExpenseModel").modal('toggle');
+					}
+				},
+				error : function(err) {
+					console.log(err);
+				
+				}
+			});
+
+        })
+    };
+
+
+</script>

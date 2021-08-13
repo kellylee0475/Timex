@@ -1,46 +1,56 @@
 package com.te.timex.model;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.ManyToMany;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
-
 @Entity
-@Table(name="role")
-public class Role {
-
-
+@Table(name="expense")
+public class Expense{
+	
 	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	@GeneratedValue(strategy = GenerationType.IDENTITY)	
 	private int id;
-
+	
+	
 	private String name;
-
-	@ManyToMany(mappedBy = "roles")	 //user.java에서 조인한 값을 가져올수잇다
-	@JsonIgnore
-	private List<User> user;
+	private String amount;
+	
+//	@OneToMany(mappedBy = "expense")
+//	private List<ExpenseList> expenselist = new ArrayList<>();
 	
 	public int getId() {
 		return id;
 	}
 
+
 	public void setId(int id) {
 		this.id = id;
 	}
+
 
 	public String getName() {
 		return name;
 	}
 
+
 	public void setName(String name) {
 		this.name = name;
 	}
+	
+	public String getAmount() {
+		return amount;
+	}
 
 
+	public void setAmount(String amount) {
+		this.amount = amount;
+	}
+	
 }

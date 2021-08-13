@@ -30,6 +30,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {// WebSecur
 	@Override
 	protected void configure(HttpSecurity http) throws Exception {
 		http
+		.csrf().disable()
 		.authorizeRequests()
 	
 			.antMatchers("/","/account/register").permitAll().anyRequest().authenticated()
@@ -40,8 +41,9 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {// WebSecur
 				.defaultSuccessUrl("/home") // 로그인 성공 후 리다이렉트 주소
 				//.failureUrl("/login?error=true")//if login fail
 				.and()
-				
+				 
 		.logout().permitAll();
+	//	.http.csrf().disable();
 	}
 	
 	@Autowired
