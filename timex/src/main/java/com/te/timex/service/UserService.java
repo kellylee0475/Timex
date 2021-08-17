@@ -12,7 +12,7 @@ import com.te.timex.repository.UserRepository;
 public class UserService{
 	@Autowired
 	private UserRepository userRepository;
-	
+	 
 	@Autowired
 	private PasswordEncoder passwordEncoder;
 	
