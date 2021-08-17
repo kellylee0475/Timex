@@ -4,9 +4,12 @@ import java.util.Date;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
@@ -31,9 +34,96 @@ public class ExpenseList{
 	@Temporal(TemporalType.DATE)
 	private Date date;
 	private String total_amount;
+
+	private int status;
+	
+	//단방향으로 추가한부분
+	@ManyToOne
+    @JoinColumn(name="project_id",referencedColumnName="id", insertable = false, updatable = false)
+    private Project project;
+
+	@ManyToOne
+    @JoinColumn(name="expense_id",referencedColumnName="id", insertable = false, updatable = false)
+    private Expense expense;
+	
+	@ManyToOne
+	@JoinColumn(name="user_id",referencedColumnName="id", insertable = false, updatable = false)
+    private User user;
+	
+	
+	
+	
+//	@OneToMany
+//    private List<User> users = new ArrayList<>();
+//	
+//	 public void addUser(final User image) {
+//		 expenseList.add(users);
+//     }
+//	@OneToOne
+//	@JoinColumn(name="user_id")
+//	private List<User> users = new ArrayList<>();
+	
+//	@OneToOne
+//	@JoinTable(name = "expense", 
+//				joinColumns = @JoinColumn(name = "userId"), 
+//				inverseJoinColumns = @JoinColumn(name = "roleId"))
+//	private List<Role> roles = new ArrayList<>();
+	
+//  @OneToOne
+//  @JoinColumn(name = "project_id", insertable = false, updatable = false)
+//  private List<Project> project;
+//
+//  @OneToOne
+//  @JoinColumn(name = "user_id",insertable = false, updatable = false)
+//  private List<User> user;
+//  
+//
+//  @OneToOne
+//  @JoinColumn(name = "expense_id",insertable = false, updatable = false)
+//  private List<Expense> expense;
+	
+	public int getStatus() {
+		return status;
+	}
+
+	public void setStatus(int status) {
+		this.status = status;
+	}
+
+	public Project getProject() {
+		return project;
+	}
+
+	public void setProject(Project project) {
+		this.project = project;
+	}
+
+	public Expense getExpense() {
+		return expense;
+	}
+
+	public void setExpense(Expense expense) {
+		this.expense = expense;
+	}
+
+	public User getUser() {
+		return user;
+	}
+
+	public void setUser(User user) {
+		this.user = user;
+	}
+
+	@Override
+	public String toString() {
+		return "ExpenseList [id=" + id + ", userId=" + userId + ", projectId=" + projectId + ", expenseId=" + expenseId
+				+ ", qty=" + qty + ", date=" + date + ", total_amount=" + total_amount + "]";
+	}
+
 	public int getId() {
 		return id;
 	}
+
 	public void setId(int id) {
 		this.id = id;
 	}
@@ -76,16 +166,5 @@ public class ExpenseList{
 
 	
 	
-//    @ManyToOne
-//    @JoinColumn(name = "project_id")
-//    private Project project;
-//
-//    @ManyToOne
-//    @JoinColumn(name = "user_id")
-//    private User user;
-//    
-//
-//    @ManyToOne
-//    @JoinColumn(name = "expense_id")
-//    private Expense expense;
+
 }

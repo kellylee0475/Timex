@@ -11,7 +11,9 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
+import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
+import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
 @Entity
@@ -45,6 +47,11 @@ public class User{
 	@OneToMany(mappedBy="user", cascade=CascadeType.ALL)//Board에서 한거 그대로 사용 (양방향매핑)//ManyToOne쪽에서 작성, OneToMany쪽에서는 mappedby키워드로 사용
 	private List<Board> boards=new ArrayList<>();
 
+	
+	@OneToMany(mappedBy = "user")
+	private List<ExpenseList> expenselist;
+//	@OneToOne(mappedBy="user")
+//	private List<ExpenseList> expenselist = new ArrayList<>();
 	
 //	@OneToMany(mappedBy = "user")
 //	private List<ExpenseList> userExpense = new ArrayList<>();

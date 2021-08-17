@@ -1,6 +1,5 @@
 package com.te.timex.model;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import javax.persistence.Entity;
@@ -21,12 +20,20 @@ public class Expense{
 	
 	private String name;
 	private String amount;
-	
+
+	//추가안해도되나??
 //	@OneToMany(mappedBy = "expense")
-//	private List<ExpenseList> expenselist = new ArrayList<>();
+//	private List<ExpenseList> expenselist;
+	
 	
 	public int getId() {
 		return id;
+	}
+
+
+	@Override
+	public String toString() {
+		return "Expense [id=" + id + ", name=" + name + ", amount=" + amount +  "]";
 	}
 
 
