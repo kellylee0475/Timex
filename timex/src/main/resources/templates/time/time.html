@@ -152,8 +152,15 @@
     var project_id;
     var project_task_id;
     var taskLists;
-   
+   var user_id;
+   var currentWeekId;
     $(function () {
+        //model.addAttribute로 컨트롤러에서 넘긴값 받는다.
+        user_id = "[[${user_id}]]";
+        currentWeekId= "[[${currentWeekId}]]";
+
+
+
         //	initComponent();
         initButton();
 
@@ -205,11 +212,12 @@ console.log(`The week number of the current date (${currentdate}) is ${result}.`
         $("#saveTaskButton").click(function () {
             var url = "/time/saveProjectTask";
             var params = {};
-
-          //  params["project_task_id"] = $("#selectProject option:selected").val();
+         
+            params["user_id"] = user_id;
+            params["currentWeekId"] = currentWeekId;
             params["project_task_id"] = $("#selectTask option:selected").val();
             project_task_id = $("#selectTask option:selected").val();
-          //   console.log(params)
+             console.log(params);
 
             $.ajax({
                 type: "POST",

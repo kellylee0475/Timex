@@ -82,9 +82,10 @@ public class TimeController{
 		
 		//6. timesheet테이블에서 currentweek와 현재 user_id값을 만족하는 데이터가져오기
 		ArrayList currentWeekList = timesheetRepository.findByUserIdAndWeekId(user_id,currentWeekId);
-		System.out.println(currentWeekList.toString());
+		//System.out.println(currentWeekList.toString());
 		model.addAttribute("user_id",user_id);
 		model.addAttribute("currentWeek",currentWeek);
+		model.addAttribute("currentWeekId",currentWeekId);
 		model.addAttribute("currentWeekList",currentWeekList);
 		return "time/time";
 	}
