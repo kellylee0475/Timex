@@ -52,7 +52,7 @@
                     </div>
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-primary">Save Project</button>
+                    <button type="button" id="saveTaskButton" class="btn btn-primary">Save Task</button>
                     <button type="button" class="btn btn-default" data-bs-dismiss="modal">Cancel</button>
 
                 </div>
@@ -78,7 +78,7 @@
                     </li>
                     <li class="page-item">
                         <a class="page-link" href="#" aria-label="current">
-                            <span aria-hidden="true">current</span>
+                            <span aria-hidden="true" th:text="${currentWeek.period}"></span>
                         </a>
                     </li>
                 </ul>
@@ -87,11 +87,12 @@
 
                 <div class="card-header">
                     <i class="fas fa-table me-1"></i>
-                    Current Week
+                     <span th:text="${currentWeek.period}"></span>
+                   
                 </div>
 
                 <div class="card-body">
-                    <table style="width: 100%;">
+                    <table style="width: 100%;" class="origin-table">
                         <thead class="table-secondary">
                             <tr>
                                 <th> </th>
@@ -106,7 +107,29 @@
                         </thead>
 
                         <tbody>
+                            <tr 
+                            th:each="cwl: ${currentWeekList}" >
+                           <!--getterseter ProjectTask를 해줘야지 Timesheet.java에서 이렇게 사용가-->
+                         <!--   <td th:text="|${cwl.projecttask.project.number} ${cwl.projecttask.project.title}|" ></td>
+                         -->     
 
+                            <td th:inline="text">
+                                [[|${cwl.projecttask.project.number} ${cwl.projecttask.project.title}  ${cwl.project_task_id}|]]
+                                <br/>
+                                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[[${cwl.projecttask.task.name}]]
+                                <br/>
+                                timesheetId : [[${cwl.id}]]
+                            </td>
+
+                            
+                                <td th:text="${cwl.sun}" />
+                                <td th:text="${cwl.mon}" />
+                                <td th:text="${cwl.tue}" />
+                                <td th:text="${cwl.wed}" />
+                                <td th:text="${cwl.thur}" />
+                                <td th:text="${cwl.fri}" />
+                                <td th:text="${cwl.sat}" />
+                            </tr>
                         </tbody>
                     </table>
                 </div>
@@ -127,6 +150,7 @@
 <script>
     //var projectLists;
     var project_id;
+    var project_task_id;
     var taskLists;
    
     $(function () {
@@ -141,6 +165,7 @@
                 projectLists = data;
                 console.log(projectLists)
                 $(projectLists).each(function (i) {
+                    
                     $("select[name='selectProject']").append("<option value='" + projectLists[i].id + "'>" + projectLists[i].id + projectLists[i].number + projectLists[i].title + "  </option>");
                 });
 
@@ -151,9 +176,21 @@
         });
 
         $("#selectProject").change(function () {
+          
             project_id = $(this).val();
-            projectTaskLists = getProjectTaskLists();
+          //  projectTaskLists = getProjectTaskLists();
+                 $('#loading2').text('select task');
+            getProjectTaskLists();
+      
+
         })
+
+/* currentdate = new Date();
+console.log(currentdate);
+var oneJan = new Date(currentdate.getFullYear(),0,1);
+var numberOfDays = Math.floor((currentdate - oneJan) / (24 * 60 * 60 * 1000));
+var result = Math.ceil(( currentdate.getDay() + 1 + numberOfDays) / 7)-1;
+console.log(`The week number of the current date (${currentdate}) is ${result}.`); */
 
     });
 
@@ -163,7 +200,83 @@
             $("#addProjectModel").modal("toggle");
         });
 
+        
+        //saveTaskButton
+        $("#saveTaskButton").click(function () {
+            var url = "/time/saveProjectTask";
+            var params = {};
+
+          //  params["project_task_id"] = $("#selectProject option:selected").val();
+            params["project_task_id"] = $("#selectTask option:selected").val();
+            project_task_id = $("#selectTask option:selected").val();
+          //   console.log(params)
+
+            $.ajax({
+                type: "POST",
+                url: url,
+                data: JSON.stringify(params),
+                contentType: "application/json",
+                success: function (data) {
+
+                    if (!data) {
+                        alert("select data");
+                    } else {
+                        alert("success!")
+                      $("#addProjectModel").modal("hide");//업로드 성공후 모달창닫기
+
+                      addRow(project_task_id);
+
+                    }
+                },
+                error: function (err) {
+                    console.log(err);
+
+                }
+            });
+
+        })
+
     }
+
+    function addRow(project_task_id){
+
+       
+        $newTbody = $("<tbody class='new-tbody'></tbody>")
+        $(".origin-table").append($newTbody)
+
+    let $cellsOfRow = $("<tr>" +
+        "<td>" + project_task_id+ "</td>" +
+        "<td><input style='width:50px' type='text'></td>" +
+"<td><input style='width:50px' type='text'></td>" +
+"<td><input style='width:50px' type='text'></td>" +
+"<td><input style='width:50px' type='text'></td>" +
+   "<td><input style='width:50px' type='text'></td>" +
+"<td><input style='width:50px' type='text'></td>" +
+  "<td><input style='width:50px' type='text'></td>" +
+        "</tr>");
+
+/*   for(let category of categoryList){
+    let $cellsOfRow = $("<tr>" +
+        "<td>" + category.no + "</td>" +
+        "<td>" + category.name + "</td>" +
+        "<td>" + category.postCount + "</td>" +
+        "<td>" + category.content + "</td>" +
+        "<td>" +
+        "<img src='${pageContext.request.contextPath}/assets/images/delete.jpg'" +
+        "class='delete-img' value='"+ category.no + "'>" +
+        "</td>" +
+        "</tr>"); */
+    $newTbody.append($cellsOfRow);
+
+
+
+
+    }
+
+
+
+
+
 
   function getProjectTaskLists() {
         var url = "/time/selectTask";
@@ -177,10 +290,16 @@
                 console.log(data)
                 projectTaskLists = data;
                 console.log(projectTaskLists);
+                 $("select[name='selectTask']").empty();
+
+				 $("select[name='selectTask']").append("<option>"+ 'select task' + "  </option>");
+
                 $(projectTaskLists).each(function (i) {
                  //   alert(JSON.stringify(data))
-                    console.log(projectTaskLists[0].task_id)
-                    $("select[name='selectTask']").append("<option value='" + projectTaskLists[i].id + "'>" + projectTaskLists[i].id + projectTaskLists[i].id + projectTaskLists[i].name + "  </option>");
+               //  console.log("hi")
+             //      console.log(projectTaskLists[0].task.id)
+               
+                    $("select[name='selectTask']").append("<option value='" + projectTaskLists[i].id + "'>" + projectTaskLists[i].task.name + "  </option>");
                 });
 
                 //Change the text of the default "loading" option.

@@ -114,10 +114,13 @@ public class ExpenseList{
 		this.user = user;
 	}
 
+
+
 	@Override
 	public String toString() {
 		return "ExpenseList [id=" + id + ", userId=" + userId + ", projectId=" + projectId + ", expenseId=" + expenseId
-				+ ", qty=" + qty + ", date=" + date + ", total_amount=" + total_amount + "]";
+				+ ", qty=" + qty + ", date=" + date + ", total_amount=" + total_amount + ", status=" + status
+				+ ", project=" + project + ", expense=" + expense + ", user=" + user + "]";
 	}
 
 	public int getId() {

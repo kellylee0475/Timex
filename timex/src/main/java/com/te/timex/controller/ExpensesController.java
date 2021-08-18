@@ -65,8 +65,8 @@ public class ExpensesController{
 	//	System.out.println(expenselist.toString());
 	//	System.out.println("***************3");
 		model.addAttribute("expenselist",expenselist);
-		
-		//System.out.println(expenselist);
+		System.out.println("***************!!!!!!!!!!!!!!!!!!!!!!!!!!!");
+		System.out.println(expenselist.toString());
 		
 		
 	//	Query query = 

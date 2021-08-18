@@ -25,7 +25,11 @@ public class Task{
 	@OneToMany(mappedBy = "task")
 	private List<ProjectTask> tasks = new ArrayList<>();
 
-//	@OneToMany(mappedBy = "task")
+	@Override
+	public String toString() {
+		return "Task [id=" + id + ", name=" + name + ", enabled=" + enabled + "]";
+	}
+	//	@OneToMany(mappedBy = "task")
 //	private List<ProjectTask> protask = new ArrayList<>();
 //	
 //

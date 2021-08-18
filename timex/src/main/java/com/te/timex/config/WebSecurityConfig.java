@@ -38,7 +38,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {// WebSecur
 		.formLogin()
 				.loginPage("/account/login")
 				.permitAll()
-				.defaultSuccessUrl("/home") // 로그인 성공 후 리다이렉트 주소
+				.defaultSuccessUrl("/time") // 로그인 성공 후 리다이렉트 주소
 				//.failureUrl("/login?error=true")//if login fail
 				.and()
 				 

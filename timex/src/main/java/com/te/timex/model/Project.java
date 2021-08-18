@@ -28,20 +28,17 @@ public class Project{
 	private List<ProjectTask> projectTask = new ArrayList<>();
 	
 
-	@OneToMany(mappedBy = "project")
-	private List<ExpenseList> expenselist;
-	//@OneToMany(mappedBy = "project")
-//	private List<ExpenseList> projectExpense = new ArrayList<>();
+	
 //	@OneToMany(mappedBy = "project")
-//	private List<ProjectTask> protask = new ArrayList<>();
-//
-//	
-//	public List<ProjectTask> getProtask() {
-//		return protask;
-//	}
-//	public void setProtask(List<ProjectTask> protask) {
-//		this.protask = protask;
-//	}
+//	private List<ExpenseList> expenselist;
+	
+	
+
+
+	@Override
+	public String toString() {
+		return "Project [id=" + id + ", number=" + number + ", title=" + title + "]";
+	}
 	public int getId() {
 		return id;
 	}
