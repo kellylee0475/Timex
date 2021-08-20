@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -91,13 +92,38 @@ public class TimeController {
 		}
 
 		// 6. timesheet테이블에서 currentweek와 현재 user_id값을 만족하는 데이터가져오기
-		ArrayList currentWeekList = timesheetRepository.findByUserIdAndWeekId(user_id, currentWeekId);
+		ArrayList<Timesheet> currentWeekList = timesheetRepository.findByUserIdAndWeekId(user_id, currentWeekId);
 
 		model.addAttribute("user_id", user_id);
 		model.addAttribute("currentWeek", currentWeek);
 		model.addAttribute("currentWeekId", currentWeekId);
 		model.addAttribute("currentWeekList", currentWeekList);
 
+		System.out.println("총합을 구해보자");
+		System.out.println(currentWeekList.toString());
+		int totalSun = 0, totalMon = 0, totalTue = 0,totalWed = 0,totalThur = 0,totalFri = 0,totalSat=0;
+		for(int i=0;i<currentWeekList.size();i++) {
+			totalSun =totalSun+ currentWeekList.get(i).getSun();
+			totalMon =totalMon+ currentWeekList.get(i).getMon();
+			totalTue =totalTue+ currentWeekList.get(i).getTue();
+			totalWed =totalWed+ currentWeekList.get(i).getWed();
+			totalThur =totalThur+ currentWeekList.get(i).getThur();
+			totalFri =totalFri+ currentWeekList.get(i).getFri();
+			totalSat =totalSat+ currentWeekList.get(i).getSat();
+		}
+		int total = totalSun+totalMon+totalTue+totalWed +totalThur+totalFri+totalSat;
+		//7.총합
+		Map<String, Integer> totalHrs  = new HashMap<String, Integer>();
+			totalHrs.put("totalSun",totalSun);
+			totalHrs.put("totalMon",totalMon);
+			totalHrs.put("totalTue",totalTue);
+			totalHrs.put("totalWed",totalWed);
+			totalHrs.put("totalThur",totalThur);
+			totalHrs.put("totalFri",totalFri);
+			totalHrs.put("totalSat",totalSat);
+			totalHrs.put("total",total);
+			
+		model.addAttribute("totalHours",totalHrs);
 		return "time/time";
 	}
 
@@ -182,9 +208,10 @@ public class TimeController {
 
 	@PostMapping("/saveProjectTask")
 	@ResponseBody
-	public String saveProjectTask(@RequestBody HashMap<String, Object> param) {
-		String message;
+	public Timesheet saveProjectTask(@RequestBody HashMap<String, Object> param) {
+
 		Timesheet timesheet = new Timesheet();
+	//	ArrayList<Timesheet> currentTimesheet = new ArrayList<Timesheet>();
 
 		// 1. time.html에서 넘겨온 파라미터 user_id, project_task_id, currentWeekId로 이미 존재하는지 체크
 		int project_task_id = Integer.parseInt((String) param.get("project_task_id"));
@@ -202,12 +229,21 @@ public class TimeController {
 			timesheet.setWeekId(week_id);
 			timesheet = timesheetRepository.save(timesheet);
 			String timesheetId = String.valueOf(timesheet.getId());
-			message = timesheetId;
+			int id = Integer.parseInt(timesheetId);
+			ProjectTask projecttask = projectTaskRepository.findById(project_task_id);
+			System.out.println(projecttask.toString());
+			timesheet.setProjecttask(projecttask);
+			System.out.println(id);
+			timesheet =  timesheetRepository.findById(id);
+		//	currentTimesheet =  timesheetRepository.findByUserIdAndWeekId(user_id, currentWeekId);
+		System.out.println("here");
+		System.out.println(timesheet.toString());
 		} else {
+			timesheet=null;
 			System.out.println("already exisiting timesheet");
-			message = "No";
+	
 		}
-		return message;
+		return timesheet;
 	}
 
 }

@@ -31,8 +31,7 @@ public class ProjectTask{
     @JoinColumn(name = "taskId")
     private Task task;
 
-    
-//	@OneToMany(mappedBy = "project_task")
+//    @OneToMany(mappedBy = "projecttaskId")
 //	private List<Timesheet> timesheet = new ArrayList<>();
     
 	@Override

@@ -12,8 +12,12 @@ public interface TimesheetRepository extends JpaRepository<Timesheet, Integer> {
 	ArrayList<Timesheet> findByUserIdAndWeekId(int user_id,int currentWeekId);
 //	ArrayList<Timesheet> findByWeekId(int userId);
 
+	Timesheet findById(int id);
+	
 	Timesheet findByUserIdAndWeekIdAndProjecttaskId(int user_id, int week_id, int project_task_id);
 
 	boolean existsByUserIdAndWeekIdAndProjecttaskId(int user_id, int week_id, int project_task_id);
+
+//	ArrayList<Timesheet> findAllById(int i);
 	
 }

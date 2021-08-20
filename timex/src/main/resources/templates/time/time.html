@@ -2,6 +2,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org"
     xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" layout:decorator="layout/layout" th:with="title='Time'">
 <style>
+
 </style>
 
 
@@ -55,100 +56,161 @@
     <main>
         <div class="container-fluid px-4">
             <h1 class="mt-4">My TimeSheet</h1>
+
+
+            <div class="md-form">
+                <input style="width:170px; float:right;" type="date" id="inputMDEx" class="form-control">
+                <!--  <label for="inputMDEx">Choose your date</label> -->
+            </div>
+
+
             <div>
                 <ul class="pagination justify-content-end">
+
                     <li class="page-item">
                         <form th:action="@{/time}">
-                        <button class="page-link" aria-label="Previous" th:name="weekId" th:value="${currentWeekId}-1">
-                         <!--                 <button class="page-link" onclick="previousWeek(this.value)" aria-label="Previous"> -->
-                            <span aria-hidden="true">&laquo;</span>
-                        </button>
+                            <button class="page-link" aria-label="Previous" th:name="weekId"
+                                th:value="${currentWeekId}-1">
+                                <!--                 <button class="page-link" onclick="previousWeek(this.value)" aria-label="Previous"> -->
+                                <span aria-hidden="true">&laquo;</span>
+                            </button>
                         </form>
                     </li>
-                       <li class="page-item">
+                    <li class="page-item">
                         <a class="page-link" href="#" aria-label="current">
                             <span aria-hidden="true" th:text="${currentWeek.period}"></span>
                         </a>
                     </li>
                     <li class="page-item">
                         <form th:action="@{/time}">
-                        <button class="page-link" aria-label="Next" th:name="weekId" th:value="${currentWeekId}+1">
-                            <span aria-hidden="true">&raquo;</span>
-                        </button>
+                            <button class="page-link" aria-label="Next" th:name="weekId" th:value="${currentWeekId}+1">
+                                <span aria-hidden="true">&raquo;</span>
+                            </button>
                         </form>
                     </li>
-                 
+
                 </ul>
             </div>
             <div class="card mb-4">
                 <div class="card-header">
                     <i class="fas fa-table me-1"></i>
                     <span th:text="${currentWeek.period}"></span>
+
                 </div>
 
                 <div class="card-body">
                     <div class="dataTable-wrapper dataTable-loading no-footer sortable searchable fixed-columns">
                         <div class="dataTable-container">
-                <!--     <table class="origin-table"> -->
-                    <table class="dataTable-table">
-                        <thead class="table-secondary">
-                            <tr>
-                                <th>Project/Task</th>
-                                <th>Sunday</th>
-                                <th>Monday</th>
-                                <th>Tuesday</th>
-                                <th>Wedensday</th>
-                                <th>Thursday</th>
-                                <th>Friday</th>
-                                <th>Saturyday</th>
-                            </tr>
-                        </thead>
+                            <!--     <table class="origin-table"> -->
+                            <table class="dataTable-table" style="table-layout: fixed">
+                                <thead class="table-secondary">
+                                    <tr>
+                                        <th style="width: 15% ;">Project/Task</th>
+                                        <th style="text-align: center; vertical-align: middle;">Sunday</th>
+                                        <th style="text-align: center; vertical-align: middle;">Monday</th>
+                                        <th style="text-align: center; vertical-align: middle;">Tuesday</th>
+                                        <th style="text-align: center; vertical-align: middle;">Wedensday</th>
+                                        <th style="text-align: center; vertical-align: middle;">Thursday</th>
+                                        <th style="text-align: center; vertical-align: middle;">Friday</th>
+                                        <th style="text-align: center; vertical-align: middle;">Saturyday</th>
+                                        <th style="width: 15% ;" colspan="2"></th>
 
-                        <tbody>
-                            <tr th:each="cwl: ${currentWeekList}" th:id="${cwl.id}">
-                                <td th:inline="text">
+                                    </tr>
+                                </thead>
+
+                                <tbody>
+                                    <tr th:each="cwl: ${currentWeekList}" th:id="${cwl.id}">
+                                        <td th:inline="text">
+                                            [[|${cwl.projecttask.project.number} ${cwl.projecttask.project.title}
+                                            |]]
+                                            <br /><b>
+                                                [[${cwl.projecttask.task.name}]]
+                                            </b>
+
+                                        </td>
+                                        <!--                                 <td th:inline="text">
                                     [[|${cwl.projecttask.project.number} ${cwl.projecttask.project.title}
                                     ${cwl.projecttaskId}|]]
                                     <br />
                                     &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[[${cwl.projecttask.task.name}]]
                                     <br />
                                     timesheetId : [[${cwl.id}]]
-                                </td>
-                                <td><input style='width:50px' th:value="${cwl.sun}" th:id="${cwl.id}+'sun'" readonly>
-                                </td>
-                                <td><input style='width:50px' th:value="${cwl.mon}" th:id="${cwl.id}+'mon'" readonly>
-                                </td>
-                                <td><input style='width:50px' th:value="${cwl.tue}" th:id="${cwl.id}+'tue'" readonly>
-                                </td>
-                                <td><input style='width:50px' th:value="${cwl.wed}" th:id="${cwl.id}+'wed'" readonly>
-                                </td>
-                                <td><input style='width:50px' th:value="${cwl.thur}" th:id="${cwl.id}+'thur'" readonly>
-                                </td>
-                                <td><input style='width:50px' th:value="${cwl.fri}" th:id="${cwl.id}+'fri'" readonly>
-                                </td>
-                                <td><input style='width:50px' th:value="${cwl.sat}" th:id="${cwl.id}+'sat'" readonly>
-                                </td>
-                                <!--hidden으로 ajax로 값넘-->
-                                <input type="hidden" th:id="'projecttaskId'+${cwl.id}"
-                                    th:value="${cwl.projecttaskId}" />
-                                <input type="hidden" th:id="'weekId'+${cwl.id}" th:value="${cwl.weekId}" />
+                                </td> -->
+                                        <td style="text-align: center; vertical-align: middle;"><input
+                                                style='width:50px; text-align:center;' th:value="${cwl.sun}"
+                                                th:id="${cwl.id}+'sun'" readonly>
+                                        </td>
+                                        <td style="text-align: center; vertical-align: middle;"><input
+                                                style='width:50px; text-align:center;' th:value="${cwl.mon}"
+                                                th:id="${cwl.id}+'mon'" readonly>
+                                        </td>
+                                        <td style="text-align: center; vertical-align: middle;"><input
+                                                style='width:50px; text-align:center;' th:value="${cwl.tue}"
+                                                th:id="${cwl.id}+'tue'" readonly>
+                                        </td>
+                                        <td style="text-align: center; vertical-align: middle;"><input
+                                                style='width:50px; text-align:center;' th:value="${cwl.wed}"
+                                                th:id="${cwl.id}+'wed'" readonly>
+                                        </td>
+                                        <td style="text-align: center; vertical-align: middle;"><input
+                                                style='width:50px; text-align:center;' th:value="${cwl.thur}"
+                                                th:id="${cwl.id}+'thur'" readonly>
+                                        </td>
+                                        <td style="text-align: center; vertical-align: middle;"><input
+                                                style='width:50px; text-align:center;' th:value="${cwl.fri}"
+                                                th:id="${cwl.id}+'fri'" readonly>
+                                        </td>
+                                        <td style="text-align: center; vertical-align: middle;"><input
+                                                style='width:50px; text-align:center;' th:value="${cwl.sat}"
+                                                th:id="${cwl.id}+'sat'" readonly>
+                                        </td>
+                                        <!--hidden으로 ajax로 값넘-->
+                                        <input type="hidden" th:id="'projecttaskId'+${cwl.id}"
+                                            th:value="${cwl.projecttaskId}" />
+                                        <input type="hidden" th:id="'weekId'+${cwl.id}" th:value="${cwl.weekId}" />
 
-                                <td><button th:value="'editButton'+${cwl.id}" type="button"
-                                        th:id="'editButton'+${cwl.id}" onclick="editTask(this.value)"
-                                        class="btn btn-primary">Edit</button></td>
-                                <td><button th:value="'deleteButton'+${cwl.id}" type="button"
-                                        th:id="'deleteButton'+${cwl.id}" onclick="deleteTask(this.value)"
-                                        class="btn btn-primary">Delete</button></td>
-                            </tr>
-                        </tbody>
-                    </table>
-                    </div>
+                                        <td style="text-align: center; vertical-align: middle;"><button
+                                                th:value="'editButton'+${cwl.id}" type="button"
+                                                th:id="'editButton'+${cwl.id}" onclick="editTask(this.value)"
+                                                class="btn btn-primary">Edit</button></td>
+                                        <td style="text-align: center; vertical-align: middle;"><button
+                                                th:value="'deleteButton'+${cwl.id}" type="button"
+                                                th:id="'deleteButton'+${cwl.id}" onclick="deleteTask(this.value)"
+                                                class="btn btn-primary">Delete</button></td>
+                                    </tr>
+                                </tbody>
+                                <thead class="table-secondary">
+                                    <tr>
+                                        <th style="width: 15% ;"><button type="button" id="addProjectButton"
+                                                class="btn btn-primary">Add Project</button></th>
+                                        <th style="text-align: center; vertical-align: middle;"
+                                            th:text="${totalHours.totalSun}"></th>
+                                        <th style="text-align: center; vertical-align: middle;"
+                                            th:text="${totalHours.totalMon}">Monday</th>
+                                        <th style="text-align: center; vertical-align: middle;"
+                                            th:text="${totalHours.totalTue}">Tuesday</th>
+                                        <th style="text-align: center; vertical-align: middle;"
+                                            th:text="${totalHours.totalWed}">Wedensday</th>
+                                        <th style="text-align: center; vertical-align: middle;"
+                                            th:text="${totalHours.totalThur}">Thursday</th>
+                                        <th style="text-align: center; vertical-align: middle;"
+                                            th:text="${totalHours.totalFri}">Friday</th>
+                                        <th style="text-align: center; vertical-align: middle;"
+                                            th:text="${totalHours.totalSat}">Saturyday</th>
+                                        <th style="text-align: center; vertical-align: middle;">Total hours</th>
+                                        <th style="text-align: center; vertical-align: middle;"
+                                            th:text="${totalHours.total}"></th>
+
+                                    </tr>
+                                </thead>
+                            </table>
+                        </div>
                     </div>
                 </div>
             </div>
-            <div>
+            <!--             <div>
                 <button type="button" id="addProjectButton" class="btn btn-primary">Add Project</button>
-            </div>
+            </div> -->
         </div>
     </main>
 </div>
@@ -165,15 +227,16 @@
     var week_id;
     var currentWeekId;
     var timesheetId;
-var currentWeekList;
+    var currentWeekList;
+    var currentTask;
     $(function () {
         //model.addAttribute로 컨트롤러에서 넘긴값 받는다.
         user_id = "[[${user_id}]]";
         currentWeekId = "[[${currentWeekId}]]";
         currentWeekList = "[[${currentWeekList}]]";
-        console.log("hel")
-console.log(currentWeekId)
-console.log(currentWeekList)
+        //    console.log("hel")
+        //     console.log(currentWeekId)
+        //     console.log(currentWeekList)
         //	initComponent();
         initButton();
 
@@ -197,11 +260,11 @@ console.log(currentWeekList)
 
         $("#selectProject").change(function () {
 
-            project_id = $(this).val();         
+            project_id = $(this).val();
             $('#loading2').text('select task');
             getProjectTaskLists();
         })
-      
+
     });
 
     function initButton() {
@@ -220,7 +283,7 @@ console.log(currentWeekList)
             params["user_id"] = user_id;
             params["currentWeekId"] = currentWeekId;
             params["project_task_id"] = $("#selectTask option:selected").val();
-            project_task_id = $("#selectTask option:selected").val();     
+            project_task_id = $("#selectTask option:selected").val();
 
             $.ajax({
                 type: "POST",
@@ -228,14 +291,13 @@ console.log(currentWeekList)
                 data: JSON.stringify(params),
                 contentType: "application/json",
                 success: function (data) {
-                    //신규 저장완료시 yes, 이미 존재할경우 no
-                    if (data == "No") {
+                    if (!data) {
                         alert("already exist");
                     } else {
                         alert("saved")
-                        timesheetId = data;
+                        currentTask = data;
                         $("#addProjectModel").modal("hide");//성공후 모달창닫기
-                        addRow(timesheetId);//성공후 새로운 프로젝트 row추가
+                        addRow(currentTask);//성공후 새로운 프로젝트 row추가
                     }
                 },
                 error: function (err) {
@@ -243,46 +305,16 @@ console.log(currentWeekList)
                 }
             });
 
-        });      
+        });
     }
 
-/*     function previousWeek(data){
-       // console.log(data);
-        currentWeekId = "[[${currentWeekId}]]";
-        previousWeekId = currentWeekId-1;
-   //     currentWeekId=previousWeekId;
-   console.log("function")
-        console.log(previousWeekId);
-        var url = "/time";
-   //     var params = {};
 
-       //     params["previousWeekId"] = previousWeekId;
-      //      params["user_id"] = user_id;
-    //  console.log(params)
-            $.ajax({
-                type: "POST",
-                url: url,
-              data: "previousWeekId="+previousWeekId,
-          //       data: JSON.stringify(params),
-          //      contentType: "application/json",
-                success: function () {  
-                   
-                   //     location.reload();
-               
-                },
-                error: function (err) {
-                    console.log(err);
-                }
-            });
- 
-
-    } */
     function editTask(data) {
         timesheetId = data.substring(10);//editButton잘라낸
         project_task_id = $('#' + 'projecttaskId' + timesheetId).val();
         week_id = $('#' + 'weekId' + timesheetId).val();
         var buttonName = document.getElementById(data).innerHTML;
-  
+
         if (buttonName == "Edit") {
             document.getElementById(data).innerHTML = 'Save';//edit 클릭시 save로 버튼이름 변경
             //입력할수있도록 readonly
@@ -316,13 +348,13 @@ console.log(currentWeekList)
                 url: url,
                 data: JSON.stringify(params),
                 contentType: "application/json",
-                success: function (data) {  
+                success: function (data) {
                     if (data == "Yes") {
                         alert("Update Success");
                         //Update후에 창 refresh
                         location.reload();
                     } else {
-                        alert("fail")                   
+                        alert("fail")
                     }
                 },
                 error: function (err) {
@@ -332,6 +364,8 @@ console.log(currentWeekList)
             return true;
         }
     }
+
+
 
     function deleteTask(data) {
         var url = "/time/deleteProjectTask";
@@ -346,13 +380,13 @@ console.log(currentWeekList)
                 url: url,
                 data: JSON.stringify(params),
                 contentType: "application/json",
-                success: function (data) { 
+                success: function (data) {
                     if (data == "Yes") {
                         alert("delete Success");
                         //delete후에 창 refresh
                         location.reload();
                     } else {
-                        alert("fail");                 
+                        alert("fail");
                     }
                 },
                 error: function (err) {
@@ -366,22 +400,27 @@ console.log(currentWeekList)
     };
 
     //addProjectButton
-    function addRow(timesheetId) {
-        $newTbody = $("<tbody class='new-tbody'></tbody>")
-        $(".dataTable-table").append($newTbody)
-
-        let $cellsOfRow = $("<tr>" +
-            "<td>" + timesheetId + "</td>" +
-            "<td><input style='width:50px' type='text'></td>" +
-            "<td><input style='width:50px' type='text'></td>" +
-            "<td><input style='width:50px' type='text'></td>" +
-            "<td><input style='width:50px' type='text'></td>" +
-            "<td><input style='width:50px' type='text'></td>" +
-            "<td><input style='width:50px' type='text'></td>" +
-            "<td><input style='width:50px' type='text'></td>" +
-            "</tr>");
-       
-        $newTbody.append($cellsOfRow);
+    function addRow(currentTask) {//나중에 바꾸
+        /*      $newTbody = $("<tbody class='new-tbody'></tbody>")
+              $(".dataTable-table").append($newTbody)
+      console.log(currentTask)
+      
+               let $cellsOfRow = $("<tr>" +
+                  "<td>" + currentTask.projecttask.project.number +"&nbsp;"+  currentTask.projecttask.project.title + "<br><b>"+currentTask.projecttask.task.name +"<b></td>" +
+                //   th:value="${cwl.sun}" th:id="${cwl.id}+'sun'"
+                  "<td style='text-align: center; vertical-align: middle;'><input value='" + currentTask.sun +"' th:id='"+currentTask.id+ "sun' style='width:50px; text-align:center;' type='text'></td>" +
+                  "<td style='text-align: center; vertical-align: middle;'><input value='" + currentTask.mon +"' th:id='"+currentTask.id+ "mon' style='width:50px; text-align:center;' type='text'></td>" +
+                  "<td style='text-align: center; vertical-align: middle;'><input value='" + currentTask.tue +"' th:id='"+currentTask.id+ "tue' style='width:50px; text-align:center;' type='text'></td>" +
+                  "<td style='text-align: center; vertical-align: middle;'><input value='" + currentTask.wed +"' th:id='"+currentTask.id+ "wed' style='width:50px; text-align:center;' type='text'></td>" +
+                  "<td style='text-align: center; vertical-align: middle;'><input value='" + currentTask.thur +"' th:id='"+currentTask.id+ "thur' style='width:50px; text-align:center;' type='text'></td>" +
+                  "<td style='text-align: center; vertical-align: middle;'><input value='" + currentTask.fri +"' th:id='"+currentTask.id+ "fri' style='width:50px; text-align:center;' type='text'></td>" +
+                  "<td style='text-align: center; vertical-align: middle;'><input value='" + currentTask.sat +"' th:id='"+currentTask.id+ "sat' style='width:50px; text-align:center;' type='text'></td>" +
+                  //"<td style='text-align: center; vertical-align: middle;'><button type='button' class='btn btn-primary' value='editButton"+currentTask.id +"' th:id='editButton"+currentTask.id+"' onclick='saveNew(this.value)'>Save</button></td>" +
+               
+                  "</tr>");
+      
+              $newTbody.append($cellsOfRow); */
+        location.reload();
     }
 
 

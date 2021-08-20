@@ -12,5 +12,5 @@ public interface ProjectTaskRepository extends JpaRepository<ProjectTask, Intege
 	
 	
 	List<ProjectTask> findByProjectId(int project_Id);
-
+	ProjectTask findById(int id);
 }
