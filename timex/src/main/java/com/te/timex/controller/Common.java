@@ -106,8 +106,8 @@ public class Common{
 }
 
 	public static int getWeekNumber(){
-		
-       LocalDate today = LocalDate.parse("2021-08-22");
+		LocalDate today = LocalDate.now();
+     //  LocalDate today = LocalDate.parse("2021-08-22");
        WeekFields weekFields = WeekFields.of(Locale.getDefault());
        String  week_number_string = String.format("%02d", today.get(weekFields.weekOfWeekBasedYear()));
        String year_string=String.format("%d", today.get(weekFields.weekBasedYear()));

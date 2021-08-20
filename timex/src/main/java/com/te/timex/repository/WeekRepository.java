@@ -11,5 +11,7 @@ public interface WeekRepository extends JpaRepository<Week, Integer> {
 	Week findByYearAndWeekNumber(int year, int week_number);
 
 	Week findByYear(int year);
+	
+	Week findById(int previousWeekId);
 
 }

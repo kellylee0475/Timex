@@ -2,7 +2,6 @@
 <html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org"
     xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" layout:decorator="layout/layout" th:with="title='Time'">
 <style>
-
 </style>
 
 
@@ -19,34 +18,28 @@
                 <div class="modal-body">
                     <div class="dropdown">
                         <table>
-                             <tr>
-                                    <td>
-                                        <h5>Project &nbsp;&nbsp; &nbsp; </h5>
-                                    </td>
-
-                                    <td>
-                                        <select class="form-control" aria-label="Default select example"
-                                            id="selectProject" name="selectProject">
-                                            <option value="-" id="loading">Please select project!</option>
-                                        </select>
-                                    </td>
-                                </tr>
-
-                                <tr>
-                                    <td>
-                                        <h5>Task &nbsp;&nbsp; &nbsp; </h5>
-                                    </td>
-
-                                    <td>
-                                        <select class="form-control" aria-label="Default select example"
-                                            id="selectTask" name="selectTask">
-                                            <option value="-" id="loading2">Please select task!</option>
-                                        </select>
-                                    </td>
-                                </tr>
-
-
-
+                            <tr>
+                                <td>
+                                    <h5>Project &nbsp;&nbsp; &nbsp; </h5>
+                                </td>
+                                <td>
+                                    <select class="form-control" aria-label="Default select example" id="selectProject"
+                                        name="selectProject">
+                                        <option value="-" id="loading">Please select project!</option>
+                                    </select>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <h5>Task &nbsp;&nbsp; &nbsp; </h5>
+                                </td>
+                                <td>
+                                    <select class="form-control" aria-label="Default select example" id="selectTask"
+                                        name="selectTask">
+                                        <option value="-" id="loading2">Please select task!</option>
+                                    </select>
+                                </td>
+                            </tr>
                         </table>
 
                     </div>
@@ -54,7 +47,6 @@
                 <div class="modal-footer">
                     <button type="button" id="saveTaskButton" class="btn btn-primary">Save Task</button>
                     <button type="button" class="btn btn-default" data-bs-dismiss="modal">Cancel</button>
-
                 </div>
             </div>
         </div>
@@ -63,108 +55,129 @@
     <main>
         <div class="container-fluid px-4">
             <h1 class="mt-4">My TimeSheet</h1>
-
             <div>
                 <ul class="pagination justify-content-end">
                     <li class="page-item">
-                        <a class="page-link" href="#" aria-label="Previous">
+                        <form th:action="@{/time}">
+                        <button class="page-link" aria-label="Previous" th:name="weekId" th:value="${currentWeekId}-1">
+                         <!--                 <button class="page-link" onclick="previousWeek(this.value)" aria-label="Previous"> -->
                             <span aria-hidden="true">&laquo;</span>
-                        </a>
+                        </button>
+                        </form>
                     </li>
-                    <li class="page-item">
-                        <a class="page-link" href="#" aria-label="Next">
-                            <span aria-hidden="true">&raquo;</span>
-                        </a>
-                    </li>
-                    <li class="page-item">
+                       <li class="page-item">
                         <a class="page-link" href="#" aria-label="current">
                             <span aria-hidden="true" th:text="${currentWeek.period}"></span>
                         </a>
                     </li>
+                    <li class="page-item">
+                        <form th:action="@{/time}">
+                        <button class="page-link" aria-label="Next" th:name="weekId" th:value="${currentWeekId}+1">
+                            <span aria-hidden="true">&raquo;</span>
+                        </button>
+                        </form>
+                    </li>
+                 
                 </ul>
             </div>
             <div class="card mb-4">
-
                 <div class="card-header">
                     <i class="fas fa-table me-1"></i>
-                     <span th:text="${currentWeek.period}"></span>
-                   
+                    <span th:text="${currentWeek.period}"></span>
                 </div>
 
                 <div class="card-body">
-                    <table style="width: 100%;" class="origin-table">
+                    <div class="dataTable-wrapper dataTable-loading no-footer sortable searchable fixed-columns">
+                        <div class="dataTable-container">
+                <!--     <table class="origin-table"> -->
+                    <table class="dataTable-table">
                         <thead class="table-secondary">
                             <tr>
-                                <th> </th>
+                                <th>Project/Task</th>
+                                <th>Sunday</th>
                                 <th>Monday</th>
                                 <th>Tuesday</th>
                                 <th>Wedensday</th>
                                 <th>Thursday</th>
                                 <th>Friday</th>
                                 <th>Saturyday</th>
-                                <th>Sunday</th>
                             </tr>
                         </thead>
 
                         <tbody>
-                            <tr 
-                            th:each="cwl: ${currentWeekList}" >
-                           <!--getterseter ProjectTask를 해줘야지 Timesheet.java에서 이렇게 사용가-->
-                         <!--   <td th:text="|${cwl.projecttask.project.number} ${cwl.projecttask.project.title}|" ></td>
-                         -->     
+                            <tr th:each="cwl: ${currentWeekList}" th:id="${cwl.id}">
+                                <td th:inline="text">
+                                    [[|${cwl.projecttask.project.number} ${cwl.projecttask.project.title}
+                                    ${cwl.projecttaskId}|]]
+                                    <br />
+                                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[[${cwl.projecttask.task.name}]]
+                                    <br />
+                                    timesheetId : [[${cwl.id}]]
+                                </td>
+                                <td><input style='width:50px' th:value="${cwl.sun}" th:id="${cwl.id}+'sun'" readonly>
+                                </td>
+                                <td><input style='width:50px' th:value="${cwl.mon}" th:id="${cwl.id}+'mon'" readonly>
+                                </td>
+                                <td><input style='width:50px' th:value="${cwl.tue}" th:id="${cwl.id}+'tue'" readonly>
+                                </td>
+                                <td><input style='width:50px' th:value="${cwl.wed}" th:id="${cwl.id}+'wed'" readonly>
+                                </td>
+                                <td><input style='width:50px' th:value="${cwl.thur}" th:id="${cwl.id}+'thur'" readonly>
+                                </td>
+                                <td><input style='width:50px' th:value="${cwl.fri}" th:id="${cwl.id}+'fri'" readonly>
+                                </td>
+                                <td><input style='width:50px' th:value="${cwl.sat}" th:id="${cwl.id}+'sat'" readonly>
+                                </td>
+                                <!--hidden으로 ajax로 값넘-->
+                                <input type="hidden" th:id="'projecttaskId'+${cwl.id}"
+                                    th:value="${cwl.projecttaskId}" />
+                                <input type="hidden" th:id="'weekId'+${cwl.id}" th:value="${cwl.weekId}" />
 
-                            <td th:inline="text">
-                                [[|${cwl.projecttask.project.number} ${cwl.projecttask.project.title}  ${cwl.project_task_id}|]]
-                                <br/>
-                                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[[${cwl.projecttask.task.name}]]
-                                <br/>
-                                timesheetId : [[${cwl.id}]]
-                            </td>
-
-                            
-                                <td th:text="${cwl.sun}" />
-                                <td th:text="${cwl.mon}" />
-                                <td th:text="${cwl.tue}" />
-                                <td th:text="${cwl.wed}" />
-                                <td th:text="${cwl.thur}" />
-                                <td th:text="${cwl.fri}" />
-                                <td th:text="${cwl.sat}" />
+                                <td><button th:value="'editButton'+${cwl.id}" type="button"
+                                        th:id="'editButton'+${cwl.id}" onclick="editTask(this.value)"
+                                        class="btn btn-primary">Edit</button></td>
+                                <td><button th:value="'deleteButton'+${cwl.id}" type="button"
+                                        th:id="'deleteButton'+${cwl.id}" onclick="deleteTask(this.value)"
+                                        class="btn btn-primary">Delete</button></td>
                             </tr>
                         </tbody>
                     </table>
+                    </div>
+                    </div>
                 </div>
-
             </div>
             <div>
                 <button type="button" id="addProjectButton" class="btn btn-primary">Add Project</button>
-
-
-
+            </div>
+        </div>
     </main>
-
 </div>
 
 
 </html>
 
 <script>
-    //var projectLists;
+
     var project_id;
     var project_task_id;
     var taskLists;
-   var user_id;
-   var currentWeekId;
+    var user_id;
+    var week_id;
+    var currentWeekId;
+    var timesheetId;
+var currentWeekList;
     $(function () {
         //model.addAttribute로 컨트롤러에서 넘긴값 받는다.
         user_id = "[[${user_id}]]";
-        currentWeekId= "[[${currentWeekId}]]";
-
-
-
+        currentWeekId = "[[${currentWeekId}]]";
+        currentWeekList = "[[${currentWeekList}]]";
+        console.log("hel")
+console.log(currentWeekId)
+console.log(currentWeekList)
         //	initComponent();
         initButton();
 
-           var url = "/time/selectProject";
+        var url = "/time/selectProject";
         $.ajax({
             type: "GET",
             url: url,
@@ -172,7 +185,7 @@
                 projectLists = data;
                 console.log(projectLists)
                 $(projectLists).each(function (i) {
-                    
+
                     $("select[name='selectProject']").append("<option value='" + projectLists[i].id + "'>" + projectLists[i].id + projectLists[i].number + projectLists[i].title + "  </option>");
                 });
 
@@ -183,22 +196,12 @@
         });
 
         $("#selectProject").change(function () {
-          
-            project_id = $(this).val();
-          //  projectTaskLists = getProjectTaskLists();
-                 $('#loading2').text('select task');
+
+            project_id = $(this).val();         
+            $('#loading2').text('select task');
             getProjectTaskLists();
-      
-
         })
-
-/* currentdate = new Date();
-console.log(currentdate);
-var oneJan = new Date(currentdate.getFullYear(),0,1);
-var numberOfDays = Math.floor((currentdate - oneJan) / (24 * 60 * 60 * 1000));
-var result = Math.ceil(( currentdate.getDay() + 1 + numberOfDays) / 7)-1;
-console.log(`The week number of the current date (${currentdate}) is ${result}.`); */
-
+      
     });
 
     function initButton() {
@@ -207,17 +210,17 @@ console.log(`The week number of the current date (${currentdate}) is ${result}.`
             $("#addProjectModel").modal("toggle");
         });
 
-        
+
         //saveTaskButton
         $("#saveTaskButton").click(function () {
             var url = "/time/saveProjectTask";
             var params = {};
-         
+
+            //신규 테스크 저장하기전 이미 있는지 확인하기위해 3가지 변수를 들고간다
             params["user_id"] = user_id;
             params["currentWeekId"] = currentWeekId;
             params["project_task_id"] = $("#selectTask option:selected").val();
-            project_task_id = $("#selectTask option:selected").val();
-             console.log(params);
+            project_task_id = $("#selectTask option:selected").val();     
 
             $.ajax({
                 type: "POST",
@@ -225,60 +228,160 @@ console.log(`The week number of the current date (${currentdate}) is ${result}.`
                 data: JSON.stringify(params),
                 contentType: "application/json",
                 success: function (data) {
-
-                    if (!data) {
-                        alert("select data");
+                    //신규 저장완료시 yes, 이미 존재할경우 no
+                    if (data == "No") {
+                        alert("already exist");
                     } else {
-                        alert("success!")
-                      $("#addProjectModel").modal("hide");//업로드 성공후 모달창닫기
-
-                      addRow(project_task_id);
-
+                        alert("saved")
+                        timesheetId = data;
+                        $("#addProjectModel").modal("hide");//성공후 모달창닫기
+                        addRow(timesheetId);//성공후 새로운 프로젝트 row추가
                     }
                 },
                 error: function (err) {
                     console.log(err);
-
                 }
             });
 
-        })
-
+        });      
     }
 
-    function addRow(project_task_id){
+/*     function previousWeek(data){
+       // console.log(data);
+        currentWeekId = "[[${currentWeekId}]]";
+        previousWeekId = currentWeekId-1;
+   //     currentWeekId=previousWeekId;
+   console.log("function")
+        console.log(previousWeekId);
+        var url = "/time";
+   //     var params = {};
 
-       
+       //     params["previousWeekId"] = previousWeekId;
+      //      params["user_id"] = user_id;
+    //  console.log(params)
+            $.ajax({
+                type: "POST",
+                url: url,
+              data: "previousWeekId="+previousWeekId,
+          //       data: JSON.stringify(params),
+          //      contentType: "application/json",
+                success: function () {  
+                   
+                   //     location.reload();
+               
+                },
+                error: function (err) {
+                    console.log(err);
+                }
+            });
+ 
+
+    } */
+    function editTask(data) {
+        timesheetId = data.substring(10);//editButton잘라낸
+        project_task_id = $('#' + 'projecttaskId' + timesheetId).val();
+        week_id = $('#' + 'weekId' + timesheetId).val();
+        var buttonName = document.getElementById(data).innerHTML;
+  
+        if (buttonName == "Edit") {
+            document.getElementById(data).innerHTML = 'Save';//edit 클릭시 save로 버튼이름 변경
+            //입력할수있도록 readonly
+            $('#' + timesheetId + 'sun').attr("readonly", false);
+            $('#' + timesheetId + 'mon').attr("readonly", false);
+            $('#' + timesheetId + 'tue').attr("readonly", false);
+            $('#' + timesheetId + 'wed').attr("readonly", false);
+            $('#' + timesheetId + 'thur').attr("readonly", false);
+            $('#' + timesheetId + 'fri').attr("readonly", false);
+            $('#' + timesheetId + 'sat').attr("readonly", false);
+
+        } else {
+            //save클릭할때
+            var url = "/time/editProjectTask";
+            var params = {};
+
+            params["timesheetId"] = timesheetId;
+            params["user_id"] = user_id;
+            params["project_task_id"] = project_task_id;
+            params["week_id"] = week_id;
+            params["sun"] = $('#' + timesheetId + 'sun').val();
+            params["mon"] = $('#' + timesheetId + 'mon').val();
+            params["tue"] = $('#' + timesheetId + 'tue').val();
+            params["wed"] = $('#' + timesheetId + 'wed').val();
+            params["thur"] = $('#' + timesheetId + 'thur').val();
+            params["fri"] = $('#' + timesheetId + 'fri').val();
+            params["sat"] = $('#' + timesheetId + 'sat').val();
+
+            $.ajax({
+                type: "POST",
+                url: url,
+                data: JSON.stringify(params),
+                contentType: "application/json",
+                success: function (data) {  
+                    if (data == "Yes") {
+                        alert("Update Success");
+                        //Update후에 창 refresh
+                        location.reload();
+                    } else {
+                        alert("fail")                   
+                    }
+                },
+                error: function (err) {
+                    console.log(err);
+                }
+            });
+            return true;
+        }
+    }
+
+    function deleteTask(data) {
+        var url = "/time/deleteProjectTask";
+        var params = {};
+        timesheetId = data.substring(12);//deleteButton잘라낸
+        params["timesheetId"] = timesheetId;
+
+        var x = confirm("Are you sure you want to delete?");
+        if (x) {
+            $.ajax({
+                type: "POST",
+                url: url,
+                data: JSON.stringify(params),
+                contentType: "application/json",
+                success: function (data) { 
+                    if (data == "Yes") {
+                        alert("delete Success");
+                        //delete후에 창 refresh
+                        location.reload();
+                    } else {
+                        alert("fail");                 
+                    }
+                },
+                error: function (err) {
+                    console.log(err);
+                }
+            });
+            return true;
+        } else {
+            return false;
+        }
+    };
+
+    //addProjectButton
+    function addRow(timesheetId) {
         $newTbody = $("<tbody class='new-tbody'></tbody>")
-        $(".origin-table").append($newTbody)
+        $(".dataTable-table").append($newTbody)
 
-    let $cellsOfRow = $("<tr>" +
-        "<td>" + project_task_id+ "</td>" +
-        "<td><input style='width:50px' type='text'></td>" +
-"<td><input style='width:50px' type='text'></td>" +
-"<td><input style='width:50px' type='text'></td>" +
-"<td><input style='width:50px' type='text'></td>" +
-   "<td><input style='width:50px' type='text'></td>" +
-"<td><input style='width:50px' type='text'></td>" +
-  "<td><input style='width:50px' type='text'></td>" +
-        "</tr>");
-
-/*   for(let category of categoryList){
-    let $cellsOfRow = $("<tr>" +
-        "<td>" + category.no + "</td>" +
-        "<td>" + category.name + "</td>" +
-        "<td>" + category.postCount + "</td>" +
-        "<td>" + category.content + "</td>" +
-        "<td>" +
-        "<img src='${pageContext.request.contextPath}/assets/images/delete.jpg'" +
-        "class='delete-img' value='"+ category.no + "'>" +
-        "</td>" +
-        "</tr>"); */
-    $newTbody.append($cellsOfRow);
-
-
-
-
+        let $cellsOfRow = $("<tr>" +
+            "<td>" + timesheetId + "</td>" +
+            "<td><input style='width:50px' type='text'></td>" +
+            "<td><input style='width:50px' type='text'></td>" +
+            "<td><input style='width:50px' type='text'></td>" +
+            "<td><input style='width:50px' type='text'></td>" +
+            "<td><input style='width:50px' type='text'></td>" +
+            "<td><input style='width:50px' type='text'></td>" +
+            "<td><input style='width:50px' type='text'></td>" +
+            "</tr>");
+       
+        $newTbody.append($cellsOfRow);
     }
 
 
@@ -286,27 +389,27 @@ console.log(`The week number of the current date (${currentdate}) is ${result}.`
 
 
 
-  function getProjectTaskLists() {
+    function getProjectTaskLists() {
         var url = "/time/selectTask";
-      
+
         $.ajax({
             type: "GET",
             url: url,
-           data : "project_id=" + project_id,
-           dataType: "json",
+            data: "project_id=" + project_id,
+            dataType: "json",
             success: function (data) {
                 console.log(data)
                 projectTaskLists = data;
                 console.log(projectTaskLists);
-                 $("select[name='selectTask']").empty();
+                $("select[name='selectTask']").empty();
 
-				 $("select[name='selectTask']").append("<option>"+ 'select task' + "  </option>");
+                $("select[name='selectTask']").append("<option>" + 'select task' + "  </option>");
 
                 $(projectTaskLists).each(function (i) {
-                 //   alert(JSON.stringify(data))
-               //  console.log("hi")
-             //      console.log(projectTaskLists[0].task.id)
-               
+                    //   alert(JSON.stringify(data))
+                    //  console.log("hi")
+                    //      console.log(projectTaskLists[0].task.id)
+
                     $("select[name='selectTask']").append("<option value='" + projectTaskLists[i].id + "'>" + projectTaskLists[i].task.name + "  </option>");
                 });
 
@@ -319,5 +422,5 @@ console.log(`The week number of the current date (${currentdate}) is ${result}.`
 
 
 
-    
+
 </script>

@@ -19,7 +19,8 @@ public class Timesheet{
 	@Column(name="user_id")
 	private int userId;
 	
-	private int project_task_id;
+	@Column(name="project_task_id")
+	private int projecttaskId;
 	
 	@Column(name="week_id")
 	private int weekId;
@@ -52,11 +53,12 @@ public class Timesheet{
 		this.id = id;
 	}
 
-	public int getProject_task_id() {
-		return project_task_id;
+
+	public int getProjecttaskId() {
+		return projecttaskId;
 	}
-	public void setProject_task_id(int project_task_id) {
-		this.project_task_id = project_task_id;
+	public void setProjecttaskId(int projecttaskId) {
+		this.projecttaskId = projecttaskId;
 	}
 	public int getUserId() {
 		return userId;
@@ -114,10 +116,11 @@ public class Timesheet{
 	}
 	@Override
 	public String toString() {
-		return "Timesheet [id=" + id + ", userId=" + userId + ", project_task_id=" + project_task_id + ", weekId="
-				+ weekId + ", sun=" + sun + ", mon=" + mon + ", tue=" + tue + ", wed=" + wed + ", thur=" + thur
-				+ ", fri=" + fri + ", sat=" + sat + ", projecttask=" + projecttask + "]";
+		return "Timesheet [id=" + id + ", userId=" + userId + ", projecttaskId=" + projecttaskId + ", weekId=" + weekId
+				+ ", sun=" + sun + ", mon=" + mon + ", tue=" + tue + ", wed=" + wed + ", thur=" + thur + ", fri=" + fri
+				+ ", sat=" + sat + ", projecttask=" + projecttask + "]";
 	}
+	
 
 	
 	
