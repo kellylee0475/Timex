@@ -36,7 +36,24 @@ public class ExpenseList{
 	private String total_amount;
 
 	private int status;
+	private String filename;
+	private String filepath;
 	
+	public String getFilename() {
+		return filename;
+	}
+
+	public void setFilename(String filename) {
+		this.filename = filename;
+	}
+
+	public String getFilepath() {
+		return filepath;
+	}
+
+	public void setFilepath(String filepath) {
+		this.filepath = filepath;
+	}
 	//단방향으로 추가한부분
 	@ManyToOne
     @JoinColumn(name="project_id",referencedColumnName="id", insertable = false, updatable = false)
@@ -116,11 +133,14 @@ public class ExpenseList{
 
 
 
+
+
 	@Override
 	public String toString() {
 		return "ExpenseList [id=" + id + ", userId=" + userId + ", projectId=" + projectId + ", expenseId=" + expenseId
 				+ ", qty=" + qty + ", date=" + date + ", total_amount=" + total_amount + ", status=" + status
-				+ ", project=" + project + ", expense=" + expense + ", user=" + user + "]";
+				+ ", filename=" + filename + ", filepath=" + filepath + ", project=" + project + ", expense=" + expense
+				+ ", user=" + user + "]";
 	}
 
 	public int getId() {

@@ -38,6 +38,24 @@ public class User{
 	private String city;
 	private Boolean enabled;
 	
+	private String resetpwtoken;
+	
+	public String getResetpwtoken() {
+		return resetpwtoken;
+	}
+
+	public void setResetpwtoken(String resetpwtoken) {
+		this.resetpwtoken = resetpwtoken;
+	}
+
+	public List<ExpenseList> getExpenselist() {
+		return expenselist;
+	}
+
+	public void setExpenselist(List<ExpenseList> expenselist) {
+		this.expenselist = expenselist;
+	}
+
 	@ManyToMany
 	@JoinTable(name = "User_Role", 
 				joinColumns = @JoinColumn(name = "userId"), 

@@ -14,10 +14,12 @@
                 <div class="modal-header">
                     <h4 class="modal-title" id="myModalLabel">New Expense</h4>
                 </div>
-                <div class="modal-body">
-                    <div class="dropdown">
-                        <form class="form-inline d-flex justify-content-center" method="GET"
-                            th:action="@{/expenses/selectProject}">
+                <form method="post" enctype="multipart/form-data" id="uploadForm">
+                    <div class="modal-body">
+                        <div class="dropdown">
+
+                            <!--   <form class="form-inline d-flex justify-content-center" method="GET"
+                            th:action="@{/expenses/selectProject}"> -->
                             <table>
                                 <tr>
                                     <td>
@@ -60,7 +62,7 @@
                                         <h5>Qty &nbsp;&nbsp; &nbsp; </h5>
                                     </td>
                                     <td>
-                                         <div class="row">
+                                        <div class="row">
                                             <div class="input-group">
                                                 <span class="input-group-prepend">
                                                     <button type="button"
@@ -96,22 +98,6 @@
                                     </td>
                                 </tr>
 
-                                <!--      <tr>
-                                    <td>
-                                        <h5>Qty &nbsp;&nbsp; &nbsp; </h5>
-                                    </td>
-
-                                    <td>
-                                        <div class="col-auto">
-                                            <div class="input-group">
-                                                <span class="input-group-text"  onclick="calculatePrice(-1);">-</span>
-                                                <input name="qty" type="text" class="form-control" style="width:60px;" value="1">
-                                                <span class="input-group-text" onclick="calculatePrice(+1);">+</span>
-                                            </div>
-                                        </div>
-
-                                    </td>
-                                </tr> -->
                                 <tr>
                                     <td>
                                         <h5>Total Amount &nbsp;&nbsp; &nbsp; </h5>
@@ -134,23 +120,25 @@
                                     <td>
 
                                         <div class="input-group">
-                                            <input type="file" class="form-control" id="inputGroupFile04"
-                                                aria-describedby="inputGroupFileAddon04" aria-label="Upload">
-                                            <button class="btn btn-outline-secondary" type="button"
-                                                id="inputGroupFileAddon04">Button</button>
+                                            <input type="file" class="form-control" id="upload_receipt"
+                                                name="upload_receipt" aria-describedby="inputGroupFileAddon04"
+                                                aria-label="Upload">
+                                            <!--             <button class="btn btn-outline-secondary" type="button"
+                                            id="inputGroupFileAddon04">Button</button> -->
                                         </div>
 
                                     </td>
                                 </tr>
                             </table>
-                        </form>
+                            <!--      </form> -->
+                        </div>
                     </div>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" id="saveExpenseButton" class="btn btn-primary">Save Expenses</button>
-                    <button type="button" class="btn btn-default" data-bs-dismiss="modal">Cancel</button>
+                    <div class="modal-footer">
+                        <button type="button" id="saveExpenseButton" class="btn btn-primary">Save Expenses</button>
+                        <button type="button" class="btn btn-default" data-bs-dismiss="modal">Cancel</button>
 
-                </div>
+                    </div>
+                </form>
             </div>
         </div>
     </div>
@@ -159,7 +147,7 @@
     <main>
 
         <div class="container-fluid px-4">
-            <h1 class="mt-4">Expenses</h1>
+            <h1 class="mt-4">My Expenses</h1>
 
 
             <div class="card mb-4">
@@ -183,7 +171,7 @@
                                 <th>Unit Amount</th>
                                 <th>Qty</th>
                                 <th>Total Amount</th>
-
+                                <th>Receipt</th>
                             </tr>
                         </thead>
 
@@ -195,11 +183,18 @@
                                     <span th:case="'2'">Pending</span>
                                     <span th:case="'3'">Rejected</span>
                                 </td>
-                                <td th:text="|${el.project.number} ${el.project.title}|"> Kelly </td>
+                                <td th:text="|${el.project.number} ${el.project.title}|">  </td>
                                 <td th:text="${el.expense.name}"> </td>
-                                <td th:text="${el.expense.amount}"> Kelly </td>
-                                <td th:text="${el.qty}"> Kelly </td>
-                                <td th:text="${el.total_amount}"> Kelly </td>
+                                <td th:text="${el.expense.amount}">  </td>
+                                <td th:text="${el.qty}">  </td>
+                                <td th:text="${el.total_amount}"> </td>
+                                <td >
+                                    <span th:if="${el.filename == null}"></span>
+                                    <!--target="_blank" 사용시 현재 tab이아닌 새로운 tab에서 파일이 열린-->
+                               <a  target="_blank"  th:href="@{expenses/openFile(param1=${el.filepath},param2=${el.filename})}">
+                                   <span th:unless="${el.filename == null}"><img style="width:30px" th:src="@{/assets/img/receipt.png}" /></span>
+                               </a>
+                                </td>
                             </tr>
 
 
@@ -231,6 +226,7 @@
     var user_id;
     var unit_amount;
     var expenseDetail;
+    var expenseListId;
 
     $(document).ready(function () {
 
@@ -387,7 +383,7 @@
             $("#addExpenseModel").modal("toggle");
         });
 
-        //saveExpenseButton
+/*         //saveExpenseButton
         $("#saveExpenseButton").click(function () {
             var url = "/expenses/saveExpenses";
             var params = {};
@@ -410,9 +406,11 @@
                     if (!data) {
                         alert("select data");
                     } else {
+                        expenseListId = data;
                         alert("success!")
                         $("#addExpenseModel").modal('toggle');
-                            location.reload();
+                        location.reload();
+
                     }
                 },
                 error: function (err) {
@@ -420,7 +418,47 @@
 
                 }
             });
+        }) */
 
+                //saveExpenseButton
+        $("#saveExpenseButton").click(function () {
+            var url = "/expenses/saveExpenses";
+
+              var form = $('#uploadForm')[0];	
+	         var data = new FormData(form);		
+	 		data.set("date2", $("#inputMDEx").val());	 
+	 		data.set("user_id2", user_id);	 
+	 		data.set("project_id2", $("#selectProject option:selected").val());	 
+	 		data.set("expense_id2", $("#selectExpense option:selected").val());	 
+	 		data.set("qty2", $("#quantity").val());	 
+	 		data.set("total_amount2", $("#total_amount").val());	 
+
+            $.ajax({
+                type: "POST",
+                 enctype: 'multipart/form-data',
+                url: url,
+                 data: data,	        
+	        processData: false, 
+	        contentType: false,
+	        cache: false,
+	        timeout: 600000,
+                success: function (data) {
+
+                    if (!data) {
+                        alert("select data");
+                    } else {
+                        expenseListId = data;
+                        alert("success!")
+                        $("#addExpenseModel").modal('toggle');
+                        location.reload();
+
+                    }
+                },
+                error: function (err) {
+                    console.log(err);
+
+                }
+            });
         })
     };
 
@@ -437,6 +475,13 @@
         //       $("input[name='aaa']").val(total)
         var totalamount = total * expenseDetail.amount;
         $("input[name='total_amount']").val(totalamount)
+    }
+    function uploadFile(expenseListId) {
+        console.log("uploadFile")
+        console.log(expenseListId)
+        var form = $('#uploadForm')[0];
+        var data = new FormData(form);
+        console.log(data)
     }
 
 </script>

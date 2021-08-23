@@ -3,6 +3,7 @@ package com.te.timex.config;
 import javax.sql.DataSource;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
@@ -12,11 +13,13 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.web.servlet.config.annotation.ViewControllerRegistry;
 @Configuration
 @EnableWebSecurity // Spring Security를 활성화한다는 의미의 어노테이션입니다.
 public class WebSecurityConfig extends WebSecurityConfigurerAdapter {// WebSecurityConfigurerAdapter는 Spring Security의
 																	// 설정파일로서의 역할을 하기 위해 상속해야 하는 클래스입니다.
 
+	
 	@Autowired
 	private DataSource dataSource; //application.properties에서 사용한 database
 	
@@ -33,7 +36,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {// WebSecur
 		.csrf().disable()
 		.authorizeRequests()
 	
-			.antMatchers("/","/account/register").permitAll().anyRequest().authenticated()
+			.antMatchers("/","/account/register","/account/forgot_password","/account/reset_password").permitAll().anyRequest().authenticated()
 			.and()
 		.formLogin()
 				.loginPage("/account/login")

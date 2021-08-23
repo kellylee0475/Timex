@@ -1,12 +1,22 @@
 package com.te.timex.service;
 
+import java.io.UnsupportedEncodingException;
+
+import javax.mail.internet.MimeMessage;
+import javax.servlet.http.HttpServletRequest;
+
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.mail.javamail.MimeMessageHelper;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import com.sun.xml.messaging.saaj.packaging.mime.MessagingException;
 import com.te.timex.model.Role;
 import com.te.timex.model.User;
 import com.te.timex.repository.UserRepository;
+
+import javassist.NotFoundException;
 
 @Service
 public class UserService{
@@ -31,6 +41,37 @@ public class UserService{
 		
 		return userRepository.save(user);
 	}
+	
+	
+	
+	 public void updateResetPasswordToken(String token, String email) throws NotFoundException {
+	        User user = userRepository.findByEmail(email);
+	        if (user != null) {
+	        	user.setResetpwtoken(token);
+	        	userRepository.save(user);
+	        } else {
+	            throw new NotFoundException("Could not find any customer with the email " + email);
+	        }
+	    }
+	     
+	    public User getByResetPasswordToken(String token) {
+	        return userRepository.findByResetpwtoken(token);
+	    }
+	     
+	    public void updatePassword(User user, String newPassword) {
+	        BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
+	        String encodedPassword = passwordEncoder.encode(newPassword);
+	        user.setPassword(encodedPassword);
+	         
+	        user.setResetpwtoken(null);
+	        userRepository.save(user);
+	    }
+
+
+
+	   
+	        
 		
 
 }
+
