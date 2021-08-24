@@ -11,10 +11,10 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
-import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
-import javax.persistence.OneToOne;
 import javax.persistence.Table;
+import javax.validation.constraints.Email;
+import javax.validation.constraints.NotBlank;
 
 @Entity
 @Table(name="Users")
@@ -24,10 +24,15 @@ public class User{
 	private int id;
 	
 	//@Column(name = "firstname") 
+	
+	@NotBlank(message = "Please enter first name.")
 	private String firstname;
+	
 //	@Column(name = "lastname")
 	private String lastname;	
 //	@Column(name = "email")
+	@NotBlank(message = "Please enter email address.")
+	@Email(message = "Please enter correct email address.")
 	private String email;
 //	@Column(name = "password")
 	private String password;

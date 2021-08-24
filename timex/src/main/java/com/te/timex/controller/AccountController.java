@@ -5,6 +5,7 @@ import java.io.UnsupportedEncodingException;
 
 import javax.mail.internet.MimeMessage;
 import javax.servlet.http.HttpServletRequest;
+import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.repository.query.Param;
@@ -15,11 +16,11 @@ import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
-import com.sun.mail.imap.Utility;
 import com.sun.xml.messaging.saaj.packaging.mime.MessagingException;
 import com.te.timex.model.User;
 import com.te.timex.repository.UserRepository;
@@ -126,14 +127,16 @@ System.out.println(resetPasswordLink);
 	     
 	    if (user == null) {
 	        model.addAttribute("message", "Invalid Token");
-	     //   return "message";
+	        System.out.println("here? no token");
+	   //     return "error/error";
 	    } else {           
 	    	userService.updatePassword(user, password);
 	         
 	        model.addAttribute("message", "You have successfully changed your password.");
 	    }
 	     
-	    return "redirect:/account/login";
+	 //   return "redirect:/account/login";
+	    return "error/error";
 	}
 	
 	public void sendEmail(String recipientEmail, String link)
@@ -162,9 +165,14 @@ System.out.println(resetPasswordLink);
     }
 
 	@PostMapping("/register")
-	public String register(User user) {
+	public String register(@Valid User user,BindingResult result) {
 		System.out.println("here");
 		System.out.println(user);
+
+        if(result.hasErrors()){
+            return "account/register";
+        }
+        
 		userService.save(user);
 		return "redirect:/";
 	}

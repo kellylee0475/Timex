@@ -1,15 +1,21 @@
 <!DOCTYPE html>
 <html  lang="en" xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org" xmlns:sf="http://www.w3.org/1999/xhtml">
-    <head>
-        <meta charset="utf-8" />
-        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-        <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
-        <meta name="description" content="" />
-        <meta name="author" content="" />
-        <title>Register</title>
-        <link rel="stylesheet" th:href="@{/css/styles.css}"/>
-        <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/js/all.min.js" crossorigin="anonymous"></script>
-    </head>
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+    <meta name="description" content="" />
+    <meta name="author" content="" />
+    <title>Password Reset</title>
+    <link rel="stylesheet" th:href="@{/css/styles.css}" />
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/js/all.min.js"
+        crossorigin="anonymous"></script>
+            <script th:src="@{/js/scripts.js}"></script>
+           <script th:src="@{/js/jquery-3.6.0.min.js}"></script>   
+               <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"
+        crossorigin="anonymous"></script>
+
+</head>
     <body class="bg-primary">
         <div id="layoutAuthentication">
             <div id="layoutAuthentication_content">
@@ -23,32 +29,33 @@
                                         <form th:action="@{/account/register}" method="post">
                                             <div class="row mb-3">
                                                 <div class="col-md-6">
-                                                    <div class="form-floating mb-3 mb-md-0">
-                                                        <input class="form-control" id="inputFirstName" type="text" name="firstname" placeholder="Enter your first name" />
+                      <div class="form-floating mb-3 mb-md-0">
+                                                        <input required class="form-control" id="inputFirstName" type="text" name="firstname" placeholder="Enter your first name" />
                                                         <label for="inputFirstName">First name</label>
-                                                    </div>
+                                                    </div> 
+                                    
                                                 </div>
                                                 <div class="col-md-6">
                                                     <div class="form-floating">
-                                                        <input class="form-control" id="inputLastName" type="text" name="lastname" placeholder="Enter your last name" />
+                                                        <input required class="form-control" id="inputLastName" type="text" name="lastname" placeholder="Enter your last name" />
                                                         <label for="inputLastName">Last name</label>
                                                     </div>
                                                 </div>
                                             </div>
                                             <div class="form-floating mb-3">
-                                                <input class="form-control" id="inputEmail" type="email" name="email" placeholder="name@example.com" />
+                                                <input required class="form-control" id="inputEmail" type="email" name="email" placeholder="name@example.com" />
                                                 <label for="inputEmail">Email address</label>
                                             </div>
                                             <div class="row mb-3">
                                                 <div class="col-md-6">
                                                     <div class="form-floating mb-3 mb-md-0">
-                                                        <input class="form-control" id="inputPassword" type="password" placeholder="Create a password" />
-                                                        <label for="inputPassword">Password</label>
+                                                        <input required class="form-control" name="password" id="password" type="password" placeholder="Create a password" />
+                                                        <label for="password">Password</label>
                                                     </div>
                                                 </div>
                                                 <div class="col-md-6">
                                                     <div class="form-floating mb-3 mb-md-0">
-                                                        <input class="form-control" id="inputPasswordConfirm" type="password" name="password" placeholder="Confirm password" />
+                                                        <input required oninput="checkPasswordMatch(this);" class="form-control" id="inputPasswordConfirm" type="password" name="password" placeholder="Confirm password" />
                                                         <label for="inputPasswordConfirm">Confirm Password</label>
                                                     </div>
                                                 </div>
@@ -87,3 +94,13 @@
 
     </body>
 </html>
+<script>
+    function checkPasswordMatch(fieldConfirmPassword) {
+        console.log("checkpassword")
+        if (fieldConfirmPassword.value != $("#password").val()) {
+            fieldConfirmPassword.setCustomValidity("Passwords do not match!");
+        } else {
+            fieldConfirmPassword.setCustomValidity("");
+        }
+    }
+</script>

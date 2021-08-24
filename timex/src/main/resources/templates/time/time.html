@@ -26,7 +26,7 @@
                                 <td>
                                     <select class="form-control" aria-label="Default select example" id="selectProject"
                                         name="selectProject">
-                                        <option value="-" id="loading">Please select project!</option>
+                                        <option value="none" id="loading">Please select project!</option>
                                     </select>
                                 </td>
                             </tr>
@@ -37,7 +37,7 @@
                                 <td>
                                     <select class="form-control" aria-label="Default select example" id="selectTask"
                                         name="selectTask">
-                                        <option value="-" id="loading2">Please select task!</option>
+                                        <option value="none" id="loading2">Please select task!</option>
                                     </select>
                                 </td>
                             </tr>
@@ -278,7 +278,15 @@
         $("#saveTaskButton").click(function () {
             var url = "/time/saveProjectTask";
             var params = {};
-
+             console.log( $("#selectProject option:selected").val())
+            console.log( $("#selectTask option:selected").val())
+                    
+            if ($("#selectProject option:selected").val() == "none") {
+                alert("please select project")
+            }
+            if ($("#selectTask option:selected").val() == "select task") {
+                alert("please select Task")
+            }
             //신규 테스크 저장하기전 이미 있는지 확인하기위해 3가지 변수를 들고간다
             params["user_id"] = user_id;
             params["currentWeekId"] = currentWeekId;
