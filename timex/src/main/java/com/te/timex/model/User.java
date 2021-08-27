@@ -16,19 +16,25 @@ import javax.persistence.Table;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
 
+import org.springframework.data.annotation.Transient;
+
+
 @Entity
 @Table(name="Users")
 public class User{
+	
+
 	@Id
 	@GeneratedValue(strategy=GenerationType.IDENTITY)
 	private int id;
 	
 	//@Column(name = "firstname") 
 	
-	@NotBlank(message = "Please enter first name.")
+	@NotBlank(message = "Please enter first name")
 	private String firstname;
 	
 //	@Column(name = "lastname")
+	@NotBlank(message = "Please enter last name")
 	private String lastname;	
 //	@Column(name = "email")
 	@NotBlank(message = "Please enter email address.")
@@ -44,7 +50,28 @@ public class User{
 	private Boolean enabled;
 	
 	private String resetpwtoken;
+	private String photo;
+	private String photopath;
 	
+	 @Transient
+	public String getPhotopath() {
+		 return photopath;
+	       
+	
+	}
+
+	public void setPhotopath(String photopath) {
+		this.photopath = photopath;
+	}
+
+	public String getPhoto() {
+		return photo;
+	}
+
+	public void setPhoto(String photo) {
+		this.photo = photo;
+	}
+
 	public String getResetpwtoken() {
 		return resetpwtoken;
 	}

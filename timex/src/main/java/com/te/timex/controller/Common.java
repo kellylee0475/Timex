@@ -1,10 +1,14 @@
 
 package com.te.timex.controller;
 
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.time.temporal.WeekFields;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Locale;
 
@@ -13,7 +17,6 @@ import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Component;
 
 import com.te.timex.model.User;
-import com.te.timex.model.Week;
 import com.te.timex.repository.UserRepository;
 import com.te.timex.repository.WeekRepository;
 
@@ -116,6 +119,21 @@ public class Common{
 
        return week_number;
 	}
+	public static ArrayList getWeekNumber2(String pickedDate){
+	//	LocalDate today = LocalDate.now();
+		ArrayList list = new ArrayList<>();
+    LocalDate today = LocalDate.parse(pickedDate);
+       WeekFields weekFields = WeekFields.of(Locale.getDefault());
+       String  week_number_string = String.format("%02d", today.get(weekFields.weekOfWeekBasedYear()));
+       String year_string=String.format("%d", today.get(weekFields.weekBasedYear()));
+       int year = Integer.parseInt((String)year_string);
+       int week_number=Integer.parseInt((String) week_number_string);
+
+       list.add(year);
+       list.add(week_number);
+       return list;
+	}
+	
 //	public static void getWeekId(int year, int week_number, Week) {
 //		System.out.println("here??!@#");
 //		weekRepository.findById(62);

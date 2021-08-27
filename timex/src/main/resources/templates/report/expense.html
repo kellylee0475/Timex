@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org"
+    xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" layout:decorator="layout/layout"
+	th:with="title='expenses'">
+	
+	<th:block layout:fragment="content">
+
+
+    <main>
+
+        <div class="container-fluid px-4">
+            <h1 class="mt-4">My Expenses</h1>
+
+
+            <div class="card mb-4">
+                <div class="card-body">
+                    <button type="button" id="addExpenseButton" class="btn btn-primary">Add Expense</button>
+                </div>
+            </div>
+            <div class="card mb-4">
+                <div class="card-header">
+                    <i class="fas fa-table me-1"></i>
+                    DataTable Example
+                </div>
+                <div class="card-body">
+                    <table id="myTable">
+                        <thead>
+                            <tr>
+                                <th>Date</th>
+                                <th>Status</th>
+                                <th>Project</th>
+                                <th>Name</th>
+                                <th>Unit Amount</th>
+                                <th>Qty</th>
+                                <th>Total Amount</th>
+                                <th>Receipt</th>
+                            </tr>
+                        </thead>
+
+                        <tbody>
+                            <tr th:each="el: ${expenselist}">
+                                <td th:text="${el.date}"></td>
+                                <td th:switch="${el.status}">
+                                    <span th:case="'1'">Approved</span>
+                                    <span th:case="'2'">Pending</span>
+                                    <span th:case="'3'">Rejected</span>
+                                </td>
+                                <td th:text="|${el.project.number} ${el.project.title}|">  </td>
+                                <td th:text="${el.expense.name}"> </td>
+                                <td th:text="${el.expense.amount}">  </td>
+                                <td th:text="${el.qty}">  </td>
+                                <td th:text="${el.total_amount}"> </td>
+                                <td >
+                                    <span th:if="${el.filename == null}"></span>
+                                    <!--target="_blank" ??? ?? tab??? ??? tab?? ??? ??-->
+                               <a  target="_blank"  th:href="@{expenses/openFile(param1=${el.filepath},param2=${el.filename})}">
+                                   <span th:unless="${el.filename == null}"><img style="width:30px" th:src="@{/assets/img/receipt.png}" /></span>
+                               </a>
+                                </td>
+                            </tr>
+
+
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+
+        </div>
+    </main>
+
+
+	</th:block>
+
+	</html>

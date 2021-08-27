@@ -42,6 +42,9 @@
                                                     </div>
                                                 </div>
                                             </div>
+                                                        <div th:if="${message != null}">
+                                        <p class="text-warning">[[${message}]]</p>
+                                    </div>
                                             <div class="form-floating mb-3">
                                                 <input required class="form-control" id="inputEmail" type="email" name="email" placeholder="name@example.com" />
                                                 <label for="inputEmail">Email address</label>

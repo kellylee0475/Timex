@@ -25,13 +25,14 @@ public class Timesheet{
 	@Column(name="week_id")
 	private int weekId;
 	
-	private int sun;
-	private int mon;
-	private int tue;
-	private int wed;
-	private int thur;
-	private int fri;
-	private int sat;
+	private String sun;
+
+	private String mon;
+	private String tue;
+	private String wed;
+	private String thur;
+	private String fri;
+	private String sat;
 
 	
 	@ManyToOne
@@ -72,46 +73,46 @@ public class Timesheet{
 	public void setWeekId(int weekId) {
 		this.weekId = weekId;
 	}
-	public int getSun() {
+	public String getSun() {
 		return sun;
 	}
-	public void setSun(int sun) {
+	public void setSun(String sun) {
 		this.sun = sun;
 	}
-	public int getMon() {
+	public String getMon() {
 		return mon;
 	}
-	public void setMon(int mon) {
+	public void setMon(String mon) {
 		this.mon = mon;
 	}
-	public int getTue() {
+	public String getTue() {
 		return tue;
 	}
-	public void setTue(int tue) {
+	public void setTue(String tue) {
 		this.tue = tue;
 	}
-	public int getWed() {
+	public String getWed() {
 		return wed;
 	}
-	public void setWed(int wed) {
+	public void setWed(String wed) {
 		this.wed = wed;
 	}
-	public int getThur() {
+	public String getThur() {
 		return thur;
 	}
-	public void setThur(int thur) {
+	public void setThur(String thur) {
 		this.thur = thur;
 	}
-	public int getFri() {
+	public String getFri() {
 		return fri;
 	}
-	public void setFri(int fri) {
+	public void setFri(String fri) {
 		this.fri = fri;
 	}
-	public int getSat() {
+	public String getSat() {
 		return sat;
 	}
-	public void setSat(int sat) {
+	public void setSat(String sat) {
 		this.sat = sat;
 	}
 	@Override

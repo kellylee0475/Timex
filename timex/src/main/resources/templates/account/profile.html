@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org"
+	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" layout:decorator="layout/layout"
+	th:with="title='expenses'">
+<!--passing title to layout.html-->
+
+<th:block layout:fragment="content">
+	<main>
+
+		<div class="container-xl px-4 mt-4">
+			<nav class="nav nav-borders">
+				<ul class="nav nav-tabs">
+					<li class="nav-item">
+						<a class="nav-link active" aria-current="page" href="#">Profile</a>
+					</li>
+					<li class="nav-item">
+						<a class="nav-link" href="#">Billing</a>
+					</li>
+					<li class="nav-item">
+						<a class="nav-link" href="#">Security</a>
+					</li>
+					<li class="nav-item">
+						<a class="nav-link disabled" href="#" tabindex="-1" aria-disabled="true">Notification</a>
+					</li>
+				</ul>
+			</nav>
+			<br>
+			<div class="row">
+
+				<div class="col-xl-4">
+					<div class="card mb-4 mb-xl-0">
+						<div class="card-header">Profile Picture</div>
+						<div class="card-body text-center">
+							<form th:action="@{/account/photo}" th:object="${user}" method="post"
+								enctype="multipart/form-data">
+								<input type="hidden" th:field="*{id}" id="id">
+							    <span th:if="${user.photo == null}"> 
+									<img class="img-account-profile rounded-circle mb-2" style="width:250px;"
+										th:src="@{/assets/img/profile.PNG}" />	</span> 
+								<span th:unless="${user.photo == null}">
+									<img class="img-account-profile rounded-circle mb-2" th:src="'/profile_photos/'+@{${user.photo}}"  style="width:250px; height:250px">
+								 	</span>	
+
+								<div class="small font-italic text-muted mb-4">
+									JPG or PNG
+								</div>
+			<!-- 					<input class="form-control" type="file" id="formFile" name="image"
+									accept="image/png, image/jpeg"> -->
+									<div>
+<button class="btn btn-primary" type="button" id="choosePhoto">Upload New Picture</button></div>
+<div>
+								 <button class="btn btn-primary" type="submit" id="savePhoto">Save New Picture</button> </div>
+							</form>
+						</div>
+					</div>
+				</div>
+				<div class="col-xl-8">
+					<div class="card mb-4">
+						<div class="card-header">Account Details</div>
+						<div class="card-body">
+							<div th:if="${message != null}">
+								<p class="text-warning">[[${message}]]</p>
+							</div>
+
+							<form th:action="@{/account/profile}" th:object="${user}" method="POST">
+								<input type="hidden" th:field="*{id}" id="id">
+								<div class="row gx-3 mb-3">
+									<div class="col-md-6">
+										<label class="small mb-1" for="firstname">Firstname</label>
+										<input th:classappend="${#fields.hasErrors('firstname')} ? 'is-invalid'"  th:field="*{firstname}" class="form-control" id="firstname" type="text"
+											value="firstname">
+											                    <div class="invalid-feedback" th:if="${#fields.hasErrors('firstname')}" th:errors="*{firstname}"></div>
+									</div>
+									<div class="col-md-6">
+										<label class="small mb-1" for="lastname">Lastname</label>
+										<input th:classappend="${#fields.hasErrors('lastname')} ? 'is-invalid'"  th:field="*{lastname}" class="form-control" id="lastname" type="text"
+											 value="lastname">
+											 											                    <div class="invalid-feedback" th:if="${#fields.hasErrors('lastname')}" th:errors="*{lastname}"></div>
+
+									</div>
+								</div>
+								<div class="mb-3">
+									<label class="small mb-1" for="firstname">email</label>
+									<input  th:classappend="${#fields.hasErrors('email')} ? 'is-invalid'"  th:field="*{email}" class="form-control" id="email" type="text"
+										placeholder="enter your email" value="email">
+																					                    <div class="invalid-feedback" th:if="${#fields.hasErrors('email')}" th:errors="*{email}"></div>
+
+								</div>
+								<div class="mb-3">
+									<label class="small mb-1" for="address">Address</label>
+									<input th:field="*{address}" class="form-control" id="address" type="text"
+										placeholder="enter your address" value="address">
+								</div>
+								<div class="row gx-3 mb-3">
+									<div class="col-md-6">
+										<label class="small mb-1" for="city">City</label>
+										<input th:field="*{city}" class="form-control" id="city" type="text"
+											placeholder="enter your city" value="city">
+									</div>
+									<div class="col-md-6">
+										<label class="small mb-1" for="zipcode">Zipcode</label>
+										<input th:field="*{zipcode}" class="form-control" id="zipcode" type="text"
+											placeholder="enter your zipcode" value="zipcode">
+									</div>
+								</div>
+								<div class="row gx-3 mb-3">
+									<div class="col-md-6">
+										<button class="btn btn-primary" type="submit">Save Changes</button>
+									</div>
+
+
+								</div>
+							</form>
+
+						</div>
+					</div>
+				</div>
+			</div>
+
+
+		</div>
+
+
+		</div>
+
+		</div>
+	</main>
+
+
+</th:block>
+
+
+</html>
+
+<script>
+	$(document).ready(function () {
+			document.getElementById('savePhoto').style.visibility='hidden';
+	
+		$("#choosePhoto").click(function(){
+			document.getElementById('choosePhoto').style.visibility='hidden';
+			document.getElementById('savePhoto').style.visibility='visible';							
+     $("#choosePhoto").parent().append($("<input/>",{required: true, class:"form-control",type:"file",name:"image",accept:'image/*',id:'formFile'})).append("<br>");
+
+
+	
+	});
+	});
+
+
+</script>

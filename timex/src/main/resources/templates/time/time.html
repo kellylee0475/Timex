@@ -1,9 +1,8 @@
 <!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org"
-    xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" layout:decorator="layout/layout" th:with="title='Time'">
-<style>
+    xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" layout:decorator="layout/layout"
+    th:with="title='MyTimeSheet'">
 
-</style>
 
 
 <div layout:fragment="content">
@@ -14,14 +13,14 @@
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h4 class="modal-title" id="myModalLabel">New Project</h4>
+                    <h4 class="modal-title w-100" style="text-align: center;" id="myModalLabel">New Project/Task</h4>
                 </div>
-                <div class="modal-body">
-                    <div class="dropdown">
+                <div class="modal-body" style="text-align: center;">
+                    <div class="dropdown" style="text-align: -webkit-center;">
                         <table>
                             <tr>
                                 <td>
-                                    <h5>Project &nbsp;&nbsp; &nbsp; </h5>
+                                    <h5>Project &nbsp;&nbsp;</h5>
                                 </td>
                                 <td>
                                     <select class="form-control" aria-label="Default select example" id="selectProject"
@@ -32,12 +31,12 @@
                             </tr>
                             <tr>
                                 <td>
-                                    <h5>Task &nbsp;&nbsp; &nbsp; </h5>
+                                    <h5>Task &nbsp;&nbsp;</h5>
                                 </td>
                                 <td>
                                     <select class="form-control" aria-label="Default select example" id="selectTask"
                                         name="selectTask">
-                                        <option value="none" id="loading2">Please select task!</option>
+                                        <option value="none" id="loading2">Select Task</option>
                                     </select>
                                 </td>
                             </tr>
@@ -47,7 +46,7 @@
                 </div>
                 <div class="modal-footer">
                     <button type="button" id="saveTaskButton" class="btn btn-primary">Save Task</button>
-                    <button type="button" class="btn btn-default" data-bs-dismiss="modal">Cancel</button>
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
                 </div>
             </div>
         </div>
@@ -55,13 +54,23 @@
 
     <main>
         <div class="container-fluid px-4">
-            <h1 class="mt-4">My TimeSheet</h1>
+            <h2 class="mt-4">My TimeSheet</h2>
 
 
             <div class="md-form">
-                <input style="width:170px; float:right;" type="date" id="inputMDEx" class="form-control">
-                <!--  <label for="inputMDEx">Choose your date</label> -->
+                <form th:action="@{/time}">
+                    <input style="width:170px; float:right;" type="date" id="pickdate" class="form-control">
+                    <!--  <label for="inputMDEx">Choose your date</label> -->
+                    <button type="button" class="btn btn-primary" id="setDate">Set</button>
+                </form>
             </div>
+
+
+
+
+
+
+
 
 
             <div>
@@ -94,119 +103,127 @@
             <div class="card mb-4">
                 <div class="card-header">
                     <i class="fas fa-table me-1"></i>
-                    <span th:text="${currentWeek.period}"></span>
+                    <b><span th:text="${currentWeek.period}"></span></b>
 
                 </div>
 
-                <div class="card-body">
-                    <div class="dataTable-wrapper dataTable-loading no-footer sortable searchable fixed-columns">
-                        <div class="dataTable-container">
-                            <!--     <table class="origin-table"> -->
-                            <table class="dataTable-table" style="table-layout: fixed">
-                                <thead class="table-secondary">
-                                    <tr>
-                                        <th style="width: 15% ;">Project/Task</th>
-                                        <th style="text-align: center; vertical-align: middle;">Sunday</th>
-                                        <th style="text-align: center; vertical-align: middle;">Monday</th>
-                                        <th style="text-align: center; vertical-align: middle;">Tuesday</th>
-                                        <th style="text-align: center; vertical-align: middle;">Wedensday</th>
-                                        <th style="text-align: center; vertical-align: middle;">Thursday</th>
-                                        <th style="text-align: center; vertical-align: middle;">Friday</th>
-                                        <th style="text-align: center; vertical-align: middle;">Saturyday</th>
-                                        <th style="width: 15% ;" colspan="2"></th>
 
-                                    </tr>
-                                </thead>
+                <div class="dataTable-wrapper dataTable-loading no-footer sortable searchable fixed-columns">
+                    <div class="dataTable-container">
+                        <!--     <table class="origin-table"> -->
+                        <table class="dataTable-table" style="table-layout: fixed">
+                            <thead class="" style="background-color:  #f2f2f2;">
+                                <tr>
+                                    <th style="width: 15% ;text-align: center; vertical-align: middle;">Project/Task
+                                    </th>
+                                    <th style="text-align: center; vertical-align: middle;">Sunday</th>
+                                    <th style="text-align: center; vertical-align: middle;">Monday</th>
+                                    <th style="text-align: center; vertical-align: middle;">Tuesday</th>
+                                    <th style="text-align: center; vertical-align: middle;">Wedensday</th>
+                                    <th style="text-align: center; vertical-align: middle;">Thursday</th>
+                                    <th style="text-align: center; vertical-align: middle;">Friday</th>
+                                    <th style="text-align: center; vertical-align: middle;">Saturyday</th>
+                                    <th style="width: 15% ;" colspan="2"></th>
 
-                                <tbody>
-                                    <tr th:each="cwl: ${currentWeekList}" th:id="${cwl.id}">
-                                        <td th:inline="text">
-                                            [[|${cwl.projecttask.project.number} ${cwl.projecttask.project.title}
-                                            |]]
-                                            <br /><b>
-                                                [[${cwl.projecttask.task.name}]]
-                                            </b>
+                                </tr>
+                            </thead>
 
-                                        </td>
-                                        <!--                                 <td th:inline="text">
-                                    [[|${cwl.projecttask.project.number} ${cwl.projecttask.project.title}
-                                    ${cwl.projecttaskId}|]]
-                                    <br />
-                                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[[${cwl.projecttask.task.name}]]
-                                    <br />
-                                    timesheetId : [[${cwl.id}]]
-                                </td> -->
-                                        <td style="text-align: center; vertical-align: middle;"><input
-                                                style='width:50px; text-align:center;' th:value="${cwl.sun}"
-                                                th:id="${cwl.id}+'sun'" readonly>
-                                        </td>
-                                        <td style="text-align: center; vertical-align: middle;"><input
-                                                style='width:50px; text-align:center;' th:value="${cwl.mon}"
-                                                th:id="${cwl.id}+'mon'" readonly>
-                                        </td>
-                                        <td style="text-align: center; vertical-align: middle;"><input
-                                                style='width:50px; text-align:center;' th:value="${cwl.tue}"
-                                                th:id="${cwl.id}+'tue'" readonly>
-                                        </td>
-                                        <td style="text-align: center; vertical-align: middle;"><input
-                                                style='width:50px; text-align:center;' th:value="${cwl.wed}"
-                                                th:id="${cwl.id}+'wed'" readonly>
-                                        </td>
-                                        <td style="text-align: center; vertical-align: middle;"><input
-                                                style='width:50px; text-align:center;' th:value="${cwl.thur}"
-                                                th:id="${cwl.id}+'thur'" readonly>
-                                        </td>
-                                        <td style="text-align: center; vertical-align: middle;"><input
-                                                style='width:50px; text-align:center;' th:value="${cwl.fri}"
-                                                th:id="${cwl.id}+'fri'" readonly>
-                                        </td>
-                                        <td style="text-align: center; vertical-align: middle;"><input
-                                                style='width:50px; text-align:center;' th:value="${cwl.sat}"
-                                                th:id="${cwl.id}+'sat'" readonly>
-                                        </td>
-                                        <!--hidden으로 ajax로 값넘-->
-                                        <input type="hidden" th:id="'projecttaskId'+${cwl.id}"
-                                            th:value="${cwl.projecttaskId}" />
-                                        <input type="hidden" th:id="'weekId'+${cwl.id}" th:value="${cwl.weekId}" />
+                            <tbody>
+        <!--                         <tr>
+                                    <td>
+                                        <input type="text" id="test" name="test" th:onchange="test(this)"
+                                            class="small form-control input-md ng-valid ng-dirty" placeholder="HH:MM" />
 
-                                        <td style="text-align: center; vertical-align: middle;"><button
-                                                th:value="'editButton'+${cwl.id}" type="button"
-                                                th:id="'editButton'+${cwl.id}" onclick="editTask(this.value)"
-                                                class="btn btn-primary">Edit</button></td>
-                                        <td style="text-align: center; vertical-align: middle;"><button
-                                                th:value="'deleteButton'+${cwl.id}" type="button"
-                                                th:id="'deleteButton'+${cwl.id}" onclick="deleteTask(this.value)"
-                                                class="btn btn-primary">Delete</button></td>
-                                    </tr>
-                                </tbody>
-                                <thead class="table-secondary">
-                                    <tr>
-                                        <th style="width: 15% ;"><button type="button" id="addProjectButton"
-                                                class="btn btn-primary">Add Project</button></th>
-                                        <th style="text-align: center; vertical-align: middle;"
-                                            th:text="${totalHours.totalSun}"></th>
-                                        <th style="text-align: center; vertical-align: middle;"
-                                            th:text="${totalHours.totalMon}">Monday</th>
-                                        <th style="text-align: center; vertical-align: middle;"
-                                            th:text="${totalHours.totalTue}">Tuesday</th>
-                                        <th style="text-align: center; vertical-align: middle;"
-                                            th:text="${totalHours.totalWed}">Wedensday</th>
-                                        <th style="text-align: center; vertical-align: middle;"
-                                            th:text="${totalHours.totalThur}">Thursday</th>
-                                        <th style="text-align: center; vertical-align: middle;"
-                                            th:text="${totalHours.totalFri}">Friday</th>
-                                        <th style="text-align: center; vertical-align: middle;"
-                                            th:text="${totalHours.totalSat}">Saturyday</th>
-                                        <th style="text-align: center; vertical-align: middle;">Total hours</th>
-                                        <th style="text-align: center; vertical-align: middle;"
-                                            th:text="${totalHours.total}"></th>
+                                    </td>
 
-                                    </tr>
-                                </thead>
-                            </table>
-                        </div>
+
+                                </tr> -->
+                                <tr th:each="cwl: ${currentWeekList}" th:id="${cwl.id}">
+                                    <td th:inline="text">
+                                        [[|${cwl.projecttask.project.number} ${cwl.projecttask.project.title}
+                                        |]]
+                                        <br /><b>
+                                            [[${cwl.projecttask.task.name}]]
+                                        </b>
+
+                                    </td>
+
+                                    <!--                <td style="text-align: center; vertical-align: middle;"><input
+                                            style='width:50px; text-align:center;' th:value="${cwl.sun}"
+                                            th:id="${cwl.id}+'sun'" readonly>
+                                    </td> -->
+                                    <td style="text-align: center; vertical-align: middle;"><input
+                                            style='width:50px; text-align:center;' th:value="${cwl.sun}"
+                                            th:id="${cwl.id}+'sun'" readonly   th:onchange="test(this)">
+                                    </td>
+                                    <td style="text-align: center; vertical-align: middle;"><input
+                                            style='width:50px; text-align:center;' th:value="${cwl.mon}"
+                                            th:id="${cwl.id}+'mon'" readonly th:onchange="test(this)">
+                                    </td>
+                                    <td style="text-align: center; vertical-align: middle;"><input
+                                            style='width:50px; text-align:center;' th:value="${cwl.tue}"
+                                            th:id="${cwl.id}+'tue'" readonly th:onchange="test(this)">
+                                    </td>
+                                    <td style="text-align: center; vertical-align: middle;"><input
+                                            style='width:50px; text-align:center;' th:value="${cwl.wed}"
+                                            th:id="${cwl.id}+'wed'" readonly th:onchange="test(this)">
+                                    </td>
+                                    <td style="text-align: center; vertical-align: middle;"><input
+                                            style='width:50px; text-align:center;' th:value="${cwl.thur}"
+                                            th:id="${cwl.id}+'thur'" readonly th:onchange="test(this)">
+                                    </td>
+                                    <td style="text-align: center; vertical-align: middle;"><input
+                                            style='width:50px; text-align:center;' th:value="${cwl.fri}"
+                                            th:id="${cwl.id}+'fri'" readonly th:onchange="test(this)">
+                                    </td>
+                                    <td style="text-align: center; vertical-align: middle;"><input
+                                            style='width:50px; text-align:center;' th:value="${cwl.sat}"
+                                            th:id="${cwl.id}+'sat'" readonly th:onchange="test(this)">
+                                    </td>
+                                    <!--hidden으로 ajax로 값넘-->
+                                    <input type="hidden" th:id="'projecttaskId'+${cwl.id}"
+                                        th:value="${cwl.projecttaskId}" />
+                                    <input type="hidden" th:id="'weekId'+${cwl.id}" th:value="${cwl.weekId}" />
+
+                                    <td style="text-align: center; vertical-align: middle;"><button
+                                            th:value="'editButton'+${cwl.id}" type="button"
+                                            th:id="'editButton'+${cwl.id}" onclick="editTask(this.value)"
+                                            class="btn btn-primary">Edit</button></td>
+                                    <td style="text-align: center; vertical-align: middle;"><button
+                                            th:value="'deleteButton'+${cwl.id}" type="button"
+                                            th:id="'deleteButton'+${cwl.id}" onclick="deleteTask(this.value)"
+                                            class="btn btn-primary">Delete</button></td>
+                                </tr>
+                            </tbody>
+                            <thead style="background-color:  #f2f2f2;">
+                                <tr>
+                                    <th style="width: 15% ;"><button type="button" id="addProjectButton"
+                                            class="btn btn-primary" style="width: -webkit-fill-available;">Add
+                                            Project</button></th>
+                                    <th style="text-align: center; vertical-align: middle;"
+                                        th:text="${totalHours.totalSun}"></th>
+                                    <th style="text-align: center; vertical-align: middle;"
+                                        th:text="${totalHours.totalMon}">Monday</th>
+                                    <th style="text-align: center; vertical-align: middle;"
+                                        th:text="${totalHours.totalTue}">Tuesday</th>
+                                    <th style="text-align: center; vertical-align: middle;"
+                                        th:text="${totalHours.totalWed}">Wedensday</th>
+                                    <th style="text-align: center; vertical-align: middle;"
+                                        th:text="${totalHours.totalThur}">Thursday</th>
+                                    <th style="text-align: center; vertical-align: middle;"
+                                        th:text="${totalHours.totalFri}">Friday</th>
+                                    <th style="text-align: center; vertical-align: middle;"
+                                        th:text="${totalHours.totalSat}">Saturyday</th>
+                                    <th style="text-align: center; vertical-align: middle;">Total hours</th>
+                                    <th style="text-align: center; vertical-align: middle;"
+                                        th:text="${totalHours.total}"></th>
+
+                                </tr>
+                            </thead>
+                        </table>
                     </div>
                 </div>
+
             </div>
             <!--             <div>
                 <button type="button" id="addProjectButton" class="btn btn-primary">Add Project</button>
@@ -234,11 +251,14 @@
         user_id = "[[${user_id}]]";
         currentWeekId = "[[${currentWeekId}]]";
         currentWeekList = "[[${currentWeekList}]]";
-        //    console.log("hel")
-        //     console.log(currentWeekId)
-        //     console.log(currentWeekList)
-        //	initComponent();
+
         initButton();
+
+
+
+
+
+        //      })
 
         var url = "/time/selectProject";
         $.ajax({
@@ -249,11 +269,11 @@
                 console.log(projectLists)
                 $(projectLists).each(function (i) {
 
-                    $("select[name='selectProject']").append("<option value='" + projectLists[i].id + "'>" + projectLists[i].id + projectLists[i].number + projectLists[i].title + "  </option>");
+                    $("select[name='selectProject']").append("<option value='" + projectLists[i].id + "'>" + projectLists[i].number + " " + projectLists[i].title + "  </option>");
                 });
 
                 //Change the text of the default "loading" option.
-                $('#loading').text('select project');
+                $('#loading').text('Select Project');
 
             }
         });
@@ -261,13 +281,119 @@
         $("#selectProject").change(function () {
 
             project_id = $(this).val();
-            $('#loading2').text('select task');
+            $('#loading2').text('Select Task');
             getProjectTaskLists();
         })
 
     });
 
+            //function isNumber(n) { return /^-?[\d.]+(?:e-?\d+)?$/.test(n); }
+        function isPositiveInteger(n) {
+            return n >>> 0 === parseFloat(n);
+        }
+        //  $("#test").change(function () {
+        function test(a) {
+            console.log("hi?")
+            console.log(a.value)
+            var writtenhours = a.value
+            var newid = a.id;
+            console.log(newid)
+            console.log(writtenhours);
+
+            //1. include :
+            if (writtenhours.includes(":")) {
+                var hh = writtenhours.substring(0, writtenhours.indexOf(':'));
+                var mm = writtenhours.substring(writtenhours.indexOf(':') + 1);
+
+                //5자이상이거나, 숫자가아닐때
+                if (length > 5 || !isPositiveInteger(hh) || !isPositiveInteger(mm) || hh.toString().length > 2 || mm.toString().length > 2) {
+                    $("#newid").val("");
+                } else {
+                    if (hh.toString().length == 2 && mm.toString().length == 2) {
+                        $('#' + newid).val(hh[0] + hh[1] + ":" + mm[0] + mm[1]);
+
+                    } else if (hh.toString().length == 2 && mm.toString().length == 1) {
+                        $('#' + newid).val(hh[0] + hh[1] + ":0" + mm[0]);
+                    } else if (hh.toString().length == 2 && mm.toString().length == 0) {
+                        $('#' + newid).val(hh[0] + hh[1] + ":00");
+                    } else if (hh.toString().length == 1 && mm.toString().length == 2) {
+                        $('#' + newid).val("0" + hh[0] + ":" + mm[0] + mm[1]);
+                    } else if (hh.toString().length == 1 && mm.toString().length == 1) {
+                        $('#' + newid).val("0" + hh[0] + ":0" + mm[0]);
+                    } else if (hh.toString().length == 1 && mm.toString().length == 0) {
+                        $('#' + newid).val("0" + hh[0] + ":00");
+                    } else if (hh.toString().length == 0 && mm.toString().length == 2) {
+                        $('#' + newid).val("00:" + mm[0] + mm[1]);
+                    } else if (hh.toString().length == 0 && mm.toString().length == 1) {
+                        $('#' + newid).val("00:" + mm[0]);
+                    } else if (hh.toString().length == 0 && mm.toString().length == 0) {
+                        $('#' + newid).val("00:00");
+                    }
+
+                }
+
+                //1. not include :
+            } else {
+                //2. onlynumber
+                if (isPositiveInteger(writtenhours)) {
+                    var length = writtenhours.toString().length;
+
+                    if (length > 4) {
+                       $('#' + newid).val("");
+                    } else {
+                        if (length == 4) {
+                            if (writtenhours[0] > 1) {
+                               $('#' + newid).val("");
+                            } else {
+                               $('#' + newid).val(writtenhours[0] + writtenhours[1] + ":" + writtenhours[2] + writtenhours[3]);
+                            }
+                        } else if (length == 3) {
+                            $('#' + newid).val("0" + writtenhours[0] + ":" + writtenhours[1] + writtenhours[2]);
+                        } else if (length == 2) {
+                            if (writtenhours[0] == 1) {
+                               $('#' + newid).val(writtenhours[0] + writtenhours[1] + ":00");
+                            } else if (writtenhours[0] == 2 && writtenhours[1] < 5) {
+                               $('#' + newid).val(writtenhours[0] + writtenhours[1] + ":00");
+                            } else if (writtenhours[0] == 2 && writtenhours[1] > 4) {
+                                $('#' + newid).val("00:" + writtenhours[0] + writtenhours[1]);
+                            } else if (writtenhours[0] == 6 && writtenhours[1] == 0) {
+                                $('#' + newid).val("01:00");
+                            } else {
+                                $('#' + newid).val("00:" + writtenhours[0] + writtenhours[1]);
+                            }
+                        } else if (length == 1) {
+                            $('#' + newid).val("0" + writtenhours[0] + ":00");
+                        }
+                    }
+
+                    //2. onlynumber no
+                } else {
+                    $('#' + newid).val("");
+                }
+
+            }
+        }
     function initButton() {
+
+        $("#setDate").click(function () {
+            var pickedDate = document.getElementById("pickdate").value;
+            console.log("pickedDate= " + pickedDate)
+
+            var url = "/time";
+
+            $.ajax({
+                type: "GET",
+                url: url,
+                data: "pickedDate=" + pickedDate,
+                dataType: "json",
+                success: function (data) {
+
+                }
+            });
+        });
+
+
+
         //addProjectModal button
         $("#addProjectButton").click(function () {
             $("#addProjectModel").modal("toggle");
@@ -278,14 +404,14 @@
         $("#saveTaskButton").click(function () {
             var url = "/time/saveProjectTask";
             var params = {};
-             console.log( $("#selectProject option:selected").val())
-            console.log( $("#selectTask option:selected").val())
-                    
+            console.log($("#selectProject option:selected").val())
+            console.log($("#selectTask option:selected").val())
+
             if ($("#selectProject option:selected").val() == "none") {
-                alert("please select project")
+                alert("Please Select Project")
             }
-            if ($("#selectTask option:selected").val() == "select task") {
-                alert("please select Task")
+            if ($("#selectTask option:selected").val() == "Select Task") {
+                alert("Please Select Task")
             }
             //신규 테스크 저장하기전 이미 있는지 확인하기위해 3가지 변수를 들고간다
             params["user_id"] = user_id;
@@ -300,9 +426,9 @@
                 contentType: "application/json",
                 success: function (data) {
                     if (!data) {
-                        alert("already exist");
+                        alert("Existing Task");
                     } else {
-                        alert("saved")
+                        alert("Saved")
                         currentTask = data;
                         $("#addProjectModel").modal("hide");//성공후 모달창닫기
                         addRow(currentTask);//성공후 새로운 프로젝트 row추가
@@ -315,6 +441,7 @@
 
         });
     }
+
 
 
     function editTask(data) {
@@ -334,6 +461,8 @@
             $('#' + timesheetId + 'fri').attr("readonly", false);
             $('#' + timesheetId + 'sat').attr("readonly", false);
 
+      
+
         } else {
             //save클릭할때
             var url = "/time/editProjectTask";
@@ -350,7 +479,13 @@
             params["thur"] = $('#' + timesheetId + 'thur').val();
             params["fri"] = $('#' + timesheetId + 'fri').val();
             params["sat"] = $('#' + timesheetId + 'sat').val();
+     /*        if ((isNumber($('#' + timesheetId + 'sun').val())) && (isNumber($('#' + timesheetId + 'mon').val())) && (isNumber($('#' + timesheetId + 'tue').val())) && (isNumber($('#' + timesheetId + 'wed').val()))
+                && (isNumber($('#' + timesheetId + 'thur').val())) && (isNumber($('#' + timesheetId + 'fri').val())) && (isNumber($('#' + timesheetId + 'sat').val()))) {
 
+            } else {
+                alert("Please Write Number")
+            }
+ */
             $.ajax({
                 type: "POST",
                 url: url,
@@ -358,7 +493,7 @@
                 contentType: "application/json",
                 success: function (data) {
                     if (data == "Yes") {
-                        alert("Update Success");
+                        alert("Saved");
                         //Update후에 창 refresh
                         location.reload();
                     } else {
@@ -373,7 +508,8 @@
         }
     }
 
-
+    //check only numbers go in
+    function isNumber(n) { return /^-?[\d.]+(?:e-?\d+)?$/.test(n); }
 
     function deleteTask(data) {
         var url = "/time/deleteProjectTask";
@@ -390,7 +526,7 @@
                 contentType: "application/json",
                 success: function (data) {
                     if (data == "Yes") {
-                        alert("delete Success");
+                        alert("Delete Success");
                         //delete후에 창 refresh
                         location.reload();
                     } else {
@@ -450,7 +586,7 @@
                 console.log(projectTaskLists);
                 $("select[name='selectTask']").empty();
 
-                $("select[name='selectTask']").append("<option>" + 'select task' + "  </option>");
+                $("select[name='selectTask']").append("<option>" + 'Select Task' + "  </option>");
 
                 $(projectTaskLists).each(function (i) {
                     //   alert(JSON.stringify(data))
@@ -471,3 +607,9 @@
 
 
 </script>
+<style>
+    input[readonly] {
+        background-color: #00000008 !important;
+        border-width: thin;
+    }
+</style>
