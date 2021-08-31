@@ -24,8 +24,8 @@
                                 </td>
                                 <td>
                                     <select class="form-control" aria-label="Default select example" id="selectProject"
-                                        name="selectProject">
-                                        <option value="none" id="loading">Please select project!</option>
+                                        name="selectProject" required>
+                                        <option value="" id="loading"></option>
                                     </select>
                                 </td>
                             </tr>
@@ -35,8 +35,8 @@
                                 </td>
                                 <td>
                                     <select class="form-control" aria-label="Default select example" id="selectTask"
-                                        name="selectTask">
-                                        <option value="none" id="loading2">Select Task</option>
+                                        name="selectTask" required>
+                                        <option value="" id="loading2">Select Task</option>
                                     </select>
                                 </td>
                             </tr>
@@ -56,80 +56,70 @@
         <div class="container-fluid px-4">
             <h2 class="mt-4">My TimeSheet</h2>
 
+            <form th:action="@{/time/setDate}" style="float:right;">
+                <div class="input-group" style="width:220px; ">
+                    <input type="date" name="pickedDate" id="pickdate" class="form-control">
+                    <span class="input-group-btn">
+                        <button type="submit" class="btn btn-primary" id="setDate">Set</button></span>
+            </form>
+        </div>
 
-            <div class="md-form">
-                <form th:action="@{/time}">
-                    <input style="width:170px; float:right;" type="date" id="pickdate" class="form-control">
-                    <!--  <label for="inputMDEx">Choose your date</label> -->
-                    <button type="button" class="btn btn-primary" id="setDate">Set</button>
-                </form>
+        <div>
+            <ul class="pagination justify-content-end">
+
+                <li class="page-item">
+                    <form th:action="@{/time}">
+                        <button class="page-link" aria-label="Previous" th:name="weekId" th:value="${currentWeekId}-1">
+                            <!--                 <button class="page-link" onclick="previousWeek(this.value)" aria-label="Previous"> -->
+                            <span aria-hidden="true">&laquo;</span>
+                        </button>
+                    </form>
+                </li>
+                <li class="page-item">
+                    <a class="page-link" href="#" aria-label="current">
+                        <span aria-hidden="true" th:text="${currentWeek.period}"></span>
+                    </a>
+                </li>
+                <li class="page-item">
+                    <form th:action="@{/time}">
+                        <button class="page-link" aria-label="Next" th:name="weekId" th:value="${currentWeekId}+1">
+                            <span aria-hidden="true">&raquo;</span>
+                        </button>
+                    </form>
+                </li>
+
+            </ul>
+        </div>
+        <div class="card mb-4">
+            <div class="card-header">
+                <i class="fas fa-table me-1"></i>
+                <b><span th:text="${currentWeek.period}"></span></b>
+
             </div>
 
 
+            <div class="dataTable-wrapper dataTable-loading no-footer sortable searchable fixed-columns">
+                <div class="dataTable-container">
+                    <!--     <table class="origin-table"> -->
+                    <table class="dataTable-table" style="table-layout: fixed">
+                        <thead class="" style="background-color:  #f2f2f2;">
+                            <tr>
+                                <th style="width: 15% ;text-align: center; vertical-align: middle;">Project/Task
+                                </th>
+                                <th style="text-align: center; vertical-align: middle;">Sunday</th>
+                                <th style="text-align: center; vertical-align: middle;">Monday</th>
+                                <th style="text-align: center; vertical-align: middle;">Tuesday</th>
+                                <th style="text-align: center; vertical-align: middle;">Wedensday</th>
+                                <th style="text-align: center; vertical-align: middle;">Thursday</th>
+                                <th style="text-align: center; vertical-align: middle;">Friday</th>
+                                <th style="text-align: center; vertical-align: middle;">Saturyday</th>
+                                <th style="width: 15% ;" colspan="2"></th>
 
+                            </tr>
+                        </thead>
 
-
-
-
-
-
-            <div>
-                <ul class="pagination justify-content-end">
-
-                    <li class="page-item">
-                        <form th:action="@{/time}">
-                            <button class="page-link" aria-label="Previous" th:name="weekId"
-                                th:value="${currentWeekId}-1">
-                                <!--                 <button class="page-link" onclick="previousWeek(this.value)" aria-label="Previous"> -->
-                                <span aria-hidden="true">&laquo;</span>
-                            </button>
-                        </form>
-                    </li>
-                    <li class="page-item">
-                        <a class="page-link" href="#" aria-label="current">
-                            <span aria-hidden="true" th:text="${currentWeek.period}"></span>
-                        </a>
-                    </li>
-                    <li class="page-item">
-                        <form th:action="@{/time}">
-                            <button class="page-link" aria-label="Next" th:name="weekId" th:value="${currentWeekId}+1">
-                                <span aria-hidden="true">&raquo;</span>
-                            </button>
-                        </form>
-                    </li>
-
-                </ul>
-            </div>
-            <div class="card mb-4">
-                <div class="card-header">
-                    <i class="fas fa-table me-1"></i>
-                    <b><span th:text="${currentWeek.period}"></span></b>
-
-                </div>
-
-
-                <div class="dataTable-wrapper dataTable-loading no-footer sortable searchable fixed-columns">
-                    <div class="dataTable-container">
-                        <!--     <table class="origin-table"> -->
-                        <table class="dataTable-table" style="table-layout: fixed">
-                            <thead class="" style="background-color:  #f2f2f2;">
-                                <tr>
-                                    <th style="width: 15% ;text-align: center; vertical-align: middle;">Project/Task
-                                    </th>
-                                    <th style="text-align: center; vertical-align: middle;">Sunday</th>
-                                    <th style="text-align: center; vertical-align: middle;">Monday</th>
-                                    <th style="text-align: center; vertical-align: middle;">Tuesday</th>
-                                    <th style="text-align: center; vertical-align: middle;">Wedensday</th>
-                                    <th style="text-align: center; vertical-align: middle;">Thursday</th>
-                                    <th style="text-align: center; vertical-align: middle;">Friday</th>
-                                    <th style="text-align: center; vertical-align: middle;">Saturyday</th>
-                                    <th style="width: 15% ;" colspan="2"></th>
-
-                                </tr>
-                            </thead>
-
-                            <tbody>
-        <!--                         <tr>
+                        <tbody>
+                            <!--                         <tr>
                                     <td>
                                         <input type="text" id="test" name="test" th:onchange="test(this)"
                                             class="small form-control input-md ng-valid ng-dirty" placeholder="HH:MM" />
@@ -138,98 +128,96 @@
 
 
                                 </tr> -->
-                                <tr th:each="cwl: ${currentWeekList}" th:id="${cwl.id}">
-                                    <td th:inline="text">
-                                        [[|${cwl.projecttask.project.number} ${cwl.projecttask.project.title}
-                                        |]]
-                                        <br /><b>
-                                            [[${cwl.projecttask.task.name}]]
-                                        </b>
+                            <tr th:each="cwl: ${currentWeekList}" th:id="${cwl.id}">
+                                <td th:inline="text">
+                                    [[|${cwl.projecttask.project.number} ${cwl.projecttask.project.title}
+                                    |]]
+                                    <br /><b>
+                                        [[${cwl.projecttask.task.name}]]
+                                    </b>
 
-                                    </td>
+                                </td>
 
-                                    <!--                <td style="text-align: center; vertical-align: middle;"><input
+                                <!--                <td style="text-align: center; vertical-align: middle;"><input
                                             style='width:50px; text-align:center;' th:value="${cwl.sun}"
                                             th:id="${cwl.id}+'sun'" readonly>
                                     </td> -->
-                                    <td style="text-align: center; vertical-align: middle;"><input
-                                            style='width:50px; text-align:center;' th:value="${cwl.sun}"
-                                            th:id="${cwl.id}+'sun'" readonly   th:onchange="test(this)">
-                                    </td>
-                                    <td style="text-align: center; vertical-align: middle;"><input
-                                            style='width:50px; text-align:center;' th:value="${cwl.mon}"
-                                            th:id="${cwl.id}+'mon'" readonly th:onchange="test(this)">
-                                    </td>
-                                    <td style="text-align: center; vertical-align: middle;"><input
-                                            style='width:50px; text-align:center;' th:value="${cwl.tue}"
-                                            th:id="${cwl.id}+'tue'" readonly th:onchange="test(this)">
-                                    </td>
-                                    <td style="text-align: center; vertical-align: middle;"><input
-                                            style='width:50px; text-align:center;' th:value="${cwl.wed}"
-                                            th:id="${cwl.id}+'wed'" readonly th:onchange="test(this)">
-                                    </td>
-                                    <td style="text-align: center; vertical-align: middle;"><input
-                                            style='width:50px; text-align:center;' th:value="${cwl.thur}"
-                                            th:id="${cwl.id}+'thur'" readonly th:onchange="test(this)">
-                                    </td>
-                                    <td style="text-align: center; vertical-align: middle;"><input
-                                            style='width:50px; text-align:center;' th:value="${cwl.fri}"
-                                            th:id="${cwl.id}+'fri'" readonly th:onchange="test(this)">
-                                    </td>
-                                    <td style="text-align: center; vertical-align: middle;"><input
-                                            style='width:50px; text-align:center;' th:value="${cwl.sat}"
-                                            th:id="${cwl.id}+'sat'" readonly th:onchange="test(this)">
-                                    </td>
-                                    <!--hidden으로 ajax로 값넘-->
-                                    <input type="hidden" th:id="'projecttaskId'+${cwl.id}"
-                                        th:value="${cwl.projecttaskId}" />
-                                    <input type="hidden" th:id="'weekId'+${cwl.id}" th:value="${cwl.weekId}" />
+                                <td style="text-align: center; vertical-align: middle;"><input
+                                        style='width:50px; text-align:center;' th:value="${cwl.sun}"
+                                        th:id="${cwl.id}+'sun'" readonly th:onchange="test(this)">
+                                </td>
+                                <td style="text-align: center; vertical-align: middle;"><input
+                                        style='width:50px; text-align:center;' th:value="${cwl.mon}"
+                                        th:id="${cwl.id}+'mon'" readonly th:onchange="test(this)">
+                                </td>
+                                <td style="text-align: center; vertical-align: middle;"><input
+                                        style='width:50px; text-align:center;' th:value="${cwl.tue}"
+                                        th:id="${cwl.id}+'tue'" readonly th:onchange="test(this)">
+                                </td>
+                                <td style="text-align: center; vertical-align: middle;"><input
+                                        style='width:50px; text-align:center;' th:value="${cwl.wed}"
+                                        th:id="${cwl.id}+'wed'" readonly th:onchange="test(this)">
+                                </td>
+                                <td style="text-align: center; vertical-align: middle;"><input
+                                        style='width:50px; text-align:center;' th:value="${cwl.thur}"
+                                        th:id="${cwl.id}+'thur'" readonly th:onchange="test(this)">
+                                </td>
+                                <td style="text-align: center; vertical-align: middle;"><input
+                                        style='width:50px; text-align:center;' th:value="${cwl.fri}"
+                                        th:id="${cwl.id}+'fri'" readonly th:onchange="test(this)">
+                                </td>
+                                <td style="text-align: center; vertical-align: middle;"><input
+                                        style='width:50px; text-align:center;' th:value="${cwl.sat}"
+                                        th:id="${cwl.id}+'sat'" readonly th:onchange="test(this)">
+                                </td>
+                                <!--hidden으로 ajax로 값넘-->
+                                <input type="hidden" th:id="'projecttaskId'+${cwl.id}"
+                                    th:value="${cwl.projecttaskId}" />
+                                <input type="hidden" th:id="'weekId'+${cwl.id}" th:value="${cwl.weekId}" />
 
-                                    <td style="text-align: center; vertical-align: middle;"><button
-                                            th:value="'editButton'+${cwl.id}" type="button"
-                                            th:id="'editButton'+${cwl.id}" onclick="editTask(this.value)"
-                                            class="btn btn-primary">Edit</button></td>
-                                    <td style="text-align: center; vertical-align: middle;"><button
-                                            th:value="'deleteButton'+${cwl.id}" type="button"
-                                            th:id="'deleteButton'+${cwl.id}" onclick="deleteTask(this.value)"
-                                            class="btn btn-primary">Delete</button></td>
-                                </tr>
-                            </tbody>
-                            <thead style="background-color:  #f2f2f2;">
-                                <tr>
-                                    <th style="width: 15% ;"><button type="button" id="addProjectButton"
-                                            class="btn btn-primary" style="width: -webkit-fill-available;">Add
-                                            Project</button></th>
-                                    <th style="text-align: center; vertical-align: middle;"
-                                        th:text="${totalHours.totalSun}"></th>
-                                    <th style="text-align: center; vertical-align: middle;"
-                                        th:text="${totalHours.totalMon}">Monday</th>
-                                    <th style="text-align: center; vertical-align: middle;"
-                                        th:text="${totalHours.totalTue}">Tuesday</th>
-                                    <th style="text-align: center; vertical-align: middle;"
-                                        th:text="${totalHours.totalWed}">Wedensday</th>
-                                    <th style="text-align: center; vertical-align: middle;"
-                                        th:text="${totalHours.totalThur}">Thursday</th>
-                                    <th style="text-align: center; vertical-align: middle;"
-                                        th:text="${totalHours.totalFri}">Friday</th>
-                                    <th style="text-align: center; vertical-align: middle;"
-                                        th:text="${totalHours.totalSat}">Saturyday</th>
-                                    <th style="text-align: center; vertical-align: middle;">Total hours</th>
-                                    <th style="text-align: center; vertical-align: middle;"
-                                        th:text="${totalHours.total}"></th>
+                                <td style="text-align: center; vertical-align: middle;"><button
+                                        th:value="'editButton'+${cwl.id}" type="button" th:id="'editButton'+${cwl.id}"
+                                        onclick="editTask(this.value)" class="btn btn-primary">Edit</button></td>
+                                <td style="text-align: center; vertical-align: middle;"><button
+                                        th:value="'deleteButton'+${cwl.id}" type="button"
+                                        th:id="'deleteButton'+${cwl.id}" onclick="deleteTask(this.value)"
+                                        class="btn btn-primary">Delete</button></td>
+                            </tr>
+                        </tbody>
+                        <thead style="background-color:  #f2f2f2;">
+                            <tr>
+                                <th style="width: 15% ;"><button type="button" id="addProjectButton"
+                                        class="btn btn-primary" style="width: -webkit-fill-available;">Add
+                                        Project</button></th>
+                                <th style="text-align: center; vertical-align: middle;"
+                                    th:text="${totalHours.totalSun}"></th>
+                                <th style="text-align: center; vertical-align: middle;"
+                                    th:text="${totalHours.totalMon}">Monday</th>
+                                <th style="text-align: center; vertical-align: middle;"
+                                    th:text="${totalHours.totalTue}">Tuesday</th>
+                                <th style="text-align: center; vertical-align: middle;"
+                                    th:text="${totalHours.totalWed}">Wedensday</th>
+                                <th style="text-align: center; vertical-align: middle;"
+                                    th:text="${totalHours.totalThur}">Thursday</th>
+                                <th style="text-align: center; vertical-align: middle;"
+                                    th:text="${totalHours.totalFri}">Friday</th>
+                                <th style="text-align: center; vertical-align: middle;"
+                                    th:text="${totalHours.totalSat}">Saturyday</th>
+                                <th style="text-align: center; vertical-align: middle;">Total hours</th>
+                                <th style="text-align: center; vertical-align: middle;" th:text="${totalHours.total}">
+                                </th>
 
-                                </tr>
-                            </thead>
-                        </table>
-                    </div>
+                            </tr>
+                        </thead>
+                    </table>
                 </div>
-
             </div>
-            <!--             <div>
-                <button type="button" id="addProjectButton" class="btn btn-primary">Add Project</button>
-            </div> -->
+
         </div>
-    </main>
+     
+            
+
+</main>
 </div>
 
 
@@ -287,110 +275,115 @@
 
     });
 
-            //function isNumber(n) { return /^-?[\d.]+(?:e-?\d+)?$/.test(n); }
-        function isPositiveInteger(n) {
-            return n >>> 0 === parseFloat(n);
-        }
-        //  $("#test").change(function () {
-        function test(a) {
-            console.log("hi?")
-            console.log(a.value)
-            var writtenhours = a.value
-            var newid = a.id;
-            console.log(newid)
-            console.log(writtenhours);
+    //function isNumber(n) { return /^-?[\d.]+(?:e-?\d+)?$/.test(n); }
+    function isPositiveInteger(n) {
+        return n >>> 0 === parseFloat(n);
+    }
+    //  $("#test").change(function () {
+    function test(a) {
+        console.log("hi?")
+        console.log(a.value)
+        var writtenhours = a.value
+        var newid = a.id;
+        console.log(newid)
+        console.log(writtenhours);
 
-            //1. include :
-            if (writtenhours.includes(":")) {
-                var hh = writtenhours.substring(0, writtenhours.indexOf(':'));
-                var mm = writtenhours.substring(writtenhours.indexOf(':') + 1);
+        //1. include :
+        if (writtenhours.includes(":")) {
+            var hh = writtenhours.substring(0, writtenhours.indexOf(':'));
+            var mm = writtenhours.substring(writtenhours.indexOf(':') + 1);
 
-                //5자이상이거나, 숫자가아닐때
-                if (length > 5 || !isPositiveInteger(hh) || !isPositiveInteger(mm) || hh.toString().length > 2 || mm.toString().length > 2) {
-                    $("#newid").val("");
-                } else {
-                    if (hh.toString().length == 2 && mm.toString().length == 2) {
-                        $('#' + newid).val(hh[0] + hh[1] + ":" + mm[0] + mm[1]);
-
-                    } else if (hh.toString().length == 2 && mm.toString().length == 1) {
-                        $('#' + newid).val(hh[0] + hh[1] + ":0" + mm[0]);
-                    } else if (hh.toString().length == 2 && mm.toString().length == 0) {
-                        $('#' + newid).val(hh[0] + hh[1] + ":00");
-                    } else if (hh.toString().length == 1 && mm.toString().length == 2) {
-                        $('#' + newid).val("0" + hh[0] + ":" + mm[0] + mm[1]);
-                    } else if (hh.toString().length == 1 && mm.toString().length == 1) {
-                        $('#' + newid).val("0" + hh[0] + ":0" + mm[0]);
-                    } else if (hh.toString().length == 1 && mm.toString().length == 0) {
-                        $('#' + newid).val("0" + hh[0] + ":00");
-                    } else if (hh.toString().length == 0 && mm.toString().length == 2) {
-                        $('#' + newid).val("00:" + mm[0] + mm[1]);
-                    } else if (hh.toString().length == 0 && mm.toString().length == 1) {
-                        $('#' + newid).val("00:" + mm[0]);
-                    } else if (hh.toString().length == 0 && mm.toString().length == 0) {
-                        $('#' + newid).val("00:00");
-                    }
-
-                }
-
-                //1. not include :
+            //5자이상이거나, 숫자가아닐때
+            if (length > 5 || !isPositiveInteger(hh) || !isPositiveInteger(mm) || hh.toString().length > 2 || mm.toString().length > 2) {
+                $("#newid").val("");
             } else {
-                //2. onlynumber
-                if (isPositiveInteger(writtenhours)) {
-                    var length = writtenhours.toString().length;
+                if (hh.toString().length == 2 && mm.toString().length == 2) {
+                    $('#' + newid).val(hh[0] + hh[1] + ":" + mm[0] + mm[1]);
 
-                    if (length > 4) {
-                       $('#' + newid).val("");
-                    } else {
-                        if (length == 4) {
-                            if (writtenhours[0] > 1) {
-                               $('#' + newid).val("");
-                            } else {
-                               $('#' + newid).val(writtenhours[0] + writtenhours[1] + ":" + writtenhours[2] + writtenhours[3]);
-                            }
-                        } else if (length == 3) {
-                            $('#' + newid).val("0" + writtenhours[0] + ":" + writtenhours[1] + writtenhours[2]);
-                        } else if (length == 2) {
-                            if (writtenhours[0] == 1) {
-                               $('#' + newid).val(writtenhours[0] + writtenhours[1] + ":00");
-                            } else if (writtenhours[0] == 2 && writtenhours[1] < 5) {
-                               $('#' + newid).val(writtenhours[0] + writtenhours[1] + ":00");
-                            } else if (writtenhours[0] == 2 && writtenhours[1] > 4) {
-                                $('#' + newid).val("00:" + writtenhours[0] + writtenhours[1]);
-                            } else if (writtenhours[0] == 6 && writtenhours[1] == 0) {
-                                $('#' + newid).val("01:00");
-                            } else {
-                                $('#' + newid).val("00:" + writtenhours[0] + writtenhours[1]);
-                            }
-                        } else if (length == 1) {
-                            $('#' + newid).val("0" + writtenhours[0] + ":00");
-                        }
-                    }
-
-                    //2. onlynumber no
-                } else {
-                    $('#' + newid).val("");
+                } else if (hh.toString().length == 2 && mm.toString().length == 1) {
+                    $('#' + newid).val(hh[0] + hh[1] + ":0" + mm[0]);
+                } else if (hh.toString().length == 2 && mm.toString().length == 0) {
+                    $('#' + newid).val(hh[0] + hh[1] + ":00");
+                } else if (hh.toString().length == 1 && mm.toString().length == 2) {
+                    $('#' + newid).val("0" + hh[0] + ":" + mm[0] + mm[1]);
+                } else if (hh.toString().length == 1 && mm.toString().length == 1) {
+                    $('#' + newid).val("0" + hh[0] + ":0" + mm[0]);
+                } else if (hh.toString().length == 1 && mm.toString().length == 0) {
+                    $('#' + newid).val("0" + hh[0] + ":00");
+                } else if (hh.toString().length == 0 && mm.toString().length == 2) {
+                    $('#' + newid).val("00:" + mm[0] + mm[1]);
+                } else if (hh.toString().length == 0 && mm.toString().length == 1) {
+                    $('#' + newid).val("00:" + mm[0]);
+                } else if (hh.toString().length == 0 && mm.toString().length == 0) {
+                    $('#' + newid).val("00:00");
                 }
 
             }
+
+            //1. not include :
+        } else {
+            //2. onlynumber
+            if (isPositiveInteger(writtenhours)) {
+                var length = writtenhours.toString().length;
+
+                if (length > 4) {
+                    $('#' + newid).val("");
+                } else {
+                    if (length == 4) {
+                        if (writtenhours[0] > 1) {
+                            $('#' + newid).val("");
+                        } else {
+                            $('#' + newid).val(writtenhours[0] + writtenhours[1] + ":" + writtenhours[2] + writtenhours[3]);
+                        }
+                    } else if (length == 3) {
+                        $('#' + newid).val("0" + writtenhours[0] + ":" + writtenhours[1] + writtenhours[2]);
+                    } else if (length == 2) {
+                        if (writtenhours[0] == 1) {
+                            $('#' + newid).val(writtenhours[0] + writtenhours[1] + ":00");
+                        } else if (writtenhours[0] == 2 && writtenhours[1] < 5) {
+                            $('#' + newid).val(writtenhours[0] + writtenhours[1] + ":00");
+                        } else if (writtenhours[0] == 2 && writtenhours[1] > 4) {
+                            $('#' + newid).val("00:" + writtenhours[0] + writtenhours[1]);
+                        } else if (writtenhours[0] == 6 && writtenhours[1] == 0) {
+                            $('#' + newid).val("01:00");
+                        } else {
+                            $('#' + newid).val("00:" + writtenhours[0] + writtenhours[1]);
+                        }
+                    } else if (length == 1) {
+                        $('#' + newid).val("0" + writtenhours[0] + ":00");
+                    }
+                }
+
+                //2. onlynumber no
+            } else {
+                $('#' + newid).val("");
+            }
+
         }
+    }
     function initButton() {
 
-        $("#setDate").click(function () {
-            var pickedDate = document.getElementById("pickdate").value;
-            console.log("pickedDate= " + pickedDate)
-
-            var url = "/time";
-
-            $.ajax({
-                type: "GET",
-                url: url,
-                data: "pickedDate=" + pickedDate,
-                dataType: "json",
-                success: function (data) {
-
-                }
-            });
-        });
+        /*         $("#setDate").click(function () {
+                    var pickedDate = document.getElementById("pickdate").value;
+                    console.log("pickedDate= " + pickedDate)
+        
+                    var url = "/time";
+        
+                    $.ajax({
+                        type: "GET",
+                        url: url,
+                        data: "pickedDate=" + pickedDate,
+                        dataType: "json",
+                           success: function (data) {
+                           console.log("here")
+                            location.reload();
+                        },
+                        error: function (err) {
+                            console.log(err);
+                             location.reload();
+                        }
+                    });
+                }); */
 
 
 
@@ -402,17 +395,17 @@
 
         //saveTaskButton
         $("#saveTaskButton").click(function () {
+
+               if(validate()==false){//유효성검사
+				return false;
+			}else{
             var url = "/time/saveProjectTask";
             var params = {};
-            console.log($("#selectProject option:selected").val())
-            console.log($("#selectTask option:selected").val())
-
-            if ($("#selectProject option:selected").val() == "none") {
-                alert("Please Select Project")
-            }
+  
             if ($("#selectTask option:selected").val() == "Select Task") {
-                alert("Please Select Task")
-            }
+                $("#selectTask option:selected").val("")
+                validate()
+            } 
             //신규 테스크 저장하기전 이미 있는지 확인하기위해 3가지 변수를 들고간다
             params["user_id"] = user_id;
             params["currentWeekId"] = currentWeekId;
@@ -438,11 +431,37 @@
                     console.log(err);
                 }
             });
-
+        }
         });
     }
 
 
+    function validate() {
+      
+        const project = document.getElementById("selectProject");
+        const task = document.getElementById("selectTask");
+     
+    console.log("hi")
+
+        if (document.getElementById("selectProject").validity.valueMissing) {          
+            project.setCustomValidity('Select Project');
+             project.reportValidity();
+            return false;
+        } else {
+            project.setCustomValidity('');
+        }
+
+        if (document.getElementById("selectTask").validity.valueMissing) {           
+            task.setCustomValidity('Select Task');
+             task.reportValidity();
+             return false;
+        } else {
+            task.setCustomValidity('');
+        }
+
+
+
+    }
 
     function editTask(data) {
         timesheetId = data.substring(10);//editButton잘라낸
@@ -461,7 +480,7 @@
             $('#' + timesheetId + 'fri').attr("readonly", false);
             $('#' + timesheetId + 'sat').attr("readonly", false);
 
-      
+
 
         } else {
             //save클릭할때
@@ -479,13 +498,13 @@
             params["thur"] = $('#' + timesheetId + 'thur').val();
             params["fri"] = $('#' + timesheetId + 'fri').val();
             params["sat"] = $('#' + timesheetId + 'sat').val();
-     /*        if ((isNumber($('#' + timesheetId + 'sun').val())) && (isNumber($('#' + timesheetId + 'mon').val())) && (isNumber($('#' + timesheetId + 'tue').val())) && (isNumber($('#' + timesheetId + 'wed').val()))
-                && (isNumber($('#' + timesheetId + 'thur').val())) && (isNumber($('#' + timesheetId + 'fri').val())) && (isNumber($('#' + timesheetId + 'sat').val()))) {
-
-            } else {
-                alert("Please Write Number")
-            }
- */
+            /*        if ((isNumber($('#' + timesheetId + 'sun').val())) && (isNumber($('#' + timesheetId + 'mon').val())) && (isNumber($('#' + timesheetId + 'tue').val())) && (isNumber($('#' + timesheetId + 'wed').val()))
+                       && (isNumber($('#' + timesheetId + 'thur').val())) && (isNumber($('#' + timesheetId + 'fri').val())) && (isNumber($('#' + timesheetId + 'sat').val()))) {
+       
+                   } else {
+                       alert("Please Write Number")
+                   }
+        */
             $.ajax({
                 type: "POST",
                 url: url,

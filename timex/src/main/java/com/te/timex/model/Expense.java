@@ -19,7 +19,7 @@ public class Expense{
 	
 	
 	private String name;
-	private String amount;
+	private String unitcost;
 
 	//추가안해도되나??
 //	@OneToMany(mappedBy = "expense")
@@ -31,10 +31,12 @@ public class Expense{
 	}
 
 
+
 	@Override
 	public String toString() {
-		return "Expense [id=" + id + ", name=" + name + ", amount=" + amount +  "]";
+		return "Expense [id=" + id + ", name=" + name + ", unitcost=" + unitcost + "]";
 	}
+
 
 
 	public void setId(int id) {
@@ -50,14 +52,17 @@ public class Expense{
 	public void setName(String name) {
 		this.name = name;
 	}
+
+
+	public String getUnitcost() {
+		return unitcost;
+	}
+
+
+	public void setUnitcost(String unitcost) {
+		this.unitcost = unitcost;
+	}
 	
-	public String getAmount() {
-		return amount;
-	}
 
-
-	public void setAmount(String amount) {
-		this.amount = amount;
-	}
 	
 }

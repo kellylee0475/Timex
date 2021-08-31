@@ -15,7 +15,7 @@ public interface TimesheetRepository extends JpaRepository<Timesheet, Integer> {
 	
 	Timesheet findById(int id);
 	
-	Timesheet findByUserIdAndWeekIdAndProjecttaskId(int user_id, int week_id, int project_task_id);
+	Timesheet findByUserIdAndWeekIdAndProjecttaskIdOrderByProjecttaskId(int user_id, int week_id, int project_task_id);
 
 	boolean existsByUserIdAndWeekIdAndProjecttaskId(int user_id, int week_id, int project_task_id);
 

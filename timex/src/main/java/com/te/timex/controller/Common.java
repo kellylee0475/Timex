@@ -134,6 +134,21 @@ public class Common{
        return list;
 	}
 	
+	/*
+	 * public static ArrayList getthisMonth(String pickedDate){
+	 * 
+	 * ArrayList list = new ArrayList<>(); LocalDate today =
+	 * LocalDate.parse(pickedDate);
+	 * 
+	 * WeekFields weekFields = WeekFields.of(Locale.getDefault());
+	 * System.out.println("weekFields = "+weekFields); String week_number_string =
+	 * String.format("%02d", today.get(weekFields.weekOfWeekBasedYear())); String
+	 * year_string=String.format("%d", today.get(weekFields.weekBasedYear())); int
+	 * year = Integer.parseInt((String)year_string); int
+	 * week_number=Integer.parseInt((String) week_number_string);
+	 * 
+	 * list.add(year); list.add(week_number); return list; }
+	 */
 //	public static void getWeekId(int year, int week_number, Week) {
 //		System.out.println("here??!@#");
 //		weekRepository.findById(62);

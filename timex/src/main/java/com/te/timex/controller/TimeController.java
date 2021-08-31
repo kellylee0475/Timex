@@ -25,6 +25,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.te.timex.model.Project;
 import com.te.timex.model.ProjectTask;
@@ -59,7 +60,7 @@ public class TimeController {
 	public String index(Authentication authentication, Model model,
 			@RequestParam(required = false, value = "weekId") Optional<String> weekId, // time.html에서 action thyemeleaf로
 																						// 가져오는값
-			@RequestParam(required = false, defaultValue = "2021") String pickedDate) {// ajax에서 가져오는값
+			@RequestParam(name="pickedDate", required = false, defaultValue = "2021") String pickedDate) {// ajax에서 가져오는값
 
 		// 1. user정보가져오기
 		Common common = new Common();
@@ -84,9 +85,6 @@ public class TimeController {
 				week_number=(int) a.get(1);
 				year=(int) a.get(0);
 			} else {
-
-				System.out.println("?????????????????????");
-
 				// 2.현재 year가져오기
 				year = Calendar.getInstance().get(Calendar.YEAR);// this year
 				// 3. 현재 year로 week 테이블 업데이트(1년에 한번)
@@ -108,7 +106,7 @@ public class TimeController {
 			System.out.println("year = "+year +" week_number = "+week_number);
 			// 5. week테이블에서 year, week number로 week id 가져오기
 			currentWeek = weekRepository.findByYearAndWeekNumber(year, week_number);
-			System.out.println(currentWeek.toString());
+			//System.out.println(currentWeek.toString());
 			currentWeekId = currentWeek.getId();
 			System.out.println(currentWeekId);
 		}
@@ -186,6 +184,13 @@ System.out.println(currentWeekList);
 		return "time/time";
 	}
 
+	@GetMapping("/setDate")
+	public String setDate(RedirectAttributes redirectAttributes,@RequestParam(name="pickedDate", required = false, defaultValue = "2021") String pickedDate) {
+		System.out.println("setDate!!!!!!!!!!!!!!!!!!!!!!!!  "+pickedDate);
+		redirectAttributes.addAttribute("pickedDate", pickedDate);
+		return "redirect:/time";
+	}
+	
 	@GetMapping("/addProject")
 	public String modal1() {
 		return "time/addProject";

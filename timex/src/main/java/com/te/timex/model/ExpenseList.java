@@ -33,7 +33,7 @@ public class ExpenseList{
 	
 	@Temporal(TemporalType.DATE)
 	private Date date;
-	private String total_amount;
+	private String totalcost;
 
 	private int status;
 	private String filename;
@@ -138,9 +138,17 @@ public class ExpenseList{
 	@Override
 	public String toString() {
 		return "ExpenseList [id=" + id + ", userId=" + userId + ", projectId=" + projectId + ", expenseId=" + expenseId
-				+ ", qty=" + qty + ", date=" + date + ", total_amount=" + total_amount + ", status=" + status
-				+ ", filename=" + filename + ", filepath=" + filepath + ", project=" + project + ", expense=" + expense
-				+ ", user=" + user + "]";
+				+ ", qty=" + qty + ", date=" + date + ", totalcost=" + totalcost + ", status=" + status + ", filename="
+				+ filename + ", filepath=" + filepath + ", project=" + project + ", expense=" + expense + ", user="
+				+ user + "]";
+	}
+
+	public String getTotalcost() {
+		return totalcost;
+	}
+
+	public void setTotalcost(String totalcost) {
+		this.totalcost = totalcost;
 	}
 
 	public int getId() {
@@ -179,12 +187,6 @@ public class ExpenseList{
 	}
 	public void setDate(Date date) {
 		this.date = date;
-	}
-	public String getTotal_amount() {
-		return total_amount;
-	}
-	public void setTotal_amount(String total_amount) {
-		this.total_amount = total_amount;
 	}
 
 	
