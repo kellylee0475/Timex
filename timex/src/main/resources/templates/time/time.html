@@ -52,10 +52,88 @@
         </div>
     </div>
 
+
+ <!---export time modal-->
+    <div class="modal fade" id="exportTimeModel" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"
+        role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+        <div class="modal-dialog" style="max-width: 50%; width: auto;">
+            <div class="modal-content">
+
+                <div class="modal-header">
+                    <h4 class="modal-title w-100" style="text-align: center;" id="myModalLabel">Time Report</h4>
+                </div>
+
+                <div class="modal-body" style="text-align: center;">
+                    <div class="dropdown" style="text-align: -webkit-center; ">
+                        <form method="post" id="exportForm">
+                            <table>
+                                <tr>
+                                    <td>
+                                        <h5 style="margin-right:10px">Timeframe</h5>
+                                    </td>
+                                    <td id="tf">
+                                        <select id="timeframe" class="form-control" required>
+
+                                            <option value="thisweek">This Week</option>
+                                            <option value="lastweek">Last Week</option>
+                                            <option value="thismonth">This Month</option>
+                                            <option value="lastmonth">Last Month</option>
+                                            <option value="thisyear">This Year</option>
+                                            <option value="lastyear">Last Year</option>
+                                            <option value="alltime">All Time</option>
+                                            <option value="custom" id="custom">Custom</option>
+
+                                        </select>
+                                    </td>
+
+                                </tr>
+                                <tr>
+                                    <td></td>
+                                    <td id="tftd" style=" padding-bottom: 10px;">
+                                        <div id="custom_timeframe" style="display: none;">
+                                            <input style="display: inline-block; width: 170px;" type="date"
+                                                name="start_date" id="start_date" class="form-control" required>
+
+                                            to
+                                            <input style="display: inline-block;width: 170px;" type="date"
+                                                name="end_date" class="form-control" id="end_date" required>
+
+                                        </div>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td style="padding-bottom: 10px;">
+                                        <h5 style="margin-right:10px">Project</h5>
+                                    </td>
+
+                                    <td style="padding-bottom: 10px;">
+                                        <select class="form-control" aria-label="Default select example"
+                                            id="selectProject2" name="selectProject" required>
+                                            <option value="allproject" id="loading">All Project</option>
+                                        </select>
+                                    </td>
+                                </tr>
+                                
+                            </table>
+                        </form>
+
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" id="runTimeReport" class="btn btn-primary">Run Report</button>
+                    <button type="button" class="btn btn-default" data-bs-dismiss="modal">Cancel</button>
+
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+
     <main>
         <div class="container-fluid px-4">
             <h2 class="mt-4">My TimeSheet</h2>
-
+       
             <form th:action="@{/time/setDate}" style="float:right;">
                 <div class="input-group" style="width:220px; ">
                     <input type="date" name="pickedDate" id="pickdate" class="form-control">
@@ -211,9 +289,11 @@
                         </thead>
                     </table>
                 </div>
+                
             </div>
 
         </div>
+                         <button type="button" id="exportTimeButton" class="btn btn-primary">Export</button>
      
             
 
@@ -244,6 +324,50 @@
 
 
 
+        $("#exportTimeButton").click(function () {
+            $("#exportTimeModel").modal("toggle");
+        });
+
+        $("#timeframe").change(function () {
+            if ($(this).val() === "custom") {
+                $('#custom_timeframe').show();
+                $("#tftd").css("padding-top", "10px");
+            } else {
+                $('#custom_timeframe').hide();
+                $("#tftd").css("padding-top", "0px");
+            }
+        });
+
+        
+        $("#runTimeReport").click(function () {
+
+            if (validateExport() == false) {//유효성검사
+                return false;
+            } else {
+                var url = "time/exportTime";
+                var params = {};
+                params["date"] = $("#timeframe").val();
+                params["project_id"] = $("#selectProject2 option:selected").val();          
+                params["start_date"] = $("#start_date").val();
+                params["end_date"] = $("#end_date").val();
+
+
+
+                $.ajax({
+                    type: "POST",
+                    url: url,
+                    data: JSON.stringify(params),
+                             contentType: "application/json",
+                    success: function (data) {
+               
+                         window.location = "/time/downloadReport"
+                    },
+                    error: function (err) {
+                        console.log(err);
+                    }
+                });
+            }
+        })
 
 
         //      })
@@ -274,7 +398,32 @@
         })
 
     });
+    function validateExport() {
+        const startdate = document.getElementById("start_date");
+        const enddate = document.getElementById("end_date");
 
+        if ($('#timeframe').val() == "custom") {
+            console.log("only custom")
+            if (document.getElementById("start_date").validity.valueMissing) {
+                startdate.setCustomValidity('Select Start Date');
+                startdate.reportValidity();
+                return false;
+            } else {
+                startdate.setCustomValidity('');
+            }
+
+            if (document.getElementById("end_date").validity.valueMissing) {
+                enddate.setCustomValidity('Select End Date');
+                enddate.reportValidity();
+                return false;
+            } else {
+                enddate.setCustomValidity('');
+            }
+
+
+        }
+
+    }
     //function isNumber(n) { return /^-?[\d.]+(?:e-?\d+)?$/.test(n); }
     function isPositiveInteger(n) {
         return n >>> 0 === parseFloat(n);

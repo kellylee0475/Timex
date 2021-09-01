@@ -1,9 +1,12 @@
 package com.te.timex.repository;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
 
+import com.te.timex.model.ExpenseList;
 import com.te.timex.model.Timesheet;
 
 
@@ -19,6 +22,78 @@ public interface TimesheetRepository extends JpaRepository<Timesheet, Integer> {
 
 	boolean existsByUserIdAndWeekIdAndProjecttaskId(int user_id, int week_id, int project_task_id);
 
-//	ArrayList<Timesheet> findAllById(int i);
 	
+//
+//	@Query(value = "SELECT ts.*,p.number,p.title,t.name\r\n" + 
+//			"FROM timesheet ts\r\n" + 
+//			"inner join project_task pt on pt.id=ts.project_task_id \r\n" + 
+//			"inner join project p on p.id=pt.project_id \r\n" + 
+//			"inner join task t on t.id=pt.task_id ", nativeQuery = true)
+//	List<ExpenseList> findByUserIdAndProjectIdAndDate(int user_id, int project_id, String startdate, String enddate);
+//
+//	
+//	ArrayList<Timesheet> findAllById(int i);
+
+			@Query(value = "SELECT ts.*,w.*,p.number,p.title,t.name " + 
+					"	FROM timesheet ts " + 
+					"	inner join week w on w.id=ts.week_id " + 
+					"	inner join project_task pt on pt.id=ts.project_task_id " + 
+					"	inner join project p on p.id=pt.project_id  " + 
+					"	inner join task t on t.id=pt.task_id  "
+					+ " Where ts.user_id=?1 and w.year=?2 ", nativeQuery = true)
+	List<Timesheet> findByUserIdAndYear(int user_id, int year);
+			
+
+			@Query(value = "SELECT ts.*,w.*,p.number,p.title,t.name " + 
+					"	FROM timesheet ts " + 
+					"	inner join week w on w.id=ts.week_id " + 
+					"	inner join project_task pt on pt.id=ts.project_task_id " + 
+					"	inner join project p on p.id=pt.project_id  " + 
+					"	inner join task t on t.id=pt.task_id  "
+					+ " Where ts.user_id=?1 ", nativeQuery = true)
+	List<Timesheet> findByUserId2(int user_id);
+			
+			
+			@Query(value = "SELECT ts.*,w.*,p.number,p.title,t.name " + 
+					"	FROM timesheet ts " + 
+					"	inner join week w on w.id=ts.week_id " + 
+					"	inner join project_task pt on pt.id=ts.project_task_id " + 
+					"	inner join project p on p.id=pt.project_id  " + 
+					"	inner join task t on t.id=pt.task_id  "
+					+ " Where ts.user_id=?1 and ts.week_id=?2 ", nativeQuery = true)
+	List<Timesheet> findByUserAndWeekId(int user_id,int week_id);
+
+			
+			
+			@Query(value = "SELECT ts.*,w.*,p.number,p.*,t.name " + 
+					"	FROM timesheet ts " + 
+					"	inner join week w on w.id=ts.week_id " + 
+					"	inner join project_task pt on pt.id=ts.project_task_id " + 
+					"	inner join project p on p.id=pt.project_id  " + 
+					"	inner join task t on t.id=pt.task_id  "
+					+ " Where ts.user_id=?1 and ts.week_id=?2 and p.id=?3 ", nativeQuery = true)
+	List<Timesheet> findByUserIdAndWeekIdAndProjectId(int user_id,int week_id,int project_id);
+			
+			
+			
+			@Query(value = "SELECT ts.*,w.*,p.number,p.*,t.name " + 
+					"	FROM timesheet ts " + 
+					"	inner join week w on w.id=ts.week_id " + 
+					"	inner join project_task pt on pt.id=ts.project_task_id " + 
+					"	inner join project p on p.id=pt.project_id  " + 
+					"	inner join task t on t.id=pt.task_id  "
+					+ " Where ts.user_id=?1 and w.year=?2 and p.id=?3 ", nativeQuery = true)
+	List<Timesheet> findByUserIdAndYearAndProjectId(int user_id,int year,int project_id);
+			
+			
+			@Query(value = "SELECT ts.*,w.*,p.number,p.*,t.name " + 
+					"	FROM timesheet ts " + 
+					"	inner join week w on w.id=ts.week_id " + 
+					"	inner join project_task pt on pt.id=ts.project_task_id " + 
+					"	inner join project p on p.id=pt.project_id  " + 
+					"	inner join task t on t.id=pt.task_id  "
+					+ " Where ts.user_id=?1  and p.id=?2 ", nativeQuery = true)
+	List<Timesheet> findByUserIdAndProjectId(int user_id,int project_id);
+			
+			
 }

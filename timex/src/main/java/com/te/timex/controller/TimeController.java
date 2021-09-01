@@ -1,17 +1,22 @@
 
 package com.te.timex.controller;
 
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.io.OutputStream;
 import java.text.DateFormat;
-import java.text.ParseException;
-import java.time.LocalDate;
-import java.time.temporal.WeekFields;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Locale;
 import java.util.Map;
 import java.util.Optional;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -19,6 +24,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.util.FileCopyUtils;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -36,6 +42,7 @@ import com.te.timex.repository.ProjectTaskRepository;
 import com.te.timex.repository.TimesheetRepository;
 import com.te.timex.repository.UserRepository;
 import com.te.timex.repository.WeekRepository;
+import com.te.timex.service.ReportService;
 
 @Controller
 @RequestMapping("/time")
@@ -52,6 +59,9 @@ public class TimeController {
 	@Autowired
 	private WeekRepository weekRepository;
 
+	@Autowired
+	private ReportService reportService;
+	
 	int user_id;
 	int currentWeekId;
 	Week currentWeek;
@@ -183,10 +193,56 @@ System.out.println(currentWeekList);
 		
 		return "time/time";
 	}
+	
+	
+	@PostMapping("/exportTime")
+	public void exportTime(@RequestBody HashMap<String, Object> param,
+			HttpServletResponse response) throws IOException {
 
+        List<Timesheet> timesheet = reportService.getTimeList(param);
+        TimeExcelExporter excelExporter = new TimeExcelExporter(timesheet);
+        
+        excelExporter.export(response);    
+	}
+	
+	@GetMapping("/downloadReport")
+	public void downloadZip(HttpServletResponse response, HttpServletRequest request) throws IOException {
+
+		String path = "C:\\Users\\pc1\\Desktop\\Timex Spring Boot\\time_report";
+		DateFormat dateFormatter = new SimpleDateFormat("yyyy-MM-dd");
+        String currentDateTime = dateFormatter.format(new Date());
+         
+		String fileName = "Time Report_"+ currentDateTime + ".xls";
+		File file = new File(path+"\\"+fileName);
+		if (file.exists() && file.isFile()) {
+			FileInputStream inputstream = new FileInputStream(file);
+
+			response.setContentType("application/octet-stream; charset=utf-8");
+			response.setHeader("Content-Disposition", "attachment; filename=Time Report.xls");
+			response.setHeader("Content-Type", "application/xls");
+			response.setHeader("Content-Transfer-Encoding", "binary");
+			response.setStatus(HttpServletResponse.SC_OK);
+
+			OutputStream out = response.getOutputStream();
+
+			FileInputStream fis = null;
+			try {
+				fis = new FileInputStream(file);
+				FileCopyUtils.copy(fis, out);
+			} catch (Exception e) {
+				e.printStackTrace();
+			} finally {
+				if (fis != null)
+					fis.close();
+				out.flush();
+				out.close();
+			}
+
+		}
+	}
 	@GetMapping("/setDate")
 	public String setDate(RedirectAttributes redirectAttributes,@RequestParam(name="pickedDate", required = false, defaultValue = "2021") String pickedDate) {
-		System.out.println("setDate!!!!!!!!!!!!!!!!!!!!!!!!  "+pickedDate);
+		
 		redirectAttributes.addAttribute("pickedDate", pickedDate);
 		return "redirect:/time";
 	}

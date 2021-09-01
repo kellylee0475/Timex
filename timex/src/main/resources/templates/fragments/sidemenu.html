@@ -11,23 +11,25 @@
                     Dashboard
                 </a>
                 <div class="sb-sidenav-menu-heading">Time and Expenses</div>
-                <a class="nav-link collapsed" th:href="@{/time}">
-                    <div class="sb-nav-link-icon"><i class="fas fa-columns"></i></div>
+                <a class="nav-link collapsed" th:href="@{/time}" style="color:#CCCCCC; font-weight:500">
+                    <div class="sb-nav-link-icon"><img style="width:20px;"
+										th:src="@{/assets/img/timesheetIcon.PNG}" /></div>
                     Time
 
                 </a>
-                <a class="nav-link collapsed" th:href="@{/expenses}">
-                    <div class="sb-nav-link-icon"><i class="fas fa-columns"></i></div>
+                <a class="nav-link collapsed" th:href="@{/expenses}" style="color:#CCCCCC; font-weight:500">
+                    <div class="sb-nav-link-icon"><img style="width:20px;"
+										th:src="@{/assets/img/expenseIcon.PNG}" /></div>
                     Expenses
 
                 </a>
                 </a>
-                <a class="nav-link collapsed" th:href="@{/board/list}">
+   <!--              <a class="nav-link collapsed" th:href="@{/board/list}" style="color:#CCCCCC; font-weight:500">
                     <div class="sb-nav-link-icon"><i class="fas fa-columns"></i></div>
                     Board
 
-                </a>
-                <a class="nav-link collapsed" href="#" data-bs-toggle="collapse" data-bs-target="#collapseLayouts"
+                </a> -->
+          <!--       <a class="nav-link collapsed" href="#" data-bs-toggle="collapse" data-bs-target="#collapseLayouts"
                     aria-expanded="false" aria-controls="collapseLayouts">
                     <div class="sb-nav-link-icon"><i class="fas fa-columns"></i></div>
                     Reports
@@ -39,7 +41,7 @@
                         <a class="nav-link" th:href="@{/report/time}">Time</a>
                         <a class="nav-link" th:href="@{/report/expense}">Expense</a>
                     </nav>
-                </div>
+                </div> -->
     <!--            <a class="nav-link collapsed" href="#" data-bs-toggle="collapse" data-bs-target="#collapsePages"
                     aria-expanded="false" aria-controls="collapsePages">
                     <div class="sb-nav-link-icon"><i class="fas fa-book-open"></i></div>
@@ -78,16 +80,19 @@
                         </div>
                     </nav>
                 </div> -->
-                <div class="sb-sidenav-menu-heading">Addons</div>
-                <a class="nav-link" th:href="@{/account/profile}">
-                    <div class="sb-nav-link-icon"><i class="fas fa-chart-area"></i></div>
+                <div class="sb-sidenav-menu-heading">Account</div>
+                <a class="nav-link" th:href="@{/account/profile}" style="color:#CCCCCC; font-weight:500">
+                    <div class="sb-nav-link-icon"><img style="width:20px;"
+										th:src="@{/assets/img/profileIcon.PNG}" /></div>
                     Profile
                 </a>
-
-                <a class="nav-link" href="tables.html">
+<!-- 
+<img class="img-account-profile rounded-circle mb-2" style="width:250px;"
+										th:src="@{/assets/img/profile.PNG}" />	</span>  -->
+              <!--   <a class="nav-link" href="tables.html">
                     <div class="sb-nav-link-icon"><i class="fas fa-table"></i></div>
                     Tables
-                </a>
+                </a> -->
             </div>
         </div>
         <div class="sb-sidenav-footer">

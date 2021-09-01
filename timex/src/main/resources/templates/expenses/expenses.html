@@ -194,11 +194,11 @@
                                     <td></td>
                                     <td id="tftd" style=" padding-bottom: 10px;">
                                         <div id="custom_timeframe" style="display: none;">
-                                            <input style="display: inline-block; width: 125px;" type="date"
+                                            <input style="display: inline-block; width: 170px;" type="date"
                                                 name="start_date" id="start_date" class="form-control" required>
 
                                             to
-                                            <input style="display: inline-block;width: 125px;" type="date"
+                                            <input style="display: inline-block;width: 170px;" type="date"
                                                 name="end_date" class="form-control" id="end_date" required>
 
                                         </div>
@@ -346,8 +346,6 @@
             url: url,
             success: function (data) {
                 user_id = data;
-
-
             }
         });
 
@@ -357,7 +355,6 @@
 
 
         $("#timeframe").change(function () {
-
             if ($(this).val() === "custom") {
                 $('#custom_timeframe').show();
                 $("#tftd").css("padding-top", "10px");
@@ -365,7 +362,6 @@
                 $('#custom_timeframe').hide();
                 $("#tftd").css("padding-top", "0px");
             }
-
         });
 
 
@@ -381,7 +377,7 @@
                 projectLists = data;
                 console.log(projectLists)
                 $(projectLists).each(function (i) {
-                    $("select[name='selectProject']").append("<option value='" + projectLists[i].id + "'>" + projectLists[i].id + projectLists[i].number + projectLists[i].title + "  </option>");
+                    $("select[name='selectProject']").append("<option value='" + projectLists[i].id + "'>" + projectLists[i].number +" "+ projectLists[i].title + "  </option>");
                 });
                 //Change the text of the default "loading" option.
                 $('#loading').text('Select Project');
@@ -418,7 +414,6 @@
             var quantity = parseInt($('#quantity').val());
 
             // If is not undefined
-
             // Increment
             if (quantity > 0) {
                 $('#quantity').val(quantity - 1);
@@ -434,7 +429,6 @@
             url: url,
             success: function (data) {
                 expenseLists = data;
-
                 $(expenseLists).each(function (i) {
                     $("select[name='selectExpense']").append("<option value='" + expenseLists[i].id + "'>" + expenseLists[i].name + "  </option>");
                 });
@@ -484,7 +478,6 @@
     });
 
 
-
     function emptyForm() {
         $("input[name='unitcost']").val("")
         $("input[name='quantity']").val(1)
@@ -524,10 +517,8 @@
                     data: JSON.stringify(params),
                              contentType: "application/json",
                     success: function (data) {
-                        if (!data) {
-                        } else {
-
-                        }
+               
+                         window.location = "/expenses/downloadReport"
                     },
                     error: function (err) {
                         console.log(err);

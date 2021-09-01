@@ -4,6 +4,7 @@ package com.te.timex.controller;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
+import java.io.OutputStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -12,16 +13,23 @@ import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.time.LocalDate;
-import java.time.Month;
 import java.time.format.DateTimeFormatter;
-import java.time.temporal.WeekFields;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Locale;
 import java.util.Optional;
 
+import javax.servlet.ServletOutputStream;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
+import org.apache.poi.ss.usermodel.Cell;
+import org.apache.poi.ss.usermodel.CellStyle;
+import org.apache.poi.ss.usermodel.Row;
+import org.apache.poi.xssf.usermodel.XSSFFont;
+import org.apache.poi.xssf.usermodel.XSSFSheet;
+import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.InputStreamResource;
@@ -52,6 +60,7 @@ import com.te.timex.repository.ProjectRepository;
 import com.te.timex.repository.UserRepository;
 import com.te.timex.repository.WeekRepository;
 import com.te.timex.service.ExpenseListService;
+import com.te.timex.service.ReportService;
 
 @Controller
 @RequestMapping("/expenses")
@@ -62,6 +71,10 @@ public class ExpensesController {
 
 	@Autowired
 	private UserRepository userRepository;
+
+	@Autowired
+	private ReportService reportService;
+
 	@Autowired
 	private ProjectRepository projectRepository;
 
@@ -73,7 +86,7 @@ public class ExpensesController {
 
 	@Autowired
 	private WeekRepository weekRepository;
-	
+
 	@Autowired
 	private ExpenseListService expenseListService;
 
@@ -83,24 +96,8 @@ public class ExpensesController {
 	public String index(Model model, Authentication authentication) {
 		Common common = new Common();
 		user_id = common.getUserId(authentication, userRepository);
-		// List<ExpenseList> expenselist = expenseListService.findByUserId(user_id);
-
-		// @Query("SELECT p from POSTS p inner join p.user u where u.username=?1")
-		// System.out.println("***************1");
-		// System.out.println(user_id);
-
 		List<ExpenseList> expenselist = expenseListRepository.findByUserId(user_id);
-		// System.out.println("***************2");
-
-		// System.out.println(expenselist.toString());
-		// System.out.println("***************3");
 		model.addAttribute("expenselist", expenselist);
-		// System.out.println("***************!!!!!!!!!!!!!!!!!!!!!!!!!!!");
-		// System.out.println(expenselist.toString());
-
-		// Query query =
-		// em.createQuery("SELECT m.userName, m.age FROM Member m");//(2)
-
 		return "expenses/expenses";
 	}
 
@@ -141,7 +138,6 @@ public class ExpensesController {
 		System.out.println("upload_path = " + upload_path);
 		// save the file on the local file system
 		try {
-
 			Path path = Paths.get(upload_path + fileName);
 			System.out.println("here + " + path);
 			Files.copy(file.getInputStream(), path, StandardCopyOption.REPLACE_EXISTING);
@@ -158,111 +154,73 @@ public class ExpensesController {
 
 	@GetMapping("/selectExpense")
 	public ResponseEntity<List<Expense>> selectCategory() {
-		// System.out.println("selectExpense");
+
 		List<Expense> expenses = expenseRepository.findAll();
 		if (expenses.isEmpty()) {
 			System.out.println("empty");
 		}
-		// System.out.println("here!!!!!!!!");
-		// System.out.println(expenses.toString());
 		return new ResponseEntity<List<Expense>>(expenses, HttpStatus.OK);
 	}
 
 	@GetMapping("/selectExpenseDetail")
 	public ResponseEntity selectExpenseDetail(int expense_id) {
-		// System.out.println(expense_id);
 		Optional<Expense> expenseDetail = expenseRepository.findById(expense_id);
-
-		// System.out.println(expenseDetail.toString());
 		return new ResponseEntity(expenseDetail, HttpStatus.OK);
 	}
-
+     
+    
 	@PostMapping("/exportExpenses")
-	@ResponseBody
-	public String exportExpenses(@RequestBody HashMap<String, Object> param) {
-		if (param.get("project_id").toString().equals("allproject")) {
-			int project_id = 0;
-		} else {
-			int project_id = Integer.parseInt((String) param.get("project_id"));
-		}
-
-		if (param.get("expense_id").toString().equals("allcategory")) {
-			int expense_id = 0;
-		} else {
-			int expense_id = Integer.parseInt((String) param.get("expense_id"));
-		}
-
-		String timeframe = param.get("date").toString();
-		String today = LocalDate.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd"));
-		String startDay,endDay;
-		String[] date = today.split("-");
-		String year = date[0];
-		String month = date[1];
-	//	int lastmonth = Integer.parseInt(month)-1;
-		String lastmonth = String.valueOf(Integer.parseInt(month)-1);
-		String lastyear = String.valueOf(Integer.parseInt(year)-1);
-		String day = date[2];
-		int userId = user_id;
+	public void exportExpenses(@RequestBody HashMap<String, Object> param,
+			HttpServletResponse response) throws IOException {
 	
-		
-		switch (timeframe) {
-//		case "thisweek":
-//			
-//			break;
-//		case "lastweek":
-//			break;
-		case "thismonth":
-			startDay = year+"-"+month+"-01";
-		    endDay = year+"-"+month+"-31";
-		    System.out.println("startDay = "+startDay+" endDay = "+endDay);
-			break;
-		case "lastmonth":
-		  startDay = year+"-"+lastmonth+"-01";
-	      endDay = year+"-"+lastmonth+"-31";
-		    System.out.println("startDay = "+startDay+" endDay = "+endDay);
+        List<ExpenseList> expensereport = reportService.getExpenseList(param);
+        ExpenseExcelExporter excelExporter = new ExpenseExcelExporter(expensereport);
+        
+        excelExporter.export(response);    
+	}
+	
+	@GetMapping("/downloadReport")
+	public void downloadZip(HttpServletResponse response, HttpServletRequest request) throws IOException {
 
-			break;
-		case "thisyear":
-		  startDay = year+"-01-01";
-	      endDay = year+"-12-31";
-		    System.out.println("startDay = "+startDay+" endDay = "+endDay);
+		String path = "C:\\Users\\pc1\\Desktop\\Timex Spring Boot\\expense_report";
+		DateFormat dateFormatter = new SimpleDateFormat("yyyy-MM-dd");
+        String currentDateTime = dateFormatter.format(new Date());
+         
+		String fileName = "Expense Report_"+ currentDateTime + ".xls";
 
-			break;
-		case "lastyear":
-		  startDay = lastyear+"-01-01";
-	      endDay = lastyear+"-12-31";
-		    System.out.println("startDay = "+startDay+" endDay = "+endDay);
+		File file = new File(path+"\\"+fileName);
+		if (file.exists() && file.isFile()) {
+			FileInputStream inputstream = new FileInputStream(file);
 
-			break;
-		case "alltime":
-			startDay = "0000-01-01";
-		     endDay = today;
-		    System.out.println("startDay = "+startDay+" endDay = "+endDay);
+			response.setContentType("application/octet-stream; charset=utf-8");
+			response.setHeader("Content-Disposition", "attachment; filename=Expense Report.xls");
+			response.setHeader("Content-Type", "application/xls");
+			response.setHeader("Content-Transfer-Encoding", "binary");
+			response.setStatus(HttpServletResponse.SC_OK);
 
-		 
-			break;
-		case "custom":
-			
-			startDay = (String) param.get("start_date");
-		     endDay = (String) param.get("end_date");
-		    System.out.println("startDay = "+startDay+" endDay = "+endDay);
-			break;
-		default:
-			// code block
+			OutputStream out = response.getOutputStream();
+
+			FileInputStream fis = null;
+			try {
+				fis = new FileInputStream(file);
+				FileCopyUtils.copy(fis, out);
+			} catch (Exception e) {
+				e.printStackTrace();
+			} finally {
+				if (fis != null)
+					fis.close();
+				out.flush();
+				out.close();
+			}
+
 		}
-
-		//ArrayList expenseReport = expenseListRepository.findByUserId
-		
-		
-		return upload_path;
 	}
 
 	@PostMapping("/saveExpenses")
 	@ResponseBody
 	public String saveExpenses(@RequestParam("upload_receipt") MultipartFile uploadfile, String date2, String user_id2,
 			String project_id2, String expense_id2, String qty2, String total_amount2) throws Exception {
-		// System.out.println("saveExpenses");
-
+	
 		ExpenseList expenseList = new ExpenseList();
 		DateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd");
 		Date date;
@@ -282,7 +240,6 @@ public class ExpensesController {
 		String total_amount = (String) total_amount2;
 
 		if (uploadfile.isEmpty()) {
-			System.out.println("is empty!!!!!!!!!!!!!1");
 		} else {
 			// 업로드된 실행파일이 저장될 위치
 			String path = upload_path;
@@ -292,10 +249,10 @@ public class ExpensesController {
 
 			// 폴더생성
 			File folder = new File(path, folder_name);
-			System.out.println("folder = " + folder);
-			System.out.println("path = " + path);
-			System.out.println("file_path = " + file_path);
-			System.out.println("file_name = " + file_name);
+			//System.out.println("folder = " + folder);
+		//	System.out.println("path = " + path);
+		//	System.out.println("file_path = " + file_path);
+		//	System.out.println("file_name = " + file_name);
 			if (!folder.exists()) { // 폴더없을경우 폴더생성
 				System.out.println("폴더없음");
 				folder.mkdir();
@@ -327,57 +284,11 @@ public class ExpensesController {
 
 		ExpenseList expenseListId = expenseListRepository.save(expenseList);
 
-//		String a = Integer.toString(expenseListId.getId());
-
 		String message = "hi";
 
 		return message;
 
 	}
 
-//	@PostMapping("/saveExpenses")
-//	@ResponseBody
-//	public String saveExpenses(@RequestBody HashMap<String, Object> param,Authentication authentication){
-//		System.out.println("saveExpenses");
-//		System.out.println(param);		
-//	
-//	//	Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal(); 
-//	//	UserDetails userDetails = (UserDetails) authentication.getPrincipal();
-//	//	System.out.println(userDetails.getUsername());
-//	
-//		ExpenseList expenseList = new ExpenseList();
-//		DateFormat simpleDateFormat=new SimpleDateFormat("yyyy-MM-dd");
-//		Date date;
-//		try {
-//			date = simpleDateFormat.parse((String) param.get("date"));
-//			expenseList.setDate(date);
-//		} catch (ParseException e) {		
-//			e.printStackTrace();
-//		}
-//		
-//		int expense_id=Integer.parseInt((String) param.get("expense_id"));
-//
-//		int project_id=Integer.parseInt((String) param.get("project_id"));
-//
-//		user_id=(int) param.get("user_id");
-//		int qty = Integer.parseInt((String) param.get("qty"));
-//		String total_amount = (String)param.get("total_amount");
-//		expenseList.setExpenseId(expense_id);
-//		expenseList.setProjectId(project_id);
-//		expenseList.setUserId(user_id);
-//		expenseList.setStatus(2);
-//		expenseList.setQty(qty);
-//		expenseList.setTotal_amount(total_amount);
-//
-//
-//		ExpenseList expenseListId = expenseListRepository.save(expenseList);
-//		String a = Integer.toString(expenseListId.getId());
-//		
-//		String message = a;
-//        
-//        return message;
-//		
-//		
-//	}
 
 }
