@@ -1,5 +1,7 @@
 package com.te.timex.model;
 
+import java.util.Date;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -8,10 +10,12 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
+import javax.persistence.Temporal;
+import javax.persistence.TemporalType;
 
 @Entity
-@Table(name="timesheet")
-public class Timesheet{
+@Table(name="timesheet2")
+public class Timesheet2{
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)	
 	private int id;
@@ -25,16 +29,19 @@ public class Timesheet{
 	@Column(name="week_id")
 	private int weekId;
 	
-	private String sun;
-
-	private String mon;
-	private String tue;
-	private String wed;
-	private String thur;
-	private String fri;
-	private String sat;
-
+	@Temporal(TemporalType.DATE)
+	private Date date;
 	
+	private String hours;
+	private String day;
+	
+	public String getDay() {
+		return day;
+	}
+	public void setDay(String day) {
+		this.day = day;
+	}
+
 	@ManyToOne
     @JoinColumn(name="project_task_id",referencedColumnName="id", insertable = false, updatable = false)
     private ProjectTask projecttask;
@@ -45,6 +52,7 @@ public class Timesheet{
 	public void setWeek(Week week) {
 		this.week = week;
 	}
+
 	@ManyToOne
     @JoinColumn(name="week_id",referencedColumnName="id", insertable = false, updatable = false)
     private Week week;
@@ -63,6 +71,23 @@ public class Timesheet{
 	}
 
 
+	@Override
+	public String toString() {
+		return "Timesheet2 [id=" + id + ", userId=" + userId + ", projecttaskId=" + projecttaskId + ", weekId=" + weekId
+				+ ", date=" + date + ", hours=" + hours + ", projecttask=" + projecttask + ", week=" + week + "]";
+	}
+	public Date getDate() {
+		return date;
+	}
+	public void setDate(Date date) {
+		this.date = date;
+	}
+	public String getHours() {
+		return hours;
+	}
+	public void setHours(String hours) {
+		this.hours = hours;
+	}
 	public int getProjecttaskId() {
 		return projecttaskId;
 	}
@@ -81,55 +106,7 @@ public class Timesheet{
 	public void setWeekId(int weekId) {
 		this.weekId = weekId;
 	}
-	public String getSun() {
-		return sun;
-	}
-	public void setSun(String sun) {
-		this.sun = sun;
-	}
-	public String getMon() {
-		return mon;
-	}
-	public void setMon(String mon) {
-		this.mon = mon;
-	}
-	public String getTue() {
-		return tue;
-	}
-	public void setTue(String tue) {
-		this.tue = tue;
-	}
-	public String getWed() {
-		return wed;
-	}
-	public void setWed(String wed) {
-		this.wed = wed;
-	}
-	public String getThur() {
-		return thur;
-	}
-	public void setThur(String thur) {
-		this.thur = thur;
-	}
-	public String getFri() {
-		return fri;
-	}
-	public void setFri(String fri) {
-		this.fri = fri;
-	}
-	public String getSat() {
-		return sat;
-	}
-	public void setSat(String sat) {
-		this.sat = sat;
-	}
-	@Override
-	public String toString() {
-		return "Timesheet [id=" + id + ", userId=" + userId + ", projecttaskId=" + projecttaskId + ", weekId=" + weekId
-				+ ", sun=" + sun + ", mon=" + mon + ", tue=" + tue + ", wed=" + wed + ", thur=" + thur + ", fri=" + fri
-				+ ", sat=" + sat + ", projecttask=" + projecttask + "]";
-	}
-	
+
 
 	
 	

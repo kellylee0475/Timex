@@ -4,6 +4,7 @@
     th:with="title='MyTimeSheet'">
 
 
+
 <div layout:fragment="content">
 
     <!---add project modal-->
@@ -168,7 +169,7 @@
             </ul>
         </div>
         <div class="card mb-4">
-            <div class="card-header" style="border:none;">
+            <div class="card-header">
                 <i class="fas fa-table me-1"></i>
                 <b><span th:text="${currentWeek.period}"></span></b>
 
@@ -176,9 +177,9 @@
 
 
             <div class="dataTable-wrapper dataTable-loading no-footer sortable searchable fixed-columns">
-                <div class="dataTable-container" style="border-radius: 4px;">
+                <div class="dataTable-container">
                     <!--     <table class="origin-table"> -->
-                    <table class="dataTable-table" style="table-layout: fixed; margin-bottom: 0rem;">
+                    <table class="dataTable-table" style="table-layout: fixed">
                         <thead class="" style="background-color:  #f2f2f2;">
                             <tr>
                                 <th style="width: 15% ;text-align: center; vertical-align: middle;">Project/Task
@@ -219,54 +220,53 @@
                                             style='width:50px; text-align:center;' th:value="${cwl.sun}"
                                             th:id="${cwl.id}+'sun'" readonly>
                                     </td> -->
-                                <td style="text-align: center; vertical-align: middle;"><input
-                                        style='width:55px; text-align:center; border-radius: 4px; border: 1px solid #b6b6b6' th:value="${cwl.sun}"
+                             <!--    <td style="text-align: center; vertical-align: middle;"><input
+                                        style='width:50px; text-align:center;' th:value="${cwl.sun}"
                                         th:id="${cwl.id}+'sun'" readonly th:onchange="test(this)">
                                 </td>
                                 <td style="text-align: center; vertical-align: middle;"><input
-                                         style='width:55px; text-align:center; border-radius: 4px; border: 1px solid #b6b6b6' th:value="${cwl.mon}"
+                                        style='width:50px; text-align:center;' th:value="${cwl.mon}"
                                         th:id="${cwl.id}+'mon'" readonly th:onchange="test(this)">
                                 </td>
                                 <td style="text-align: center; vertical-align: middle;"><input
-                                         style='width:55px; text-align:center; border-radius: 4px; border: 1px solid #b6b6b6' th:value="${cwl.tue}"
+                                        style='width:50px; text-align:center;' th:value="${cwl.tue}"
                                         th:id="${cwl.id}+'tue'" readonly th:onchange="test(this)">
                                 </td>
                                 <td style="text-align: center; vertical-align: middle;"><input
-                                         style='width:55px; text-align:center; border-radius: 4px; border: 1px solid #b6b6b6' th:value="${cwl.wed}"
+                                        style='width:50px; text-align:center;' th:value="${cwl.wed}"
                                         th:id="${cwl.id}+'wed'" readonly th:onchange="test(this)">
                                 </td>
                                 <td style="text-align: center; vertical-align: middle;"><input
-                                         style='width:55px; text-align:center; border-radius: 4px; border: 1px solid #b6b6b6' th:value="${cwl.thur}"
+                                        style='width:50px; text-align:center;' th:value="${cwl.thur}"
                                         th:id="${cwl.id}+'thur'" readonly th:onchange="test(this)">
                                 </td>
                                 <td style="text-align: center; vertical-align: middle;"><input
-                                         style='width:55px; text-align:center; border-radius: 4px; border: 1px solid #b6b6b6' th:value="${cwl.fri}"
+                                        style='width:50px; text-align:center;' th:value="${cwl.fri}"
                                         th:id="${cwl.id}+'fri'" readonly th:onchange="test(this)">
                                 </td>
                                 <td style="text-align: center; vertical-align: middle;"><input
-                                         style='width:55px; text-align:center; border-radius: 4px; border: 1px solid #b6b6b6' th:value="${cwl.sat}"
+                                        style='width:50px; text-align:center;' th:value="${cwl.sat}"
                                         th:id="${cwl.id}+'sat'" readonly th:onchange="test(this)">
-                                </td>
+                                </td> -->
                                 <!--hidden으로 ajax로 값넘-->
                                 <input type="hidden" th:id="'projecttaskId'+${cwl.id}"
                                     th:value="${cwl.projecttaskId}" />
                                 <input type="hidden" th:id="'weekId'+${cwl.id}" th:value="${cwl.weekId}" />
-
-                                <td style="text-align: center; vertical-align: middle;">
-                                <button
+<!-- 
+                                <td style="text-align: center; vertical-align: middle;"><button
                                         th:value="'editButton'+${cwl.id}" type="button" th:id="'editButton'+${cwl.id}"
                                         onclick="editTask(this.value)" class="btn btn-primary">Edit</button></td>
                                 <td style="text-align: center; vertical-align: middle;"><button
                                         th:value="'deleteButton'+${cwl.id}" type="button"
                                         th:id="'deleteButton'+${cwl.id}" onclick="deleteTask(this.value)"
-                                        class="btn btn-primary">Delete</button></td>
+                                        class="btn btn-primary">Delete</button></td> -->
                             </tr>
                         </tbody>
                         <thead style="background-color:  #f2f2f2;">
                             <tr>
-                               <th style="width: 15% ;"><button type="button" id="addProjectButton"
+                                <th style="width: 15% ;"><button type="button" id="addProjectButton"
                                         class="btn btn-primary" style="width: -webkit-fill-available;">Add
-                                        Project</button></th>
+                                        Project</button></th> <!--
                                 <th style="text-align: center; vertical-align: middle;"
                                     th:text="${totalHours.totalSun}"></th>
                                 <th style="text-align: center; vertical-align: middle;"
@@ -283,8 +283,8 @@
                                     th:text="${totalHours.totalSat}">Saturyday</th>
                                 <th style="text-align: center; vertical-align: middle;">Total hours</th>
                                 <th style="text-align: center; vertical-align: middle;" th:text="${totalHours.total}">
-                                </th> 
-
+                                </th>
+ -->
                             </tr>
                         </thead>
                     </table>
@@ -292,10 +292,10 @@
                 
             </div>
 
-        </div><div style="text-align:right; padding-bottom:10px">
-                         <button type="button" id="exportTimeButton" class="btn btn-primary">Export Timesheet</button>
+        </div>
+                         <button type="button" id="exportTimeButton" class="btn btn-primary">Export</button>
      
-            </div>
+            
 
 </main>
 </div>
@@ -454,17 +454,17 @@
                 } else if (hh.toString().length == 2 && mm.toString().length == 0) {
                     $('#' + newid).val(hh[0] + hh[1] + ":00");
                 } else if (hh.toString().length == 1 && mm.toString().length == 2) {
-                    $('#' + newid).val( hh[0] + ":" + mm[0] + mm[1]);
+                    $('#' + newid).val("0" + hh[0] + ":" + mm[0] + mm[1]);
                 } else if (hh.toString().length == 1 && mm.toString().length == 1) {
-                    $('#' + newid).val(hh[0] + ":0" + mm[0]);
+                    $('#' + newid).val("0" + hh[0] + ":0" + mm[0]);
                 } else if (hh.toString().length == 1 && mm.toString().length == 0) {
-                    $('#' + newid).val(hh[0] + ":00");
+                    $('#' + newid).val("0" + hh[0] + ":00");
                 } else if (hh.toString().length == 0 && mm.toString().length == 2) {
-                    $('#' + newid).val("0:" + mm[0] + mm[1]);
+                    $('#' + newid).val("00:" + mm[0] + mm[1]);
                 } else if (hh.toString().length == 0 && mm.toString().length == 1) {
-                    $('#' + newid).val("0:" + mm[0]);
+                    $('#' + newid).val("00:" + mm[0]);
                 } else if (hh.toString().length == 0 && mm.toString().length == 0) {
-                    $('#' + newid).val("");
+                    $('#' + newid).val("00:00");
                 }
 
             }
@@ -485,21 +485,21 @@
                             $('#' + newid).val(writtenhours[0] + writtenhours[1] + ":" + writtenhours[2] + writtenhours[3]);
                         }
                     } else if (length == 3) {
-                        $('#' + newid).val( writtenhours[0] + ":" + writtenhours[1] + writtenhours[2]);
+                        $('#' + newid).val("0" + writtenhours[0] + ":" + writtenhours[1] + writtenhours[2]);
                     } else if (length == 2) {
                         if (writtenhours[0] == 1) {
                             $('#' + newid).val(writtenhours[0] + writtenhours[1] + ":00");
                         } else if (writtenhours[0] == 2 && writtenhours[1] < 5) {
                             $('#' + newid).val(writtenhours[0] + writtenhours[1] + ":00");
                         } else if (writtenhours[0] == 2 && writtenhours[1] > 4) {
-                            $('#' + newid).val("0:" + writtenhours[0] + writtenhours[1]);
+                            $('#' + newid).val("00:" + writtenhours[0] + writtenhours[1]);
                         } else if (writtenhours[0] == 6 && writtenhours[1] == 0) {
-                            $('#' + newid).val("1:00");
+                            $('#' + newid).val("01:00");
                         } else {
-                            $('#' + newid).val("0:" + writtenhours[0] + writtenhours[1]);
+                            $('#' + newid).val("00:" + writtenhours[0] + writtenhours[1]);
                         }
                     } else if (length == 1) {
-                        $('#' + newid).val(writtenhours[0] + ":00");
+                        $('#' + newid).val("0" + writtenhours[0] + ":00");
                     }
                 }
 
@@ -613,8 +613,6 @@
     }
 
     function editTask(data) {
-    	
-  	console.log("editTAsk")
         timesheetId = data.substring(10);//editButton잘라낸
         project_task_id = $('#' + 'projecttaskId' + timesheetId).val();
         week_id = $('#' + 'weekId' + timesheetId).val();
@@ -782,10 +780,4 @@
         background-color: #00000008 !important;
         border-width: thin;
     }
-    
-#btnwrap{
-    width: 100%;
-}
-
-    
 </style>

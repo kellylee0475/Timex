@@ -61,7 +61,7 @@ public class TimeController {
 
 	@Autowired
 	private ReportService reportService;
-	
+
 	int user_id;
 	int currentWeekId;
 	Week currentWeek;
@@ -70,13 +70,14 @@ public class TimeController {
 	public String index(Authentication authentication, Model model,
 			@RequestParam(required = false, value = "weekId") Optional<String> weekId, // time.html에서 action thyemeleaf로
 																						// 가져오는값
-			@RequestParam(name="pickedDate", required = false, defaultValue = "2021") String pickedDate) {// ajax에서 가져오는값
+			@RequestParam(name = "pickedDate", required = false, defaultValue = "2021") String pickedDate) {// ajax에서
+																											// 가져오는값
 
 		// 1. user정보가져오기
 		Common common = new Common();
 		user_id = common.getUserId(authentication, userRepository);
 		int week_number = 0;
-		int year=0;
+		int year = 0;
 		// 2.time.html에서 previous 또는 next 주 버튼클릭했을때 weekId를 가져온다
 		if (weekId.isPresent()) {
 			int previousWeekId = Integer.parseInt(weekId.get());
@@ -85,15 +86,15 @@ public class TimeController {
 
 		} else {// 현재
 
-		//	if (!pickedDate.isEmpty() || pickedDate != "" || pickedDate != null ) {
-				if (!pickedDate.equals("2021")) {
+			// if (!pickedDate.isEmpty() || pickedDate != "" || pickedDate != null ) {
+			if (!pickedDate.equals("2021")) {
 				System.out.println("here is picked date");
 				System.out.println(pickedDate);
 				// LocalDate today = LocalDate.now();
 				ArrayList a = Common.getWeekNumber2(pickedDate);
-			//	System.out.println(a.get(0));
-				week_number=(int) a.get(1);
-				year=(int) a.get(0);
+				// System.out.println(a.get(0));
+				week_number = (int) a.get(1);
+				year = (int) a.get(0);
 			} else {
 				// 2.현재 year가져오기
 				year = Calendar.getInstance().get(Calendar.YEAR);// this year
@@ -113,18 +114,17 @@ public class TimeController {
 				// 4. common.java에서 오늘 날짜에따른 week number가져오기
 				week_number = common.getWeekNumber();
 			}
-			System.out.println("year = "+year +" week_number = "+week_number);
+			System.out.println("year = " + year + " week_number = " + week_number);
 			// 5. week테이블에서 year, week number로 week id 가져오기
 			currentWeek = weekRepository.findByYearAndWeekNumber(year, week_number);
-			//System.out.println(currentWeek.toString());
+			// System.out.println(currentWeek.toString());
 			currentWeekId = currentWeek.getId();
 			System.out.println(currentWeekId);
 		}
 
 		// 6. timesheet테이블에서 currentweek와 현재 user_id값을 만족하는 데이터가져오기
 		ArrayList<Timesheet> currentWeekList = timesheetRepository.findByUserIdAndWeekId(user_id, currentWeekId);
-System.out.println(currentWeekList);
-		System.out.println(currentWeekList);
+
 		model.addAttribute("user_id", user_id);
 		model.addAttribute("currentWeek", currentWeek);
 		model.addAttribute("currentWeekId", currentWeekId);
@@ -135,31 +135,72 @@ System.out.println(currentWeekList);
 				TueMM = 0, WedMM = 0, ThurMM = 0, FriMM = 0, SatMM = 0;
 		int TotalHH = 0, TotalMM = 0;
 		for (int i = 0; i < currentWeekList.size(); i++) {
-			System.out.println(currentWeekList.get(i).getSun().substring(0, 2));
-			SunHH = SunHH + Integer.parseInt((String) (currentWeekList.get(i).getSun().substring(0, 2)));
-			MonHH = MonHH + Integer.parseInt((String) (currentWeekList.get(i).getMon().substring(0, 2)));
-			TueHH = TueHH + Integer.parseInt((String) (currentWeekList.get(i).getTue().substring(0, 2)));
-			WedHH = WedHH + Integer.parseInt((String) (currentWeekList.get(i).getWed().substring(0, 2)));
-			ThurHH = ThurHH + Integer.parseInt((String) (currentWeekList.get(i).getThur().substring(0, 2)));
-			FriHH = FriHH + Integer.parseInt((String) (currentWeekList.get(i).getFri().substring(0, 2)));
-			SatHH = SatHH + Integer.parseInt((String) (currentWeekList.get(i).getSat().substring(0, 2)));
-			SunMM = SunMM + Integer.parseInt((String) (currentWeekList.get(i).getSun().substring(3, 5)));
-			MonMM = MonMM + Integer.parseInt((String) (currentWeekList.get(i).getMon().substring(3, 5)));
-			TueMM = TueMM + Integer.parseInt((String) (currentWeekList.get(i).getTue().substring(3, 5)));
-			WedMM = SunHH + Integer.parseInt((String) (currentWeekList.get(i).getWed().substring(3, 5)));
-			ThurMM = ThurMM + Integer.parseInt((String) (currentWeekList.get(i).getThur().substring(3, 5)));
-			FriMM = FriMM + Integer.parseInt((String) (currentWeekList.get(i).getFri().substring(3, 5)));
-			SatMM = SatMM + Integer.parseInt((String) (currentWeekList.get(i).getSat().substring(3, 5)));
+			if (currentWeekList.get(i).getSun().contains(":")) {
 
-			// totalSun =totalSun+ currentWeekList.get(i).getSun();
-			// totalMon =totalMon+ currentWeekList.get(i).getMon();
-			// totalTue =totalTue+ currentWeekList.get(i).getTue();
-			// totalWed =totalWed+ currentWeekList.get(i).getWed();
-			// totalThur =totalThur+ currentWeekList.get(i).getThur();
-			// totalFri =totalFri+ currentWeekList.get(i).getFri();
-			// totalSat =totalSat+ currentWeekList.get(i).getSat();
+				SunHH = SunHH + Integer.parseInt((String) (currentWeekList.get(i).getSun().split(":")[0]));
+				SunMM = SunMM + Integer.parseInt((String) (currentWeekList.get(i).getSun().split(":")[1]));
+
+			}
+			if (currentWeekList.get(i).getMon().contains(":")) {
+
+				MonHH = MonHH + Integer.parseInt((String) (currentWeekList.get(i).getMon().split(":")[0]));
+				MonMM = MonMM + Integer.parseInt((String) (currentWeekList.get(i).getMon().split(":")[1]));
+			}
+			if (currentWeekList.get(i).getTue().contains(":")) {
+
+				TueHH = TueHH + Integer.parseInt((String) (currentWeekList.get(i).getTue().split(":")[0]));
+				TueMM = TueMM + Integer.parseInt((String) (currentWeekList.get(i).getTue().split(":")[1]));
+			}
+			if (currentWeekList.get(i).getWed().contains(":")) {
+				WedHH = WedHH + Integer.parseInt((String) (currentWeekList.get(i).getWed().split(":")[0]));
+				WedMM = WedMM + Integer.parseInt((String) (currentWeekList.get(i).getWed().split(":")[1]));
+
+			}
+			if (currentWeekList.get(i).getThur().contains(":")) {
+
+				ThurHH = ThurHH + Integer.parseInt((String) (currentWeekList.get(i).getThur().split(":")[0]));
+				ThurMM = ThurMM + Integer.parseInt((String) (currentWeekList.get(i).getThur().split(":")[1]));
+			}
+			if (currentWeekList.get(i).getFri().contains(":")) {
+
+				FriHH = FriHH + Integer.parseInt((String) (currentWeekList.get(i).getFri().split(":")[0]));
+				FriMM = FriMM + Integer.parseInt((String) (currentWeekList.get(i).getFri().split(":")[1]));
+			}
+			if (currentWeekList.get(i).getSat().contains(":")) {
+				SatHH = SatHH + Integer.parseInt((String) (currentWeekList.get(i).getSat().split(":")[0]));
+				SatMM = SatMM + Integer.parseInt((String) (currentWeekList.get(i).getSat().split(":")[1]));
+			}
+
 		}
 
+		while (SunMM >= 60) {
+			SunHH++;
+			SunMM = SunMM - 60;
+		}
+		while (MonMM >= 60) {
+			MonHH++;
+			MonMM = MonMM - 60;
+		}
+		while (TueMM >= 60) {
+			TueHH++;
+			TueMM = TueMM - 60;
+		}
+		while (WedMM >= 60) {
+			WedHH++;
+			WedMM = WedMM - 60;
+		}
+		while (ThurMM >= 60) {
+			ThurHH++;
+			ThurMM = ThurMM - 60;
+		}
+		while (FriMM >= 60) {
+			FriHH++;
+			FriMM = FriMM - 60;
+		}
+		while (SatMM >= 60) {
+			SatHH++;
+			SatMM = SatMM - 60;
+		}
 		totalSun = String.valueOf(SunHH) + ":" + String.valueOf(SunMM);
 		totalMon = String.valueOf(MonHH) + ":" + String.valueOf(MonMM);
 		totalTue = String.valueOf(TueHH) + ":" + String.valueOf(TueMM);
@@ -167,12 +208,43 @@ System.out.println(currentWeekList);
 		totalThur = String.valueOf(ThurHH) + ":" + String.valueOf(ThurMM);
 		totalFri = String.valueOf(FriHH) + ":" + String.valueOf(FriMM);
 		totalSat = String.valueOf(SatHH) + ":" + String.valueOf(SatMM);
-
+	
+		if (totalSun.contains(":") && String.valueOf(SunMM).equals("0")) {
+			totalSun = String.valueOf(SunHH) + ":00";
+		}
+		if (totalMon.contains(":") && String.valueOf(MonMM).equals("0")) {
+			System.out.println("no???????????????????");
+			totalMon = String.valueOf(MonHH) + ":00";
+		}
+		if (totalTue.contains(":") && String.valueOf(TueMM).equals("0")) {
+			totalTue = String.valueOf(TueHH) + ":00";
+		}
+		if (totalWed.contains(":") && String.valueOf(WedMM).equals("0")) {
+			totalWed = String.valueOf(WedHH) + ":00";
+		}
+		if (totalThur.contains(":") && String.valueOf(ThurMM).equals("0")) {
+			totalThur = String.valueOf(ThurHH) + ":00";
+		}
+		if (totalFri.contains(":") && String.valueOf(FriMM).equals("0")) {
+			totalFri = String.valueOf(FriHH) + ":00";
+		}
+		if (totalSat.contains(":") && String.valueOf(SatMM).equals("0")) {
+			totalSat = String.valueOf(SatHH) + ":00";
+		}
 		TotalHH = SunHH + MonHH + TueHH + WedHH + ThurHH + FriHH + SatHH;
 		TotalMM = SunMM + MonMM + TueMM + WedMM + ThurMM + FriMM + SatMM;
 		String totalHr = String.valueOf(TotalHH) + ":" + String.valueOf(TotalMM);
-		// String totalSun = String.valueOf(SunHH)+":"+String.valueOf(SunMM);
+		
 
+		while (TotalMM >= 60) {
+			TotalHH++;
+			TotalMM = TotalMM - 60;
+		}
+		if (totalHr.contains(":") && String.valueOf(TotalMM).equals("0")) {
+			totalHr = String.valueOf(TotalHH) + ":00";
+		}
+		
+		
 		// 7.총합
 		Map<String, String> totalHrs = new HashMap<String, String>();
 
@@ -190,30 +262,29 @@ System.out.println(currentWeekList);
 		System.out.println(currentWeek);
 		System.out.println(currentWeekId);
 		System.out.println(currentWeekList);
-		
+
 		return "time/time";
 	}
-	
-	
-	@PostMapping("/exportTime")
-	public void exportTime(@RequestBody HashMap<String, Object> param,
-			HttpServletResponse response) throws IOException {
 
-        List<Timesheet> timesheet = reportService.getTimeList(param);
-        TimeExcelExporter excelExporter = new TimeExcelExporter(timesheet);
-        
-        excelExporter.export(response);    
+	@PostMapping("/exportTime")
+	public void exportTime(@RequestBody HashMap<String, Object> param, HttpServletResponse response)
+			throws IOException {
+
+		List<Timesheet> timesheet = reportService.getTimeList(param);
+		TimeExcelExporter excelExporter = new TimeExcelExporter(timesheet);
+
+		excelExporter.export(response);
 	}
-	
+
 	@GetMapping("/downloadReport")
 	public void downloadZip(HttpServletResponse response, HttpServletRequest request) throws IOException {
 
 		String path = "C:\\Users\\pc1\\Desktop\\Timex Spring Boot\\time_report";
 		DateFormat dateFormatter = new SimpleDateFormat("yyyy-MM-dd");
-        String currentDateTime = dateFormatter.format(new Date());
-         
-		String fileName = "Time Report_"+ currentDateTime + ".xls";
-		File file = new File(path+"\\"+fileName);
+		String currentDateTime = dateFormatter.format(new Date());
+
+		String fileName = "Time Report_" + currentDateTime + ".xls";
+		File file = new File(path + "\\" + fileName);
 		if (file.exists() && file.isFile()) {
 			FileInputStream inputstream = new FileInputStream(file);
 
@@ -240,13 +311,15 @@ System.out.println(currentWeekList);
 
 		}
 	}
+
 	@GetMapping("/setDate")
-	public String setDate(RedirectAttributes redirectAttributes,@RequestParam(name="pickedDate", required = false, defaultValue = "2021") String pickedDate) {
-		
+	public String setDate(RedirectAttributes redirectAttributes,
+			@RequestParam(name = "pickedDate", required = false, defaultValue = "2021") String pickedDate) {
+
 		redirectAttributes.addAttribute("pickedDate", pickedDate);
 		return "redirect:/time";
 	}
-	
+
 	@GetMapping("/addProject")
 	public String modal1() {
 		return "time/addProject";
@@ -349,13 +422,13 @@ System.out.println(currentWeekList);
 			timesheet.setUserId(user_id);
 			timesheet.setProjecttaskId(project_task_id);
 			timesheet.setWeekId(week_id);
-			timesheet.setSun("00:00");
-			timesheet.setMon("00:00");
-			timesheet.setTue("00:00");
-			timesheet.setWed("00:00");
-			timesheet.setThur("00:00");
-			timesheet.setFri("00:00");
-			timesheet.setSat("00:00");
+			timesheet.setSun("");
+			timesheet.setMon("");
+			timesheet.setTue("");
+			timesheet.setWed("");
+			timesheet.setThur("");
+			timesheet.setFri("");
+			timesheet.setSat("");
 			timesheet = timesheetRepository.save(timesheet);
 			String timesheetId = String.valueOf(timesheet.getId());
 			int id = Integer.parseInt(timesheetId);

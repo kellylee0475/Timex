@@ -72,8 +72,17 @@ public class TimeExcelExporter {
 		font.setFontHeight(16);
 		style.setFont(font);
 
-		createCell(row, 0, "Date", style);
+		createCell(row, 0, "Period", style);
 		createCell(row, 1, "Project", style);
+		createCell(row, 2, "Task", style);
+		createCell(row, 3, "Sun", style);
+		createCell(row, 4, "Mon", style);
+		createCell(row, 5, "Tue", style);
+		createCell(row, 6, "Wed", style);
+		createCell(row, 7, "Thur", style);
+		createCell(row, 8, "Fri", style);
+		createCell(row, 9, "Sat", style);
+	
 
 	}
 
@@ -102,9 +111,18 @@ public class TimeExcelExporter {
 			Row row = sheet.createRow(rowCount++);
 			int columnCount = 0;
 
-			
+		
+			createCell(row, columnCount++, 	ts.getWeek().getPeriod(), style);
+			createCell(row, columnCount++, ts.getProjecttask().getProject().getNumber()+"  "+ts.getProjecttask().getProject().getTitle(), style);
+			createCell(row, columnCount++, ts.getProjecttask().getTask().getName(), style);
+			createCell(row, columnCount++, ts.getSun(), style);
 			createCell(row, columnCount++, ts.getMon(), style);
 			createCell(row, columnCount++, ts.getTue(), style);
+			createCell(row, columnCount++, ts.getWed(), style);
+			createCell(row, columnCount++, ts.getThur(), style);
+			createCell(row, columnCount++, ts.getFri(), style);
+			createCell(row, columnCount++, ts.getSat(), style);
+
 		//	createCell(row, columnCount++, el.getExpense().getName(), style);
 		
 
