@@ -274,6 +274,8 @@ System.out.println(user.getEmail());
 	        
 	    } catch (Exception e) {
 	        e.printStackTrace();
+	        System.out.println("Idon'tknow");
+	        System.out.println(user.toString());
 	        userService.save(user);
 			return "account/login";
 	       

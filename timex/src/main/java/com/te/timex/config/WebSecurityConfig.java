@@ -3,66 +3,52 @@ package com.te.timex.config;
 import javax.sql.DataSource;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
+import org.springframework.security.config.annotation.authentication.configuration.EnableGlobalAuthentication;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.builders.WebSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.web.servlet.config.annotation.ViewControllerRegistry;
+
 @Configuration
 @EnableWebSecurity // Spring Security를 활성화한다는 의미의 어노테이션입니다.
+@EnableGlobalAuthentication
 public class WebSecurityConfig extends WebSecurityConfigurerAdapter {// WebSecurityConfigurerAdapter는 Spring Security의
-																	// 설정파일로서의 역할을 하기 위해 상속해야 하는 클래스입니다.
+																		// 설정파일로서의 역할을 하기 위해 상속해야 하는 클래스입니다.
 
-	
 	@Autowired
-	private DataSource dataSource; //application.properties에서 사용한 database
-	
+	private DataSource dataSource; // application.properties에서 사용한 database
 
-	 @Override
-	  public void configure(WebSecurity web) { // static 하위 폴더 (css, js, img)는 무조건 접근이 가능해야하기 때문에 인증을 무시해야합니다.
-	    web.ignoring().antMatchers("/css/**", "/js/**", "/img/**", "/assets/**");
-	  }
-	
-	
+	@Override
+	public void configure(WebSecurity web) { // static 하위 폴더 (css, js, img)는 무조건 접근이 가능해야하기 때문에 인증을 무시해야합니다.
+		web.ignoring().antMatchers("/css/**", "/js/**", "/img/**", "/assets/**");
+	}
+
 	@Override
 	protected void configure(HttpSecurity http) throws Exception {
-		http
-		.csrf().disable()
-		.authorizeRequests()
-	
-			.antMatchers("/","/account/register","/account/forgot_password","/account/reset_password").permitAll().anyRequest().authenticated()
-			.and()
-		.formLogin()
-				.loginPage("/account/login")
-				.permitAll()
+		http.csrf().disable().authorizeRequests()
+				.antMatchers("/", "/account/register", "/account/forgot_password", "/account/reset_password")
+				.permitAll().anyRequest().authenticated().and().formLogin().loginPage("/account/login").permitAll()
 				.defaultSuccessUrl("/time") // 로그인 성공 후 리다이렉트 주소
-				//.failureUrl("/login?error=true")//if login fail
+				// .failureUrl("/login?error=true")//if login fail
 				.and()
-				 
-		.logout().permitAll();
-	//	.http.csrf().disable();
+				.logout().permitAll();
+		// .http.csrf().disable();
 	}
-	
-	@Autowired
-	public void configureGlobal(AuthenticationManagerBuilder auth) 
-	  throws Exception {
-	    auth.jdbcAuthentication()
-	      .dataSource(dataSource)
-	      .passwordEncoder(passwordEncoder())
-	      .usersByUsernameQuery("select email, password, enabled from users where email=?")
 
-	      .authoritiesByUsernameQuery("select u.email, r.name "
-	        + "from user_role ur inner join users u on ur.user_id=u.id "
-	        + "inner join role r on ur.role_id=r.id "
-	        + "where u.email = ?;");
+	@Autowired
+	public void configureGlobal(AuthenticationManagerBuilder auth) throws Exception {
+		auth.jdbcAuthentication().dataSource(dataSource).passwordEncoder(passwordEncoder())
+				.usersByUsernameQuery("select email, password, enabled from users where email=?")
+				.authoritiesByUsernameQuery(
+						"select u.email, r.name " + "from user_role ur inner join users u on ur.user_id=u.id "
+								+ "inner join role r on ur.role_id=r.id " + "where u.email = ?;");
 	}
-	
+
 	@Bean
 	public PasswordEncoder passwordEncoder() {
 		return new BCryptPasswordEncoder();
