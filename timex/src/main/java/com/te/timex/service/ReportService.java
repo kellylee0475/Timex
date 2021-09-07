@@ -29,8 +29,9 @@ public class ReportService {
 	@Autowired
 	WeekRepository weekRepository;
 
+	
 	public List<ExpenseList> getExpenseList(HashMap<String, Object> param) {
-		System.out.println("&&&&&&&&&&&&&&");
+
 		System.out.println(param.get("project_id").toString());
 		System.out.println(param.get("expense_id").toString());
 		int project_id, expense_id;
@@ -55,14 +56,14 @@ public class ReportService {
 		String lastmonth = String.valueOf(Integer.parseInt(month) - 1);
 		String lastyear = String.valueOf(Integer.parseInt(year) - 1);
 		String day = date[2];
-
-		int user_id = 9;
+		
+		int user_id =  Integer.parseInt((String) param.get("user_id").toString());
+	//	System.out.println(user_id2);
 		Common common = new Common();
 		ArrayList weekinfo;
 		Week currentWeek;
 		String period;
 		String[] period2;
-
 		switch (timeframe) {
 		case "thisweek":
 			weekinfo = common.getWeekNumber2(today);
@@ -134,17 +135,19 @@ public class ReportService {
 			Date convertedEndDate = sdf.parse(endDay);
 			end_date = sdf.format(convertedEndDate);
 			// System.out.println(start_date);
-			// System.out.println("startDay = " + start_date + " endDay = " + end_date);
+			 System.out.println("startDay = " + start_date + " endDay = " + end_date);
 
 		} catch (ParseException e1) {
 
 			e1.printStackTrace();
 		}
-		// System.out.println("user_id" + user_id);
-		// System.out.println(project_id);
-		// System.out.println(expense_id);
-		// System.out.println(start_date);
-		// System.out.println(end_date);
+		System.out.println("&&&&&&&&&&&&&&2");
+
+		 System.out.println("user_id" + user_id);
+		 System.out.println(project_id);
+		 System.out.println(expense_id);
+		 System.out.println(start_date);
+		 System.out.println(end_date);
 		List<ExpenseList> expenseReport = null;
 		if (project_id == 0 && expense_id != 0) {
 			System.out.println("here1");
@@ -187,7 +190,7 @@ public class ReportService {
 		int yearInt = Integer.parseInt(year);
 		int monthInt = Integer.parseInt(month);
 		List<Timesheet> timesheetReport = null;
-		int user_id = 9;
+		int user_id =  Integer.parseInt((String) param.get("user_id"));
 		Common common = new Common();
 		ArrayList weekinfo;
 		Week currentWeek;
@@ -263,8 +266,9 @@ public class ReportService {
 			break;
 		case "lastyear":
 			if (project_id == 0) {
-				List<Timesheet> timesheet = timesheetRepository.findByUserIdAndYear(user_id, yearInt - 1);
-				System.out.println(timesheet);
+			
+				timesheetReport = timesheetRepository.findByUserIdAndYear(user_id, yearInt - 1);
+			
 			} else {
 				timesheetReport = timesheetRepository.findByUserIdAndYearAndProjectId(user_id, yearInt - 1, project_id);
 
@@ -272,6 +276,9 @@ public class ReportService {
 			break;
 		case "alltime":
 			if (project_id == 0) {
+			//	System.out.println("project_id? = "+project_id);
+			//	System.out.println("user_id=?");
+			//	System.out.println(user_id);
 				timesheetReport = timesheetRepository.findByUserIdOrderByWeekIdDesc(user_id);
 
 			} else {
@@ -287,8 +294,8 @@ public class ReportService {
 			System.out.println("everyoneher?");
 		}
 
-		System.out.println("*************!!!! timesheetreport");
-		System.out.println(timesheetReport);
+	//	System.out.println("*************!!!! timesheetreport");
+		//System.out.println(timesheetReport);
 
 		return timesheetReport;
 	}

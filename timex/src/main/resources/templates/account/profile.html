@@ -38,7 +38,7 @@
 									<img class="img-account-profile rounded-circle mb-2" style="width:250px;"
 										th:src="@{/assets/img/profile.PNG}" />	</span> 
 								<span th:unless="${user.photo == null}">
-									<img class="img-account-profile rounded-circle mb-2" th:src="'/profile_photos/'+@{${user.photo}}"  style="width:250px; height:250px">
+									<img class="img-account-profile rounded-circle mb-2" th:src="'/timex/profile_photos/'+@{${user.photo}}"  style="width:250px; height:250px">
 								 	</span>	
 
 								<div class="small font-italic text-muted mb-4">

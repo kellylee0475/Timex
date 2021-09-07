@@ -212,4 +212,15 @@ public class User{
 		this.roles = roles;
 	}
 
+	/*
+	 * @Override public String toString() { return "User [id=" + id + ", firstname="
+	 * + firstname + ", lastname=" + lastname + ", email=" + email + ", password=" +
+	 * password + ", address=" + address + ", country=" + country + ", zipcode=" +
+	 * zipcode + ", memo=" + memo + ", city=" + city + ", enabled=" + enabled +
+	 * ", resetpwtoken=" + resetpwtoken + ", photo=" + photo + ", photopath=" +
+	 * photopath + ", roles=" + roles + ", boards=" + boards + ", expenselist=" +
+	 * expenselist + "]"; }
+	 */
+	
+	
 }

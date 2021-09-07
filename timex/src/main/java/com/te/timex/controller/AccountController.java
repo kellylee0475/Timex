@@ -87,7 +87,7 @@ public class AccountController {
 		User user = userRepository.findByEmail(email);
 		System.out.println("profile controller");
 		System.out.println(user);
-		// System.out.println(user.toString());
+	//	 System.out.println(user.toString());
 		model.addAttribute(user);
 		return "account/profile";
 	}

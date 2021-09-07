@@ -88,8 +88,8 @@ public class TimeController {
 
 			// if (!pickedDate.isEmpty() || pickedDate != "" || pickedDate != null ) {
 			if (!pickedDate.equals("2021")) {
-				System.out.println("here is picked date");
-				System.out.println(pickedDate);
+		//		System.out.println("here is picked date");
+		//		System.out.println(pickedDate);
 				// LocalDate today = LocalDate.now();
 				ArrayList a = Common.getWeekNumber2(pickedDate);
 				// System.out.println(a.get(0));
@@ -114,7 +114,7 @@ public class TimeController {
 				// 4. common.java에서 오늘 날짜에따른 week number가져오기
 				week_number = common.getWeekNumber();
 			}
-			System.out.println("year = " + year + " week_number = " + week_number);
+		//	System.out.println("year = " + year + " week_number = " + week_number);
 			// 5. week테이블에서 year, week number로 week id 가져오기
 			currentWeek = weekRepository.findByYearAndWeekNumber(year, week_number);
 			// System.out.println(currentWeek.toString());
@@ -213,7 +213,7 @@ public class TimeController {
 			totalSun = String.valueOf(SunHH) + ":00";
 		}
 		if (totalMon.contains(":") && String.valueOf(MonMM).equals("0")) {
-			System.out.println("no???????????????????");
+		
 			totalMon = String.valueOf(MonHH) + ":00";
 		}
 		if (totalTue.contains(":") && String.valueOf(TueMM).equals("0")) {
@@ -258,10 +258,11 @@ public class TimeController {
 		totalHrs.put("total", totalHr);
 
 		model.addAttribute("totalHours", totalHrs);
-		System.out.println(totalHrs);
-		System.out.println(currentWeek);
-		System.out.println(currentWeekId);
-		System.out.println(currentWeekList);
+	//	System.out.println(totalHrs);
+	//	System.out.println(currentWeek);
+	//	System.out.println(currentWeekId);
+	//	System.out.println(currentWeekList);
+
 
 		return "time/time";
 	}
@@ -327,13 +328,14 @@ public class TimeController {
 
 	@GetMapping("/selectProject")
 	public ResponseEntity<List<Project>> selectProject() {
-
+System.out.println("am i heere!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!~~~~~~~~~~~~~~~~~");
 		List<Project> projects = projectRepository.findAll();
 
 		if (projects.isEmpty()) {// 고객에 등록된 솔루션이 없을경우
 			System.out.println("empty");
 		}
-		// System.out.println(projects);
+		System.out.println("&&&&&&&&&&&&&&&&??");
+		System.out.println(projects);
 		return new ResponseEntity<List<Project>>(projects, HttpStatus.OK);
 	}
 

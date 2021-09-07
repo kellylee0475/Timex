@@ -80,7 +80,7 @@
                                             <option value="thisyear">This Year</option>
                                             <option value="lastyear">Last Year</option>
                                             <option value="alltime">All Time</option>
-                                            <option value="custom" id="custom">Custom</option>
+                                           <!--  <option value="custom" id="custom">Custom</option> -->
 
                                         </select>
                                     </td>
@@ -183,13 +183,13 @@
                             <tr>
                                 <th style="width: 15% ;text-align: center; vertical-align: middle;">Project/Task
                                 </th>
-                                <th style="text-align: center; vertical-align: middle;">Sunday</th>
-                                <th style="text-align: center; vertical-align: middle;">Monday</th>
-                                <th style="text-align: center; vertical-align: middle;">Tuesday</th>
-                                <th style="text-align: center; vertical-align: middle;">Wedensday</th>
-                                <th style="text-align: center; vertical-align: middle;">Thursday</th>
-                                <th style="text-align: center; vertical-align: middle;">Friday</th>
-                                <th style="text-align: center; vertical-align: middle;">Saturyday</th>
+                                <th style="text-align: center; vertical-align: middle;">Sun</th>
+                                <th style="text-align: center; vertical-align: middle;">Mon</th>
+                                <th style="text-align: center; vertical-align: middle;">Tue</th>
+                                <th style="text-align: center; vertical-align: middle;">Wed</th>
+                                <th style="text-align: center; vertical-align: middle;">Thur</th>
+                                <th style="text-align: center; vertical-align: middle;">Fri</th>
+                                <th style="text-align: center; vertical-align: middle;">Sat</th>
                                 <th style="width: 15% ;" colspan="2"></th>
 
                             </tr>
@@ -323,59 +323,10 @@
         initButton();
 
 
-
-        $("#exportTimeButton").click(function () {
-            $("#exportTimeModel").modal("toggle");
-        });
-
-        $("#timeframe").change(function () {
-            if ($(this).val() === "custom") {
-                $('#custom_timeframe').show();
-                $("#tftd").css("padding-top", "10px");
-            } else {
-                $('#custom_timeframe').hide();
-                $("#tftd").css("padding-top", "0px");
-            }
-        });
-
-        
-        $("#runTimeReport").click(function () {
-
-            if (validateExport() == false) {//유효성검사
-                return false;
-            } else {
-                var url = "time/exportTime";
-                var params = {};
-                params["date"] = $("#timeframe").val();
-                params["project_id"] = $("#selectProject2 option:selected").val();          
-                params["start_date"] = $("#start_date").val();
-                params["end_date"] = $("#end_date").val();
-
-
-
-                $.ajax({
-                    type: "POST",
-                    url: url,
-                    data: JSON.stringify(params),
-                             contentType: "application/json",
-                    success: function (data) {
-               
-                         window.location = "/time/downloadReport"
-                    },
-                    error: function (err) {
-                        console.log(err);
-                    }
-                });
-            }
-        })
-
-
-        //      })
-
-        var url = "/time/selectProject";
+    //    var url = "/time/selectProject";
         $.ajax({
             type: "GET",
-            url: url,
+            url: "/timex/time/selectProject",
             success: function (data) {
                 projectLists = data;
                 console.log(projectLists)
@@ -397,7 +348,59 @@
             getProjectTaskLists();
         })
 
+        $("#exportTimeButton").click(function () {
+            $("#exportTimeModel").modal("toggle");
+        });
+
+        $("#timeframe").change(function () {
+            if ($(this).val() === "custom") {
+                $('#custom_timeframe').show();
+                $("#tftd").css("padding-top", "10px");
+            } else {
+                $('#custom_timeframe').hide();
+                $("#tftd").css("padding-top", "0px");
+            }
+        });
+
+        
+        $("#runTimeReport").click(function () {
+
+            if (validateExport() == false) {//유효성검사
+                return false;
+            } else {
+                var url = "/timex/time/exportTime";
+                var params = {};
+                params["date"] = $("#timeframe").val();
+                params["project_id"] = $("#selectProject2 option:selected").val();          
+                params["start_date"] = $("#start_date").val();
+                params["end_date"] = $("#end_date").val();
+
+                params["user_id"] = user_id;
+
+                $.ajax({
+                    type: "POST",
+                    url: url,
+                    data: JSON.stringify(params),
+                             contentType: "application/json",
+                    success: function (data) {
+               
+                         window.location = "/timex/time/downloadReport"
+                    },
+                    error: function (err) {
+                        console.log(err);
+                    }
+                });
+            }
+        })
+
+
+        //      })
+
+
+
     });
+    
+    
     function validateExport() {
         const startdate = document.getElementById("start_date");
         const enddate = document.getElementById("end_date");
@@ -548,7 +551,7 @@
                if(validate()==false){//유효성검사
 				return false;
 			}else{
-            var url = "/time/saveProjectTask";
+            var url = "/timex/time/saveProjectTask";
             var params = {};
   
             if ($("#selectTask option:selected").val() == "Select Task") {
@@ -635,7 +638,7 @@
 
         } else {
             //save클릭할때
-            var url = "/time/editProjectTask";
+            var url = "/timex/time/editProjectTask";
             var params = {};
 
             params["timesheetId"] = timesheetId;
@@ -682,7 +685,7 @@
     function isNumber(n) { return /^-?[\d.]+(?:e-?\d+)?$/.test(n); }
 
     function deleteTask(data) {
-        var url = "/time/deleteProjectTask";
+        var url = "/timex/time/deleteProjectTask";
         var params = {};
         timesheetId = data.substring(12);//deleteButton잘라낸
         params["timesheetId"] = timesheetId;
@@ -743,7 +746,7 @@
 
 
     function getProjectTaskLists() {
-        var url = "/time/selectTask";
+        var url = "/timex/time/selectTask";
 
         $.ajax({
             type: "GET",
@@ -789,3 +792,4 @@
 
     
 </style>
+
