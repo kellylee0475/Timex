@@ -48,7 +48,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {// WebSecur
 						"select u.email, r.name " + "from user_role ur inner join users u on ur.user_id=u.id "
 								+ "inner join role r on ur.role_id=r.id " + "where u.email = ?;");
 	}
-
+ 
 	@Bean
 	public PasswordEncoder passwordEncoder() {
 		return new BCryptPasswordEncoder();
