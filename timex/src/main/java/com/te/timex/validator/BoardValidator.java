@@ -12,15 +12,12 @@ import com.te.timex.model.Board;
 public class BoardValidator implements Validator{
 
 	@Override
-	public boolean supports(Class<?> clazz) {
-		// TODO Auto-generated method stub
-		
+	public boolean supports(Class<?> clazz) {		
 		return Board.class.equals(clazz);
 	}
 
 	@Override
 	public void validate(Object obj, Errors errors) {
-		// TODO Auto-generated method stub
 		Board b = (Board) obj;
 		if(StringUtils.isEmpty(b.getContent())) {
 			errors.rejectValue("content","key","add content");

@@ -26,10 +26,6 @@ public class TimeExcelExporter {
 	private XSSFSheet sheet;
 	private List<Timesheet> timesheet;
 
-	// @Value("${expenseReport_path}")
-	// private String path;
-
-//	    expenseReport_path
 	public TimeExcelExporter(List<Timesheet> timesheet) {
 		this.timesheet = timesheet;
 		workbook = new XSSFWorkbook();
@@ -40,30 +36,26 @@ public class TimeExcelExporter {
 		writeHeaderLine();
 		writeDataLines();
 
+		//Chnage6
+		//String path = "C:\\Users\\pc1\\Desktop\\Timex Spring Boot\\time_report";
 		String path = "C:\\Users\\pc1\\Desktop\\Timex Spring Boot\\time_report";
 		DateFormat dateFormatter = new SimpleDateFormat("yyyy-MM-dd");
         String currentDateTime = dateFormatter.format(new Date());
-         
-    //    String headerKey = "Content-Disposition";
-//        String headerValue = "attachment; filename=users_" + currentDateTime + ".xlsx";
+
 		String fileName = "Time Report_"+ currentDateTime + ".xls";
 		
-		//File.Exists(@"C:\Users\Me\Desktop\JAM_MACHINE\JAMS\record.txt"
-		
-		File xlsFile = new File(path + "\\" + fileName); // 저장경로 설정
-		//Files.deleteIfExists(file.toPath()); 
+		File xlsFile = new File(path + "\\" + fileName); // set the save path
+
 		if(xlsFile.exists()) {
 			xlsFile.delete();
 		}
 		FileOutputStream fos = new FileOutputStream(xlsFile);
 		workbook.write(fos);
 		fos.close();
-	//	downloadFile(xlsFile);
 	}
 
 	private void writeHeaderLine() {
-		sheet = workbook.createSheet("Time");
-
+		sheet = workbook.createSheet("TimeSheet");
 		Row row = sheet.createRow(0);
 
 		CellStyle style = workbook.createCellStyle();
@@ -82,8 +74,6 @@ public class TimeExcelExporter {
 		createCell(row, 7, "Thur", style);
 		createCell(row, 8, "Fri", style);
 		createCell(row, 9, "Sat", style);
-	
-
 	}
 
 	private void createCell(Row row, int columnCount, Object value, CellStyle style) {
@@ -110,7 +100,6 @@ public class TimeExcelExporter {
 		for (Timesheet ts : timesheet) {
 			Row row = sheet.createRow(rowCount++);
 			int columnCount = 0;
-
 		
 			createCell(row, columnCount++, 	ts.getWeek().getPeriod(), style);
 			createCell(row, columnCount++, ts.getProjecttask().getProject().getNumber()+"  "+ts.getProjecttask().getProject().getTitle(), style);
@@ -122,9 +111,6 @@ public class TimeExcelExporter {
 			createCell(row, columnCount++, ts.getThur(), style);
 			createCell(row, columnCount++, ts.getFri(), style);
 			createCell(row, columnCount++, ts.getSat(), style);
-
-		//	createCell(row, columnCount++, el.getExpense().getName(), style);
-		
 
 		}
 	}

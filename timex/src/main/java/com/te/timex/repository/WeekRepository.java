@@ -9,7 +9,6 @@ import com.te.timex.model.Week;
 
 
 public interface WeekRepository extends JpaRepository<Week, Integer> {
-
 	
 	Week findByYearAndWeekNumber(int year, int week_number);
 	@Query(value = "SELECT id " + 

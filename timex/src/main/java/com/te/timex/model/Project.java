@@ -7,9 +7,7 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
-import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
 @Entity
@@ -20,25 +18,17 @@ public class Project{
 	@GeneratedValue(strategy = GenerationType.IDENTITY)	
 	private int id;
 	
-	
 	private String number;
 	private String title;
 	
 	@OneToMany(mappedBy = "project")
 	private List<ProjectTask> projectTask = new ArrayList<>();
-	
-
-	
-//	@OneToMany(mappedBy = "project")
-//	private List<ExpenseList> expenselist;
-	
-	
-
 
 	@Override
 	public String toString() {
 		return "Project [id=" + id + ", number=" + number + ", title=" + title + "]";
 	}
+	
 	public int getId() {
 		return id;
 	}
@@ -57,9 +47,5 @@ public class Project{
 	public void setTitle(String title) {
 		this.title = title;
 	}
-	
-
-
-	
 	
 }

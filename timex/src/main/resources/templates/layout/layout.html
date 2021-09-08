@@ -1,25 +1,24 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout">
+<html xmlns:th="http://www.thymeleaf.org"
+	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout">
 
-<th:block th:replace="fragments/head :: head(${title})"><!--passing title that received from expenses.html to head.html-->
-
+<th:block th:replace="fragments/head :: head(${title})">
+	<!--passing title that received from expenses.html to head.html-->
 </th:block>
 
 
 <body>
 
-    <th:block th:replace="fragments/topmenu :: topmenu"></th:block>
+	<th:block th:replace="fragments/topmenu :: topmenu"></th:block>
 
-    <div id="layoutSidenav">
-        <th:block th:replace="fragments/sidemenu :: sidemenu"></th:block>
-        <div id="layoutSidenav_content">
-    <!--   <p th:text="${title}"> </p> -->
-            <th:block layout:fragment="content">
-          
-            </th:block>
-            <th:block th:replace="fragments/footer :: footer"></th:block>
-        </div>
-    </div>
+	<div id="layoutSidenav">
+		<th:block th:replace="fragments/sidemenu :: sidemenu"></th:block>
+		<div id="layoutSidenav_content">
+			<th:block layout:fragment="content">
+			</th:block>
+			<th:block th:replace="fragments/footer :: footer"></th:block>
+		</div>
+	</div>
 
 </body>
 

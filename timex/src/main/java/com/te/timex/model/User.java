@@ -23,41 +23,45 @@ import org.springframework.data.annotation.Transient;
 @Table(name="Users")
 public class User{
 	
-
 	@Id
 	@GeneratedValue(strategy=GenerationType.IDENTITY)
 	private int id;
-	
-	//@Column(name = "firstname") 
-	
+		
 	@NotBlank(message = "Please enter first name")
 	private String firstname;
 	
-//	@Column(name = "lastname")
 	@NotBlank(message = "Please enter last name")
 	private String lastname;	
-//	@Column(name = "email")
 	@NotBlank(message = "Please enter email address.")
 	@Email(message = "Please enter correct email address.")
 	private String email;
-//	@Column(name = "password")
+	
 	private String password;
 	private String address;
 	private String country;
 	private int zipcode;
 	private String memo;
 	private String city;
-	private Boolean enabled;
-	
+	private Boolean enabled;	
 	private String resetpwtoken;
 	private String photo;
 	private String photopath;
 	
-	 @Transient
-	public String getPhotopath() {
-		 return photopath;
-	       
+	@ManyToMany
+	@JoinTable(name = "User_Role", 
+				joinColumns = @JoinColumn(name = "userId"), 
+				inverseJoinColumns = @JoinColumn(name = "roleId"))
+	private List<Role> roles = new ArrayList<>();
 	
+	@OneToMany(mappedBy="user", cascade=CascadeType.ALL)//Board에서 한거 그대로 사용 (양방향매핑)//ManyToOne쪽에서 작성, OneToMany쪽에서는 mappedby키워드로 사용
+	private List<Board> boards=new ArrayList<>();
+	
+	@OneToMany(mappedBy = "user")
+	private List<ExpenseList> expenselist;
+	
+	@Transient
+	public String getPhotopath() {
+		 return photopath;	
 	}
 
 	public void setPhotopath(String photopath) {
@@ -87,24 +91,6 @@ public class User{
 	public void setExpenselist(List<ExpenseList> expenselist) {
 		this.expenselist = expenselist;
 	}
-
-	@ManyToMany
-	@JoinTable(name = "User_Role", 
-				joinColumns = @JoinColumn(name = "userId"), 
-				inverseJoinColumns = @JoinColumn(name = "roleId"))
-	private List<Role> roles = new ArrayList<>();
-	
-	@OneToMany(mappedBy="user", cascade=CascadeType.ALL)//Board에서 한거 그대로 사용 (양방향매핑)//ManyToOne쪽에서 작성, OneToMany쪽에서는 mappedby키워드로 사용
-	private List<Board> boards=new ArrayList<>();
-
-	
-	@OneToMany(mappedBy = "user")
-	private List<ExpenseList> expenselist;
-//	@OneToOne(mappedBy="user")
-//	private List<ExpenseList> expenselist = new ArrayList<>();
-	
-//	@OneToMany(mappedBy = "user")
-//	private List<ExpenseList> userExpense = new ArrayList<>();
 	
 	public List<Board> getBoards() {
 		return boards;
@@ -193,8 +179,6 @@ public class User{
 	public void setCity(String city) {
 		this.city = city;
 	}
-
-	
 	
 	public Boolean getEnabled() {
 		return enabled;
@@ -212,15 +196,4 @@ public class User{
 		this.roles = roles;
 	}
 
-	/*
-	 * @Override public String toString() { return "User [id=" + id + ", firstname="
-	 * + firstname + ", lastname=" + lastname + ", email=" + email + ", password=" +
-	 * password + ", address=" + address + ", country=" + country + ", zipcode=" +
-	 * zipcode + ", memo=" + memo + ", city=" + city + ", enabled=" + enabled +
-	 * ", resetpwtoken=" + resetpwtoken + ", photo=" + photo + ", photopath=" +
-	 * photopath + ", roles=" + roles + ", boards=" + boards + ", expenselist=" +
-	 * expenselist + "]"; }
-	 */
-	
-	
 }

@@ -8,8 +8,7 @@ import com.te.timex.model.Project;
 
 
 public interface ProjectRepository extends JpaRepository<Project, Integer> {
-	
-	
+		
 	List<Project> findByNumber(String number);
 
 }

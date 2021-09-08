@@ -50,12 +50,16 @@ public class TimeController {
 
 	@Autowired
 	private ProjectRepository projectRepository;
+	
 	@Autowired
 	private ProjectTaskRepository projectTaskRepository;
+	
 	@Autowired
 	private TimesheetRepository timesheetRepository;
+	
 	@Autowired
 	private UserRepository userRepository;
+	
 	@Autowired
 	private WeekRepository weekRepository;
 
@@ -73,32 +77,28 @@ public class TimeController {
 			@RequestParam(name = "pickedDate", required = false, defaultValue = "2021") String pickedDate) {// ajax에서
 																											// 가져오는값
 
-		// 1. user정보가져오기
+		// 1. get User Information
 		Common common = new Common();
 		user_id = common.getUserId(authentication, userRepository);
 		int week_number = 0;
 		int year = 0;
-		// 2.time.html에서 previous 또는 next 주 버튼클릭했을때 weekId를 가져온다
+		
+		// 2.get WeekId when you click previous or next in time.html page
 		if (weekId.isPresent()) {
 			int previousWeekId = Integer.parseInt(weekId.get());
 			currentWeek = weekRepository.findById(previousWeekId);
 			currentWeekId = currentWeek.getId();
 
-		} else {// 현재
+		} else {// current
 
-			// if (!pickedDate.isEmpty() || pickedDate != "" || pickedDate != null ) {
 			if (!pickedDate.equals("2021")) {
-		//		System.out.println("here is picked date");
-		//		System.out.println(pickedDate);
-				// LocalDate today = LocalDate.now();
-				ArrayList a = Common.getWeekNumber2(pickedDate);
-				// System.out.println(a.get(0));
+				ArrayList a = Common.getWeekNumber2(pickedDate);		
 				week_number = (int) a.get(1);
 				year = (int) a.get(0);
 			} else {
-				// 2.현재 year가져오기
+				// 2.current year
 				year = Calendar.getInstance().get(Calendar.YEAR);// this year
-				// 3. 현재 year로 week 테이블 업데이트(1년에 한번)
+				// 3. update the table with current year
 				HashMap weeklist = common.weekList(year);
 				for (int i = 1; i < weeklist.size(); i++) {
 					if (weekRepository.findByYearAndWeekNumber(2021, i).equals(null)) {// 존재안할경우 insert
@@ -107,62 +107,51 @@ public class TimeController {
 						week.setWeekNumber(i);
 						week.setPeriod((String) weeklist.get(i));
 						weekRepository.save(week);
-					}
-					// System.out.println("already existing");
+					}				
 				}
 
-				// 4. common.java에서 오늘 날짜에따른 week number가져오기
+				// 4. get Week Number of today from common.java
 				week_number = common.getWeekNumber();
 			}
-		//	System.out.println("year = " + year + " week_number = " + week_number);
-			// 5. week테이블에서 year, week number로 week id 가져오기
-			currentWeek = weekRepository.findByYearAndWeekNumber(year, week_number);
-			// System.out.println(currentWeek.toString());
+			// 5. get weekId from week table with param year, week_number
+			currentWeek = weekRepository.findByYearAndWeekNumber(year, week_number);	
 			currentWeekId = currentWeek.getId();
-			System.out.println(currentWeekId);
 		}
 
-		// 6. timesheet테이블에서 currentweek와 현재 user_id값을 만족하는 데이터가져오기
+		// 6. get data from timesheet table with param currentWeekID and userId
 		ArrayList<Timesheet> currentWeekList = timesheetRepository.findByUserIdAndWeekId(user_id, currentWeekId);
 
 		model.addAttribute("user_id", user_id);
 		model.addAttribute("currentWeek", currentWeek);
 		model.addAttribute("currentWeekId", currentWeekId);
 		model.addAttribute("currentWeekList", currentWeekList);
-		String totalHH = "", totalMM = "";
+		
 		String totalSun = "", totalMon = "", totalTue = "", totalWed = "", totalThur = "", totalFri = "", totalSat = "";
 		int SunHH = 0, MonHH = 0, TueHH = 0, WedHH = 0, ThurHH = 0, FriHH = 0, SatHH = 0, SunMM = 0, MonMM = 0,
 				TueMM = 0, WedMM = 0, ThurMM = 0, FriMM = 0, SatMM = 0;
 		int TotalHH = 0, TotalMM = 0;
 		for (int i = 0; i < currentWeekList.size(); i++) {
 			if (currentWeekList.get(i).getSun().contains(":")) {
-
 				SunHH = SunHH + Integer.parseInt((String) (currentWeekList.get(i).getSun().split(":")[0]));
 				SunMM = SunMM + Integer.parseInt((String) (currentWeekList.get(i).getSun().split(":")[1]));
-
 			}
 			if (currentWeekList.get(i).getMon().contains(":")) {
-
 				MonHH = MonHH + Integer.parseInt((String) (currentWeekList.get(i).getMon().split(":")[0]));
 				MonMM = MonMM + Integer.parseInt((String) (currentWeekList.get(i).getMon().split(":")[1]));
 			}
 			if (currentWeekList.get(i).getTue().contains(":")) {
-
 				TueHH = TueHH + Integer.parseInt((String) (currentWeekList.get(i).getTue().split(":")[0]));
 				TueMM = TueMM + Integer.parseInt((String) (currentWeekList.get(i).getTue().split(":")[1]));
 			}
 			if (currentWeekList.get(i).getWed().contains(":")) {
 				WedHH = WedHH + Integer.parseInt((String) (currentWeekList.get(i).getWed().split(":")[0]));
 				WedMM = WedMM + Integer.parseInt((String) (currentWeekList.get(i).getWed().split(":")[1]));
-
 			}
 			if (currentWeekList.get(i).getThur().contains(":")) {
-
 				ThurHH = ThurHH + Integer.parseInt((String) (currentWeekList.get(i).getThur().split(":")[0]));
 				ThurMM = ThurMM + Integer.parseInt((String) (currentWeekList.get(i).getThur().split(":")[1]));
 			}
 			if (currentWeekList.get(i).getFri().contains(":")) {
-
 				FriHH = FriHH + Integer.parseInt((String) (currentWeekList.get(i).getFri().split(":")[0]));
 				FriMM = FriMM + Integer.parseInt((String) (currentWeekList.get(i).getFri().split(":")[1]));
 			}
@@ -170,7 +159,6 @@ public class TimeController {
 				SatHH = SatHH + Integer.parseInt((String) (currentWeekList.get(i).getSat().split(":")[0]));
 				SatMM = SatMM + Integer.parseInt((String) (currentWeekList.get(i).getSat().split(":")[1]));
 			}
-
 		}
 
 		while (SunMM >= 60) {
@@ -212,8 +200,7 @@ public class TimeController {
 		if (totalSun.contains(":") && String.valueOf(SunMM).equals("0")) {
 			totalSun = String.valueOf(SunHH) + ":00";
 		}
-		if (totalMon.contains(":") && String.valueOf(MonMM).equals("0")) {
-		
+		if (totalMon.contains(":") && String.valueOf(MonMM).equals("0")) {		
 			totalMon = String.valueOf(MonHH) + ":00";
 		}
 		if (totalTue.contains(":") && String.valueOf(TueMM).equals("0")) {
@@ -235,7 +222,6 @@ public class TimeController {
 		TotalMM = SunMM + MonMM + TueMM + WedMM + ThurMM + FriMM + SatMM;
 		String totalHr = String.valueOf(TotalHH) + ":" + String.valueOf(TotalMM);
 		
-
 		while (TotalMM >= 60) {
 			TotalHH++;
 			TotalMM = TotalMM - 60;
@@ -243,9 +229,8 @@ public class TimeController {
 		if (totalHr.contains(":") && String.valueOf(TotalMM).equals("0")) {
 			totalHr = String.valueOf(TotalHH) + ":00";
 		}
-		
-		
-		// 7.총합
+				
+		// 7.Total Hours
 		Map<String, String> totalHrs = new HashMap<String, String>();
 
 		totalHrs.put("totalSun", totalSun);
@@ -258,12 +243,6 @@ public class TimeController {
 		totalHrs.put("total", totalHr);
 
 		model.addAttribute("totalHours", totalHrs);
-	//	System.out.println(totalHrs);
-	//	System.out.println(currentWeek);
-	//	System.out.println(currentWeekId);
-	//	System.out.println(currentWeekList);
-
-
 		return "time/time";
 	}
 
@@ -279,7 +258,8 @@ public class TimeController {
 
 	@GetMapping("/downloadReport")
 	public void downloadZip(HttpServletResponse response, HttpServletRequest request) throws IOException {
-
+		//Change5
+		//String path = "C:\\Users\\Administrator\\Desktop\\Timex\\time_report";
 		String path = "C:\\Users\\pc1\\Desktop\\Timex Spring Boot\\time_report";
 		DateFormat dateFormatter = new SimpleDateFormat("yyyy-MM-dd");
 		String currentDateTime = dateFormatter.format(new Date());
@@ -328,14 +308,12 @@ public class TimeController {
 
 	@GetMapping("/selectProject")
 	public ResponseEntity<List<Project>> selectProject() {
-System.out.println("am i heere!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!~~~~~~~~~~~~~~~~~");
+
 		List<Project> projects = projectRepository.findAll();
 
-		if (projects.isEmpty()) {// 고객에 등록된 솔루션이 없을경우
+		if (projects.isEmpty()) {
 			System.out.println("empty");
 		}
-		System.out.println("&&&&&&&&&&&&&&&&??");
-		System.out.println(projects);
 		return new ResponseEntity<List<Project>>(projects, HttpStatus.OK);
 	}
 
@@ -343,18 +321,16 @@ System.out.println("am i heere!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!~~~~~~~~
 	public ResponseEntity<List<ProjectTask>> selectTask(int project_id) {
 
 		List<ProjectTask> protask = projectTaskRepository.findByProjectId(project_id);
-
-		if (protask.isEmpty()) {// 고객에 등록된 솔루션이 없을경우
+		if (protask.isEmpty()) {
 			System.out.println("empty");
 		}
-
 		return new ResponseEntity<List<ProjectTask>>(protask, HttpStatus.OK);
 	}
 
 	@PostMapping("/deleteProjectTask")
 	@ResponseBody
 	public String deleteProjectTask(@RequestBody HashMap<String, Object> param) {
-		// time.html에서 받아온 timesheetId로 데이터삭제
+		// delete data with the param timesheetId from time.html page
 		int timesheetId = Integer.parseInt((String) param.get("timesheetId"));
 		timesheetRepository.deleteById(timesheetId);
 
@@ -366,15 +342,14 @@ System.out.println("am i heere!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!~~~~~~~~
 	@PostMapping("/editProjectTask")
 	@ResponseBody
 	public String editProjectTask(@RequestBody HashMap<String, Object> param) {
-		System.out.println("here?");
-		// 1. time.html에서 정보 모두가져온다
+
+		// 1. get all information from time.html
 		int timesheetId = Integer.parseInt((String) param.get("timesheetId"));
 		int user_id = Integer.parseInt((String) param.get("user_id"));
 		int project_task_id = Integer.parseInt((String) param.get("project_task_id"));
 		int week_id = Integer.parseInt((String) param.get("week_id"));
 
 		String sun = (String) param.get("sun");
-
 		String mon = (String) param.get("mon");
 		String tue = (String) param.get("tue");
 		String wed = (String) param.get("wed");
@@ -396,7 +371,7 @@ System.out.println("am i heere!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!~~~~~~~~
 		timesheet.setFri(fri);
 		timesheet.setSat(sat);
 
-		// 3.저장
+		// 3.save
 		timesheetRepository.save(timesheet);
 
 		String message = "Yes";
@@ -407,8 +382,7 @@ System.out.println("am i heere!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!~~~~~~~~
 	@ResponseBody
 	public Timesheet saveProjectTask(@RequestBody HashMap<String, Object> param) {
 
-		Timesheet timesheet = new Timesheet();
-		// ArrayList<Timesheet> currentTimesheet = new ArrayList<Timesheet>();
+		Timesheet timesheet = new Timesheet();		
 
 		// 1. time.html에서 넘겨온 파라미터 user_id, project_task_id, currentWeekId로 이미 존재하는지 체크
 		int project_task_id = Integer.parseInt((String) param.get("project_task_id"));
@@ -419,8 +393,7 @@ System.out.println("am i heere!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!~~~~~~~~
 		boolean exist = timesheetRepository.existsByUserIdAndWeekIdAndProjecttaskId(user_id, week_id, project_task_id);
 
 		// 3. 존재하지않을경우 timesheet에 받은 파라미터 넣어서 save
-		if (exist == false) {
-			System.out.println("new timesheet");
+		if (exist == false) {		
 			timesheet.setUserId(user_id);
 			timesheet.setProjecttaskId(project_task_id);
 			timesheet.setWeekId(week_id);
@@ -436,17 +409,10 @@ System.out.println("am i heere!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!~~~~~~~~
 			int id = Integer.parseInt(timesheetId);
 			ProjectTask projecttask = projectTaskRepository.findById(project_task_id);
 			System.out.println(projecttask.toString());
-			timesheet.setProjecttask(projecttask);
-			System.out.println(id);
-			timesheet = timesheetRepository.findById(id);
-			// currentTimesheet = timesheetRepository.findByUserIdAndWeekId(user_id,
-			// currentWeekId);
-			System.out.println("here");
-			System.out.println(timesheet.toString());
+			timesheet.setProjecttask(projecttask);			
+			timesheet = timesheetRepository.findById(id);			
 		} else {
 			timesheet = null;
-			System.out.println("already exisiting timesheet");
-
 		}
 		return timesheet;
 	}

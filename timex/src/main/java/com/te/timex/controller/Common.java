@@ -22,23 +22,17 @@ public class Common {
 	@Autowired
 	private static WeekRepository weekRepository;
 
-	// private UserRepository userRepository;
 
 	public int getUserId(Authentication authentication, UserRepository userRepository) {
-
-		// 로그인한 정보로 email주소 가져온다
-		String email = authentication.getName();
-
-		// 로그인한 email정보로 user_id 가져온다
+	
+		String email = authentication.getName();		
 		User user = userRepository.findByEmail(email);
 		int user_id = user.getId();
-
 		return user_id;
 	}
 
 	public static ArrayList getDates(int year) {
 		Calendar cal = Calendar.getInstance();
-
 		cal.set(Calendar.YEAR, year);
 
 		ArrayList datelist = new ArrayList();
@@ -46,7 +40,6 @@ public class Common {
 		String weekdate = "";
 
 		for (int month = 1; month <= 12; month++) {
-
 			cal.set(Calendar.MONTH, month - 1);
 
 			for (int week = 1; week < cal.getMaximum(Calendar.WEEK_OF_MONTH); week++) {
@@ -68,15 +61,13 @@ public class Common {
 								+ "/" + endDay;
 						datelist.add(weeknum, weekdate);
 						weeknum++;
-						// System.out.println(previousyear + "/" + previousmonth + "/" + startDay + " ~
-						// " + year + "/"+ month + "/" + endDay);
+					
 					} else {
 						weekdate = year + "/" + previousmonth + "/" + startDay + " ~ " + year + "/" + month + "/"
 								+ endDay;
 						datelist.add(weeknum, weekdate);
 						weeknum++;
-						// System.out.println(year + "/" + previousmonth + "/" + startDay + " ~ " + year
-						// + "/" + month + "/" + endDay);
+						
 					}
 
 				} else if (week == cal.getMaximum(Calendar.WEEK_OF_MONTH) - 1 && endDay <= 7) {
@@ -86,16 +77,14 @@ public class Common {
 						weekdate = year + "/" + month + "/" + startDay + " ~ " + nextyear + "/" + 1 + "/" + endDay;
 						datelist.add(weeknum, weekdate);
 						weeknum++;
-						// System.out.println(year + "/" + month + "/" + startDay + " ~ " + nextyear +
-						// "/" + 1 + "/" + endDay);
+						
 					}
 
 				} else {
 					weekdate = year + "/" + month + "/" + startDay + " ~ " + year + "/" + month + "/" + endDay;
 					datelist.add(weeknum, weekdate);
 					weeknum++;
-					// System.out.println(year + "/" + month + "/" + startDay + " ~ " + year + "/" +
-					// month + "/" + endDay);
+				
 				}
 			}
 		}
@@ -133,10 +122,9 @@ public class Common {
 			int startDay = cal.get(Calendar.DAY_OF_MONTH);
 			cal.set(Calendar.DAY_OF_WEEK, Calendar.SATURDAY);
 
-			int endDay = cal.get(Calendar.DAY_OF_MONTH);
-			System.out.println("week = " + week);
-			System.out.println("startyDay = " + startDay);
+			int endDay = cal.get(Calendar.DAY_OF_MONTH);		
 			int nextmonth = intMonth + 1;
+			
 			if (week == 1 && startDay >= 7) {
 				int previousmonth = intMonth - 1;
 
@@ -170,30 +158,19 @@ public class Common {
 			}
 		}
 
-	//	System.out.println(datelist);
-		//weekList(intYear);
+	
 		ArrayList weeknumbers = new ArrayList();
 		HashMap weeks = weekList(intYear);
 		for(int i=1; i<weeks.size();i++) {
 			for(int j=0;j<datelist.size();j++) {
 				String list = datelist.get(j).toString();
 				if(weeks.get(i).toString().contains(datelist.get(j).toString())) {
-					weeknumbers.add(i);
-					
-				}
-				
-			}
-			
-			
+					weeknumbers.add(i);					
+				}				
+			}			
 		}
 		
-	//	if(weekList(intYear).get(0).toString().contains("2021/01/24")) {
-	//		System.out.println("yes");
-//		}else {
-//			System.out.println("n");
-//		}
 		return weeknumbers;
-
 	}
 
 	public static int getWeekNumber() {
@@ -221,30 +198,6 @@ public class Common {
 		list.add(year);
 		list.add(week_number);
 		return list;
-	}
-
-	/*
-	 * public static ArrayList getthisMonth(String pickedDate){
-	 * 
-	 * ArrayList list = new ArrayList<>(); LocalDate today =
-	 * LocalDate.parse(pickedDate);
-	 * 
-	 * WeekFields weekFields = WeekFields.of(Locale.getDefault());
-	 * System.out.println("weekFields = "+weekFields); String week_number_string =
-	 * String.format("%02d", today.get(weekFields.weekOfWeekBasedYear())); String
-	 * year_string=String.format("%d", today.get(weekFields.weekBasedYear())); int
-	 * year = Integer.parseInt((String)year_string); int
-	 * week_number=Integer.parseInt((String) week_number_string);
-	 * 
-	 * list.add(year); list.add(week_number); return list; }
-	 */
-//	public static void getWeekId(int year, int week_number, Week) {
-//		System.out.println("here??!@#");
-//		weekRepository.findById(62);
-//		System.out.println("tutu");
-//		weekRepository.findByYearAndWeekNumber(year, week_number);
-//		System.out.println("hi");
-//		//System.out.println(week);
-//	}
+	}	
 
 }

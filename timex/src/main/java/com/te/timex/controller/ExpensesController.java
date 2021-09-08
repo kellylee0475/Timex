@@ -12,24 +12,14 @@ import java.nio.file.StandardCopyOption;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.time.LocalDate;
-import java.time.format.DateTimeFormatter;
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Optional;
 
-import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import org.apache.poi.ss.usermodel.Cell;
-import org.apache.poi.ss.usermodel.CellStyle;
-import org.apache.poi.ss.usermodel.Row;
-import org.apache.poi.xssf.usermodel.XSSFFont;
-import org.apache.poi.xssf.usermodel.XSSFSheet;
-import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.InputStreamResource;
@@ -53,7 +43,6 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.te.timex.model.Expense;
 import com.te.timex.model.ExpenseList;
-import com.te.timex.model.Week;
 import com.te.timex.repository.ExpenseListRepository;
 import com.te.timex.repository.ExpenseRepository;
 import com.te.timex.repository.ProjectRepository;
@@ -76,20 +65,11 @@ public class ExpensesController {
 	private ReportService reportService;
 
 	@Autowired
-	private ProjectRepository projectRepository;
-
-	@Autowired
 	private ExpenseRepository expenseRepository;
 
 	@Autowired
 	private ExpenseListRepository expenseListRepository;
-
-	@Autowired
-	private WeekRepository weekRepository;
-
-	@Autowired
-	private ExpenseListService expenseListService;
-
+	
 	int user_id;
 
 	@GetMapping
@@ -119,30 +99,30 @@ public class ExpensesController {
 
 		return ResponseEntity.ok().headers(headers).contentLength(file.length())
 				.contentType(MediaType.parseMediaType(fileType)).body(resource);
-
 	}
 
 	@PostMapping("/upload")
 	public String uploadFile(@RequestParam("upload_receipt") MultipartFile file, RedirectAttributes attributes,
 			@ModelAttribute("expenseinfo") ExpenseList expenselist) {
-		System.out.println();
+
 		// check if file is empty
 		if (file.isEmpty()) {
 			attributes.addFlashAttribute("message", "Please select a file to upload.");
 			return "redirect:/";
 		}
+		
 		// normalize the file path
 		String fileName = file.getOriginalFilename();
+		
+		//Change3
+		//String upload_path = "C:\\Users\\Administrator\\Desktop\\Timex\\expense_receipt";
 		String upload_path = "C:\\Users\\pc1\\Desktop\\Timex Spring Boot\\expense_receipt";
-		System.out.println("fileName = " + fileName);
-		System.out.println("upload_path = " + upload_path);
+		
 		// save the file on the local file system
 		try {
-			Path path = Paths.get(upload_path + fileName);
-			System.out.println("here + " + path);
+			Path path = Paths.get(upload_path + fileName);		
 			Files.copy(file.getInputStream(), path, StandardCopyOption.REPLACE_EXISTING);
 		} catch (IOException e) {
-			System.out.println("here2");
 			e.printStackTrace();
 		}
 
@@ -181,11 +161,12 @@ public class ExpensesController {
 	
 	@GetMapping("/downloadReport")
 	public void downloadZip(HttpServletResponse response, HttpServletRequest request) throws IOException {
-
+		
+		//Change4
+		//String path = "C:\\Users\\Administrator\\Desktop\\Timex\\expense_report";
 		String path = "C:\\Users\\pc1\\Desktop\\Timex Spring Boot\\expense_report";
 		DateFormat dateFormatter = new SimpleDateFormat("yyyy-MM-dd");
-        String currentDateTime = dateFormatter.format(new Date());
-         
+        String currentDateTime = dateFormatter.format(new Date());         
 		String fileName = "Expense Report_"+ currentDateTime + ".xls";
 
 		File file = new File(path+"\\"+fileName);
@@ -232,10 +213,8 @@ public class ExpensesController {
 		}
 
 		int expense_id = Integer.parseInt(expense_id2);
-
 		int project_id = Integer.parseInt(project_id2);
 		user_id = Integer.parseInt(user_id2);
-
 		int qty = Integer.parseInt((String) qty2);
 		String total_amount = (String) total_amount2;
 
@@ -247,20 +226,15 @@ public class ExpensesController {
 			String file_path = path + "\\" + folder_name;
 			String file_name = user_id + "_" + date2 + "_" + uploadfile.getOriginalFilename();
 
-			// 폴더생성
+			// create folder
 			File folder = new File(path, folder_name);
-			//System.out.println("folder = " + folder);
-		//	System.out.println("path = " + path);
-		//	System.out.println("file_path = " + file_path);
-		//	System.out.println("file_name = " + file_name);
-			if (!folder.exists()) { // 폴더없을경우 폴더생성
-				System.out.println("폴더없음");
+	
+			if (!folder.exists()) { // create folder if not exist
 				folder.mkdir();
 			}
 
 			File file = new File(file_path, file_name);
-			if (file.exists()) {// 파일 이미존재할경우 삭제
-				System.out.println("파일있음");
+			if (file.exists()) {// if file already exist, delete	
 				file.delete();
 			}
 			expenseList.setFilename(file_name);
@@ -269,7 +243,6 @@ public class ExpensesController {
 			// 임시디렉토리에 업로드된 파일을 지정된 디렉토리로 복사
 			try {
 				FileCopyUtils.copy(uploadfile.getBytes(), file);
-
 			} catch (IOException e) {
 				e.printStackTrace();
 			}

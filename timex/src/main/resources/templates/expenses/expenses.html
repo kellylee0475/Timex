@@ -1,678 +1,690 @@
 <!DOCTYPE html>
-<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org"
-    xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" layout:decorator="layout/layout"
-    th:with="title='MyExpenses'">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:th="http://www.thymeleaf.org"
+	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	layout:decorator="layout/layout" th:with="title='MyExpenses'">
 <!--passing title to layout.html-->
 
 <th:block layout:fragment="content">
 
-    <!---add expense modal-->
-    <div class="modal fade" id="addExpenseModel" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"
-        role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-        <div class="modal-dialog" style="max-width: 55%; width: auto;">
-            <div class="modal-content">
-                <form method="post" enctype="multipart/form-data" id="uploadForm">
-                    <div class="modal-header">
-                        <h4 class="modal-title w-100" style="text-align: center;" id="myModalLabel">New Expense</h4>
-                    </div>
+	<!---add expense modal-->
+	<div class="modal fade" id="addExpenseModel" data-bs-backdrop="static"
+		data-bs-keyboard="false" tabindex="-1" role="dialog"
+		aria-labelledby="myModalLabel" aria-hidden="true">
+		<div class="modal-dialog" style="max-width: 55%; width: auto;">
+			<div class="modal-content">
+				<form method="post" enctype="multipart/form-data" id="uploadForm">
+					<div class="modal-header">
+						<h4 class="modal-title w-100" style="text-align: center;"
+							id="myModalLabel">New Expense</h4>
+					</div>
 
-                    <div class="modal-body" style="text-align: center;">
-                        <div class="dropdown" style="text-align: -webkit-center; ">
+					<div class="modal-body" style="text-align: center;">
+						<div class="dropdown" style="text-align: -webkit-center;">
 
-                            <div style="display: flex;">
+							<div style="display: flex;">
+								<div style="width: 35%; overflow: auto; margin-right: 15px">
+									<table>
+										<tr>
+											<td style="padding-bottom: 10px;">
+												<h5 style="margin-right: 10px">Date</h5>
+											</td>
+											<td style="padding-bottom: 10px;">
+												<div class="md-form">
+													<input type="date" id="inputMDEx" class="form-control"
+														required>													
+												</div>
+											</td>
+										</tr>
+										<tr>
+											<td style="padding-bottom: 10px;">
+												<h5 style="margin-right: 10px">Project</h5>
+											</td>
 
+											<td style="padding-bottom: 10px;"><select
+												class="form-control" aria-label="Default select example"
+												id="selectProject" name="selectProject" required>
+													<option value="" id="loading">Please select
+														project!</option>
+											</select></td>
+										</tr>
+									</table>
+								</div>
+								<div style="flex-grow: 1; overflow: auto;">
+									<table>
+										<tr>
+											<td style="padding-bottom: 10px;">
+												<h5 style="margin-right: 10px">Expense</h5>
+											</td>
+											<td style="padding-bottom: 10px;"><select
+												class="form-control" aria-label="Default select example"
+												id="selectExpense" name="selectExpense" required>
+													<option value="" id="loading2"></option>
+											</select></td>
+										</tr>
+										<tr>
+											<td style="padding-bottom: 10px;">
+												<h5 style="margin-right: 10px">Qty</h5>
+											</td>
+											<td style="padding-bottom: 10px;">
+												<div class="row">
+													<div class="input-group" style="width: 180px;">
+														<span class="input-group-prepend">
+															<button type="button" id="minusButton"
+																class="quantity-left-minus btn btn-danger btn-number"
+																data-type="minus" data-field="">
+																<span class="fa fa-minus"></span>
+															</button>
+														</span> <input style="text-align: center;" type="text"
+															id="quantity" name="quantity"
+															class="form-control input-number" value="1" min="1"
+															max="100"> <span class="input-group-append">
+															<button type="button" id="plusButton"
+																class="quantity-right-plus btn btn-success btn-number"
+																data-type="plus" data-field="">
+																<span class="fa fa-plus"></span>
+															</button>
+														</span>
+													</div>
+												</div>
+											</td>
+										</tr>
+										<tr>
+											<td style="padding-bottom: 10px;">
+												<h5 style="margin-right: 10px">Unit Cost</h5>
+											</td>
+											<td style="padding-bottom: 10px;">
+												<div class="input-group" style="width: 200px;">
+													<span class="input-group-text">$</span> <input type="text"
+														class="form-control" name="unitcost"> <span
+														class="input-group-text">.00</span>
+												</div>
+											</td>
+										</tr>
+										<tr>
+											<td style="padding-bottom: 10px;">
+												<h5 style="margin-right: 10px">Total Cost</h5>
+											</td>
+											<td style="padding-bottom: 10px;">
+												<div class="input-group" style="width: 200px;">
+													<span class="input-group-text">$</span> <input type="text"
+														class="form-control" id="totalcost" name="totalcost"
+														required> <span class="input-group-text">.00</span>
+												</div>
+											</td>
+										</tr>
+										<tr>
+											<td>
+												<h5 style="margin-right: 10px">Receipt</h5>
+											</td>
+											<td>
+												<div class="input-group">
+													<input type="file" class="form-control" id="upload_receipt"
+														name="upload_receipt"
+														aria-describedby="inputGroupFileAddon04"
+														aria-label="Upload">												
+												</div>
 
-                                <div style=" width:35%; overflow: auto; margin-right:15px">
-                                    <table>
-                                        <tr>
-                                            <td style="padding-bottom: 10px;">
-                                                <h5 style="margin-right:10px">Date</h5>
-                                            </td>
-                                            <td style="padding-bottom: 10px;">
-                                                <div class="md-form">
-                                                    <input type="date" id="inputMDEx" class="form-control" required>
-                                                    <!--  <label for="inputMDEx">Choose your date</label> -->
-                                                </div>
-                                            </td>
-                                        </tr>
-                                        <tr>
-                                            <td style="padding-bottom: 10px;">
-                                                <h5 style="margin-right:10px">Project</h5>
-                                            </td>
-
-                                            <td style="padding-bottom: 10px;">
-                                                <select class="form-control" aria-label="Default select example"
-                                                    id="selectProject" name="selectProject" required>
-                                                    <option value="" id="loading">Please select project!</option>
-                                                </select>
-                                            </td>
-                                        </tr>
-                                    </table>
-                                </div>
-                                <div style="flex-grow: 1; overflow: auto;">
-                                    <table>
-
-                                        <tr>
-                                            <td style="padding-bottom: 10px;">
-                                                <h5 style="margin-right:10px">Expense </h5>
-                                            </td>
-                                            <td style="padding-bottom: 10px;">
-                                                <select class="form-control" aria-label="Default select example"
-                                                    id="selectExpense" name="selectExpense" required>
-                                                    <option value="" id="loading2"></option>
-                                                </select>
-                                            </td>
-                                        </tr>
-
-                                        <tr>
-                                            <td style="padding-bottom: 10px;">
-                                                <h5 style="margin-right:10px">Qty </h5>
-                                            </td>
-                                            <td style=" padding-bottom: 10px;">
-                                                <div class="row">
-                                                    <div class="input-group" style="width: 180px;">
-                                                        <span class="input-group-prepend">
-                                                            <button type="button" id="minusButton"
-                                                                class="quantity-left-minus btn btn-danger btn-number"
-                                                                data-type="minus" data-field="">
-                                                                <span class="fa fa-minus"></span>
-                                                            </button>
-                                                        </span>
-                                                        <input style="text-align: center;" type="text" id="quantity"
-                                                            name="quantity" class="form-control input-number" value="1"
-                                                            min="1" max="100">
-                                                        <span class="input-group-append">
-                                                            <button type="button" id="plusButton"
-                                                                class="quantity-right-plus btn btn-success btn-number"
-                                                                data-type="plus" data-field="">
-                                                                <span class="fa fa-plus"></span>
-                                                            </button>
-                                                        </span>
-                                                    </div>
-                                                </div>
-                                            </td>
-                                        </tr>
-
-                                        <tr>
-                                            <td style="padding-bottom: 10px;">
-                                                <h5 style="margin-right:10px">Unit Cost</h5>
-                                            </td>
-                                            <td style="padding-bottom: 10px;">
-                                                <div class="input-group" style="width: 200px;">
-                                                    <span class="input-group-text">$</span>
-                                                    <input type="text" class="form-control" name="unitcost">
-                                                    <span class="input-group-text">.00</span>
-                                                </div>
-                                            </td>
-                                        </tr>
-
-                                        <tr>
-                                            <td style="padding-bottom: 10px;">
-                                                <h5 style="margin-right:10px">Total Cost</h5>
-                                            </td>
-
-                                            <td style="padding-bottom: 10px;">
-                                                <div class="input-group" style="width: 200px;">
-                                                    <span class="input-group-text">$</span>
-                                                    <input type="text" class="form-control" id="totalcost"
-                                                        name="totalcost" required>
-                                                    <span class="input-group-text">.00</span>
-                                                </div>
-                                            </td>
-                                        </tr>
-
-                                        <tr>
-                                            <td>
-                                                <h5 style="margin-right:10px">Receipt</h5>
-                                            </td>
-                                            <td>
-
-                                                <div class="input-group">
-                                                    <input type="file" class="form-control" id="upload_receipt"
-                                                        name="upload_receipt" aria-describedby="inputGroupFileAddon04"
-                                                        aria-label="Upload">
-                                                    <!--             <button class="btn btn-outline-secondary" type="button"
-                                            id="inputGroupFileAddon04">Button</button> -->
-                                                </div>
-
-                                            </td>
-                                        </tr>
-                                    </table>
-                                </div>
-                                <!--      </form> -->
-
-                            </div>
-                        </div>
-                    </div>
-                    <div class="modal-footer">
-                        <button type="button" id="saveExpenseButton" class="btn btn-primary">Save Expenses</button>
-                        <button type="button" class="btn btn-default" data-bs-dismiss="modal">Cancel</button>
-
-                    </div>
-                </form>
-            </div>
-        </div>
-    </div>
+											</td>
+										</tr>
+									</table>
+								</div>
+							</div>
+						</div>
+					</div>
+					<div class="modal-footer">
+						<button type="button" id="saveExpenseButton"
+							class="btn btn-primary">Save Expenses</button>
+						<button type="button" class="btn btn-default"
+							data-bs-dismiss="modal">Cancel</button>
+					</div>
+				</form>
+			</div>
+		</div>
+	</div>
 
 
 
-    <!---export expense modal-->
-    <div class="modal fade" id="exportExpenseModel" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"
-        role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-        <div class="modal-dialog" style="max-width: 50%; width: auto;">
-            <div class="modal-content">
+	<!---export expense modal-->
+	<div class="modal fade" id="exportExpenseModel"
+		data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"
+		role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+		<div class="modal-dialog" style="max-width: 50%; width: auto;">
+			<div class="modal-content">
 
-                <div class="modal-header">
-                    <h4 class="modal-title w-100" style="text-align: center;" id="myModalLabel">Expense Report</h4>
-                </div>
+				<div class="modal-header">
+					<h4 class="modal-title w-100" style="text-align: center;"
+						id="myModalLabel">Expense Report</h4>
+				</div>
 
-                <div class="modal-body" style="text-align: center;">
-                    <div class="dropdown" style="text-align: -webkit-center; ">
-                        <form method="post" id="exportForm">
-                            <table>
-                                <tr>
-                                    <td>
-                                        <h5 style="margin-right:10px">Timeframe</h5>
-                                    </td>
-                                    <td id="tf">
-                                        <select id="timeframe" class="form-control" required>
+				<div class="modal-body" style="text-align: center;">
+					<div class="dropdown" style="text-align: -webkit-center;">
+						<form method="post" id="exportForm">
+							<table>
+								<tr>
+									<td>
+										<h5 style="margin-right: 10px">Timeframe</h5>
+									</td>
+									<td id="tf"><select id="timeframe" class="form-control"
+										required>
+											<option value="thisweek">This Week</option>
+											<option value="lastweek">Last Week</option>
+											<option value="thismonth">This Month</option>
+											<option value="lastmonth">Last Month</option>
+											<option value="thisyear">This Year</option>
+											<option value="lastyear">Last Year</option>
+											<option value="alltime">All Time</option>
+											<option value="custom" id="custom">Custom</option>
+									</select></td>
+								</tr>
+								<tr>
+									<td></td>
+									<td id="tftd" style="padding-bottom: 10px;">
+										<div id="custom_timeframe" style="display: none;">
+											<input style="display: inline-block; width: 170px;"
+												type="date" name="start_date" id="start_date"
+												class="form-control" required> to <input
+												style="display: inline-block; width: 170px;" type="date"
+												name="end_date" class="form-control" id="end_date" required>
+										</div>
+									</td>
+								</tr>
+								<tr>
+									<td style="padding-bottom: 10px;">
+										<h5 style="margin-right: 10px">Project</h5>
+									</td>
+									<td style="padding-bottom: 10px;"><select
+										class="form-control" aria-label="Default select example"
+										id="selectProject2" name="selectProject" required>
+											<option value="allproject" id="loading">All Project</option>
+									</select></td>
+								</tr>
+								<tr>
+									<td style="padding-bottom: 10px;">
+										<h5 style="margin-right: 10px">Category</h5>
+									</td>
 
-                                            <option value="thisweek">This Week</option>
-                                            <option value="lastweek">Last Week</option>
-                                            <option value="thismonth">This Month</option>
-                                            <option value="lastmonth">Last Month</option>
-                                            <option value="thisyear">This Year</option>
-                                            <option value="lastyear">Last Year</option>
-                                            <option value="alltime">All Time</option>
-                                            <option value="custom" id="custom">Custom</option>
+									<td style="padding-bottom: 10px;"><select
+										class="form-control" aria-label="Default select example"
+										id="selectExpense2" name="selectExpense" required>
+											<option value="allcategory" id="loading2">All
+												Category</option>
+									</select></td>
+								</tr>
+							</table>
+						</form>
 
-                                        </select>
-                                    </td>
+					</div>
+				</div>
+				<div class="modal-footer">
+					<button type="button" id="runExpenseReport" class="btn btn-primary">Run
+						Report</button>
+					<button type="button" class="btn btn-default"
+						data-bs-dismiss="modal">Cancel</button>
+				</div>
 
-                                </tr>
-                                <tr>
-                                    <td></td>
-                                    <td id="tftd" style=" padding-bottom: 10px;">
-                                        <div id="custom_timeframe" style="display: none;">
-                                            <input style="display: inline-block; width: 170px;" type="date"
-                                                name="start_date" id="start_date" class="form-control" required>
-
-                                            to
-                                            <input style="display: inline-block;width: 170px;" type="date"
-                                                name="end_date" class="form-control" id="end_date" required>
-
-                                        </div>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td style="padding-bottom: 10px;">
-                                        <h5 style="margin-right:10px">Project</h5>
-                                    </td>
-
-                                    <td style="padding-bottom: 10px;">
-                                        <select class="form-control" aria-label="Default select example"
-                                            id="selectProject2" name="selectProject" required>
-                                            <option value="allproject" id="loading">All Project</option>
-                                        </select>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td style="padding-bottom: 10px;">
-                                        <h5 style="margin-right:10px">Category</h5>
-                                    </td>
-
-                                    <td style="padding-bottom: 10px;">
-                                        <select class="form-control" aria-label="Default select example"
-                                            id="selectExpense2" name="selectExpense" required>
-                                            <option value="allcategory" id="loading2">All Category</option>
-                                        </select>
-                                    </td>
-                                </tr>
-                            </table>
-                        </form>
-
-                    </div>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" id="runExpenseReport" class="btn btn-primary">Run Report</button>
-                    <button type="button" class="btn btn-default" data-bs-dismiss="modal">Cancel</button>
-
-                </div>
-
-            </div>
-        </div>
-    </div>
+			</div>
+		</div>
+	</div>
 
 
-    <main>
+	<main>
+		<div class="container-fluid px-4">
+			<h2 class="mt-4">My Expenses</h2>
 
-        <div class="container-fluid px-4">
-            <h2 class="mt-4">My Expenses</h2>
+			<div class="card mb-4" style="border: none;">
+				<div class="card-body">
+					<button type="button" id="addExpenseButton" class="btn btn-primary">Add
+						Expense</button>
+					<button type="button" id="exportExpenseButton"
+						class="btn btn-primary">Export</button>
 
+				</div>
+			</div>
+			<div class="card mb-4">			
+				<div class="card-body">
+					<table id="myTable">
+						<thead>
+							<tr>
+								<th>Date</th>
+								<th>Status</th>
+								<th>Project</th>
+								<th>Category</th>
+								<th>Unit Cost</th>
+								<th>Qty</th>
+								<th>Total Cost</th>
+								<th>Receipt</th>
+							</tr>
+						</thead>
 
-            <div class="card mb-4" style="border: none;">
-                <div class="card-body">
-                    <button type="button" id="addExpenseButton" class="btn btn-primary">Add Expense</button>
-                    <button type="button" id="exportExpenseButton" class="btn btn-primary">Export</button>
-
-                </div>
-            </div>
-            <div class="card mb-4">
-                <!--                 <div class="card-header">
-                    <i class="fas fa-table me-1"></i>
-                    DataTable Example
-                </div> -->
-                <div class="card-body">
-                    <table id="myTable">
-                        <thead>
-                            <tr>
-                                <th>Date</th>
-                                <th>Status</th>
-                                <th>Project</th>
-                                <th>Category</th>
-                                <th>Unit Cost</th>
-                                <th>Qty</th>
-                                <th>Total Cost</th>
-                                <th>Receipt</th>
-                            </tr>
-                        </thead>
-
-                        <tbody>
-                            <tr th:each="el: ${expenselist}">
-                                <td th:text="${el.date}"></td>
-                                <td th:switch="${el.status}">
-                                    <span th:case="'1'">Approved</span>
-                                    <span th:case="'2'">Pending</span>
-                                    <span th:case="'3'">Rejected</span>
-                                </td>
-                                <td th:text="|${el.project.number} ${el.project.title}|"> </td>
-                                <td th:text="${el.expense.name}"> </td>
-                                <td>
-                                    <span th:if="${el.expense.unitcost == null}" th:text="${el.totalcost}"></span>
-                                    <span th:unless="${el.expense.unitcost == null}"
-                                        th:text="${el.expense.unitcost}"></span>
-                                </td>
-                                <!--    <td th:text="${el.expense.unitcost}"> </td> -->
-                                <td th:text="${el.qty}"> </td>
-                                <td th:text="${el.totalcost}"> </td>
-                                <td style="text-align: center;">
-                                    <span th:if="${el.filename == null}"></span>
-                                    <!--target="_blank" 사용시 현재 tab이아닌 새로운 tab에서 파일이 열린-->
-                                    <a target="_blank"
-                                        th:href="@{expenses/openFile(param1=${el.filepath},param2=${el.filename})}">
-                                        <span th:unless="${el.filename == null}"><img style="width:30px"
-                                                th:src="@{/assets/img/receipt.png}" /></span>
-                                    </a>
-                                </td>
-                            </tr>
-
-
-                        </tbody>
-                    </table>
-                </div>
-            </div>
-
-
-        </div>
-    </main>
-
-    <!--  <th:block th:replace="fragments/footer :: footer"></th:block> -->
-
-
-
-
+						<tbody>
+							<tr th:each="el: ${expenselist}">
+								<td th:text="${el.date}"></td>
+								<td th:switch="${el.status}"><span th:case="'1'">Approved</span>
+									<span th:case="'2'">Pending</span> <span th:case="'3'">Rejected</span>
+								</td>
+								<td th:text="|${el.project.number} ${el.project.title}|"></td>
+								<td th:text="${el.expense.name}"></td>
+								<td><span th:if="${el.expense.unitcost == null}"
+									th:text="${el.totalcost}"></span> <span
+									th:unless="${el.expense.unitcost == null}"
+									th:text="${el.expense.unitcost}"></span></td>
+								<!--    <td th:text="${el.expense.unitcost}"> </td> -->
+								<td th:text="${el.qty}"></td>
+								<td th:text="${el.totalcost}"></td>
+								<td style="text-align: center;"><span
+									th:if="${el.filename == null}"></span> <!--target="_blank" 사용시 현재 tab이아닌 새로운 tab에서 파일이 열린-->
+									<a target="_blank"
+									th:href="@{expenses/openFile(param1=${el.filepath},param2=${el.filename})}">
+										<span th:unless="${el.filename == null}"><img
+											style="width: 30px" th:src="@{/assets/img/receipt.png}" /></span>
+								</a></td>
+							</tr>
+						</tbody>
+					</table>
+				</div>
+			</div>
+		</div>
+	</main>
 </th:block>
 
 
 </html>
 
 <script>
-
-    var projectLists;
-    var projectTaskLists;
-    var project_id;
-    var expenseLists;
-    var user_id;
-    var unitcost;
-    var expenseDetail;
-    var expenseListId;
-
-    $(document).ready(function () {
-
-        //user_id가져오
-        var url = "/timex/account/loginInfo";
-        $.ajax({
-            type: "POST",
-            url: url,
-            success: function (data) {
-                user_id = data;
-            }
-        });
-
-        $('#myTable').DataTable({
-            "order": [3, "desc"]
-        });
-
-
-        $("#timeframe").change(function () {
-            if ($(this).val() === "custom") {
-                $('#custom_timeframe').show();
-                $("#tftd").css("padding-top", "10px");
-            } else {
-                $('#custom_timeframe').hide();
-                $("#tftd").css("padding-top", "0px");
-            }
-        });
-
-
-        $(function () {
-            initButton();
-        });
-
-        var url = "/timex/time/selectProject";
-        $.ajax({
-            type: "GET",
-            url: url,
-            success: function (data) {
-                projectLists = data;
-                console.log(projectLists)
-                $(projectLists).each(function (i) {
-                    $("select[name='selectProject']").append("<option value='" + projectLists[i].id + "'>" + projectLists[i].number +" "+ projectLists[i].title + "  </option>");
-                });
-                //Change the text of the default "loading" option.
-                $('#loading').text('Select Project');
-            }
-        });
-
-
-        $("#selectProject").change(function () {
-            project_id = $(this).val();
-        });
-
-        //+ - button for qty
-        var quantitiy = 0;
-        $('.quantity-right-plus').click(function (e) {
-
-            // Stop acting like a button
-            e.preventDefault();
-            // Get the field name
-            var quantity = parseInt($('#quantity').val());
-
-            // If is not undefined
-            $('#quantity').val(quantity + 1);
-            var totalamount = $('#quantity').val() * expenseDetail.unitcost;
-            $("input[name='totalcost']").val(totalamount)
-
-            // Increment
-
-        });
-
-        $('.quantity-left-minus').click(function (e) {
-            // Stop acting like a button
-            e.preventDefault();
-            // Get the field name
-            var quantity = parseInt($('#quantity').val());
-
-            // If is not undefined
-            // Increment
-            if (quantity > 0) {
-                $('#quantity').val(quantity - 1);
-            }
-
-            var totalamount = $('#quantity').val() * expenseDetail.unitcost;
-            $("input[name='totalcost']").val(totalamount)
-        });
-
-    //    var url = "/timex/expenses/selectExpense";
-        $.ajax({
-            type: "GET",
-            url: "/timex/expenses/selectExpense",
-            success: function (data) {
-                expenseLists = data;
-                $(expenseLists).each(function (i) {
-                    $("select[name='selectExpense']").append("<option value='" + expenseLists[i].id + "'>" + expenseLists[i].name + "  </option>");
-                });
-
-                //Change the text of the default "loading" option.
-                $('#loading2').text('Select Expense');
-            }
-        });
-
-
-        $("#selectExpense").change(function () {
-            console.log("&&&&")
-            expense_id = $(this).val();
-
-            var url = "/timex/expenses/selectExpenseDetail";
-
-            $.ajax({
-                type: "GET",
-                url: url,
-                data: "expense_id=" + expense_id,
-
-                success: function (data) {
-                    expenseDetail = data;
-                    emptyForm();
-                    console.log(expenseDetail)
-                    if (expenseDetail.unitcost == null) {
-                        $("input[name='unitcost']").attr("readOnly", true);
-                        $("input[name='quantity']").attr("readOnly", true);
-                        $("input[name='totalcost']").attr("readOnly", false);
-
-                        document.getElementById("minusButton").disabled = true;
-                        document.getElementById("plusButton").disabled = true;
-                    } else {
-                        document.getElementById("minusButton").disabled = false;
-                        document.getElementById("plusButton").disabled = false;
-                        $("input[name='unitcost']").val(expenseDetail.unitcost)
-                        $("input[name='unitcost']").attr("readOnly", true);
-
-                        $("input[name='quantity']").val(1)
-                        $("input[name='totalcost']").attr("readOnly", true);
-                        $("input[name='totalcost']").val(expenseDetail.unitcost)
-
-                    }
-                }
-            });
-        });
-    });
-
-
-    function emptyForm() {
-        $("input[name='unitcost']").val("")
-        $("input[name='quantity']").val(1)
-        $("input[name='totalcost']").val("")
-    }
-
-    function initButton() {
-        //addExpense button
-        $("#addExpenseButton").click(function () {
-            $("#addExpenseModel").modal("toggle");
-        });
-
-
-        $("#exportExpenseButton").click(function () {
-            $("#exportExpenseModel").modal("toggle");
-        });
-
-
-        $("#runExpenseReport").click(function () {
-
-            if (validateExport() == false) {//유효성검사
-                return false;
-            } else {
-                var url = "/timex/expenses/exportExpenses";
-                var params = {};
-                params["date"] = $("#timeframe").val();
-                params["project_id"] = $("#selectProject2 option:selected").val();
-                params["expense_id"] = $("#selectExpense2 option:selected").val();
-                params["start_date"] = $("#start_date").val();
-                params["end_date"] = $("#end_date").val();
-                params["user_id"] = user_id;
-             
-
-
-                $.ajax({
-                    type: "POST",
-                    url: url,
-                    data: JSON.stringify(params),
-                             contentType: "application/json",
-                    success: function (data) {
-               
-                         window.location = "/timex/expenses/downloadReport"
-                    },
-                    error: function (err) {
-                        console.log(err);
-                    }
-                });
-            }
-        })
-
-        //saveExpenseButton
-        $("#saveExpenseButton").click(function () {
-            var url = "/timex/expenses/saveExpenses";
-
-            var form = $('#uploadForm')[0];
-            var data = new FormData(form);
-
-            if (validate() == false) {//유효성검사
-                return false;
-            } else {
-
-                data.set("date2", $("#inputMDEx").val());
-                data.set("user_id2", user_id);
-                data.set("project_id2", $("#selectProject option:selected").val());
-                data.set("expense_id2", $("#selectExpense option:selected").val());
-                data.set("qty2", $("#quantity").val());
-                data.set("total_amount2", $("#totalcost").val());
-
-                $.ajax({
-                    type: "POST",
-                    enctype: 'multipart/form-data',
-                    url: url,
-                    data: data,
-                    processData: false,
-                    contentType: false,
-                    cache: false,
-                    timeout: 600000,
-                    success: function (data) {
-
-                        if (!data) {
-                            alert("select data");
-                        } else {
-                            expenseListId = data;
-                            alert("Saved")
-                            $("#addExpenseModel").modal('toggle');
-                            location.reload();
-
-                        }
-                    },
-                    error: function (err) {
-                        console.log(err);
-
-                    }
-                });
-            }
-        })
-
-    };
-
-    function validateExport() {
-        const startdate = document.getElementById("start_date");
-        const enddate = document.getElementById("end_date");
-
-        if ($('#timeframe').val() == "custom") {
-            console.log("only custom")
-            if (document.getElementById("start_date").validity.valueMissing) {
-                startdate.setCustomValidity('Select Start Date');
-                startdate.reportValidity();
-                return false;
-            } else {
-                startdate.setCustomValidity('');
-            }
-
-            if (document.getElementById("end_date").validity.valueMissing) {
-                enddate.setCustomValidity('Select End Date');
-                enddate.reportValidity();
-                return false;
-            } else {
-                enddate.setCustomValidity('');
-            }
-
-
-        }
-
-    }
-
-        function validate() {
-
-            const date = document.getElementById("inputMDEx");
-            const project = document.getElementById("selectProject");
-            const expense = document.getElementById("selectExpense");
-            const totalcost = document.getElementById("totalcost");
-
-
-
-            if (document.getElementById("inputMDEx").validity.valueMissing) {
-                date.setCustomValidity('Select Date');
-                date.reportValidity();
-                return false;
-            } else {
-                date.setCustomValidity('');
-            }
-
-            if (document.getElementById("selectProject").validity.valueMissing) {
-                project.setCustomValidity('Select Project');
-                project.reportValidity();
-                return false;
-            } else {
-                project.setCustomValidity('');
-            }
-
-            if (document.getElementById("selectExpense").validity.valueMissing) {
-                expense.setCustomValidity('Select Expense');
-                expense.reportValidity();
-                return false;
-            } else {
-                expense.setCustomValidity('');
-            }
-
-            if (document.getElementById("totalcost").validity.valueMissing) {
-                console.log("cost misssing")
-                totalcost.setCustomValidity('Enter Cost');
-                totalcost.reportValidity();
-                return false;
-            } else {
-                totalcost.setCustomValidity('');
-            }
-
-            //  totalcost.reportValidity();
-            //    expense.reportValidity();
-            //    project.reportValidity();
-            //    date.reportValidity();
-
-        }
-
-        var total = 1;
-        function calculatePrice(cnt) {
-
-            console.log("here?")
-            total = this.total + cnt;
-            if (total < 1) total = 1;
-            this.total = total;
-            $("input[name='qty']").val(total)
-            //    console.log(total);
-            //   var totalAmount = total * 
-            //       $("input[name='aaa']").val(total)
-            var totalamount = total * expenseDetail.amount;
-            $("input[name='totalcost']").val(totalamount)
-        }
-        function uploadFile(expenseListId) {
-            console.log("uploadFile")
-            console.log(expenseListId)
-            var form = $('#uploadForm')[0];
-            var data = new FormData(form);
-            console.log(data)
-        }
-
+	var projectLists;
+	var projectTaskLists;
+	var project_id;
+	var expenseLists;
+	var user_id;
+	var unitcost;
+	var expenseDetail;
+	var expenseListId;
+
+	$(document)
+			.ready(
+					function() {
+
+						var url = "/timex/account/loginInfo";
+						$.ajax({
+							type : "POST",
+							url : url,
+							success : function(data) {
+								user_id = data;
+							}
+						});
+
+						$('#myTable').DataTable({
+							"order" : [ 3, "desc" ]
+						});
+
+						$("#timeframe").change(function() {
+							if ($(this).val() === "custom") {
+								$('#custom_timeframe').show();
+								$("#tftd").css("padding-top", "10px");
+							} else {
+								$('#custom_timeframe').hide();
+								$("#tftd").css("padding-top", "0px");
+							}
+						});
+
+						$(function() {
+							initButton();
+						});
+
+						var url = "/timex/time/selectProject";
+						$
+								.ajax({
+									type : "GET",
+									url : url,
+									success : function(data) {
+										projectLists = data;
+										console.log(projectLists)
+										$(projectLists)
+												.each(
+														function(i) {
+															$(
+																	"select[name='selectProject']")
+																	.append(
+																			"<option value='" + projectLists[i].id + "'>"
+																					+ projectLists[i].number
+																					+ " "
+																					+ projectLists[i].title
+																					+ "  </option>");
+														});
+										//Change the text of the default "loading" option.
+										$('#loading').text('Select Project');
+									}
+								});
+
+						$("#selectProject").change(function() {
+							project_id = $(this).val();
+						});
+
+						//+ - button for qty
+						var quantitiy = 0;
+						$('.quantity-right-plus').click(
+								function(e) {
+
+									// Stop acting like a button
+									e.preventDefault();
+									// Get the field name
+									var quantity = parseInt($('#quantity')
+											.val());
+
+									// If is not undefined
+									$('#quantity').val(quantity + 1);
+									var totalamount = $('#quantity').val()
+											* expenseDetail.unitcost;
+									$("input[name='totalcost']").val(
+											totalamount)
+
+									// Increment
+
+								});
+
+						$('.quantity-left-minus').click(
+								function(e) {
+									// Stop acting like a button
+									e.preventDefault();
+									// Get the field name
+									var quantity = parseInt($('#quantity')
+											.val());
+
+									// If is not undefined
+									// Increment
+									if (quantity > 0) {
+										$('#quantity').val(quantity - 1);
+									}
+
+									var totalamount = $('#quantity').val()
+											* expenseDetail.unitcost;
+									$("input[name='totalcost']").val(
+											totalamount)
+								});
+
+						$
+								.ajax({
+									type : "GET",
+									url : "/timex/expenses/selectExpense",
+									success : function(data) {
+										expenseLists = data;
+										$(expenseLists)
+												.each(
+														function(i) {
+															$(
+																	"select[name='selectExpense']")
+																	.append(
+																			"<option value='" + expenseLists[i].id + "'>"
+																					+ expenseLists[i].name
+																					+ "  </option>");
+														});
+
+										//Change the text of the default "loading" option.
+										$('#loading2').text('Select Expense');
+									}
+								});
+
+						$("#selectExpense")
+								.change(
+										function() {											
+											expense_id = $(this).val();
+
+											var url = "/timex/expenses/selectExpenseDetail";
+
+											$
+													.ajax({
+														type : "GET",
+														url : url,
+														data : "expense_id="
+																+ expense_id,
+
+														success : function(data) {
+															expenseDetail = data;
+															emptyForm();
+															console
+																	.log(expenseDetail)
+															if (expenseDetail.unitcost == null) {
+																$(
+																		"input[name='unitcost']")
+																		.attr(
+																				"readOnly",
+																				true);
+																$(
+																		"input[name='quantity']")
+																		.attr(
+																				"readOnly",
+																				true);
+																$(
+																		"input[name='totalcost']")
+																		.attr(
+																				"readOnly",
+																				false);
+
+																document
+																		.getElementById("minusButton").disabled = true;
+																document
+																		.getElementById("plusButton").disabled = true;
+															} else {
+																document
+																		.getElementById("minusButton").disabled = false;
+																document
+																		.getElementById("plusButton").disabled = false;
+																$(
+																		"input[name='unitcost']")
+																		.val(
+																				expenseDetail.unitcost)
+																$(
+																		"input[name='unitcost']")
+																		.attr(
+																				"readOnly",
+																				true);
+
+																$(
+																		"input[name='quantity']")
+																		.val(1)
+																$(
+																		"input[name='totalcost']")
+																		.attr(
+																				"readOnly",
+																				true);
+																$(
+																		"input[name='totalcost']")
+																		.val(
+																				expenseDetail.unitcost)
+
+															}
+														}
+													});
+										});
+					});
+
+	function emptyForm() {
+		$("input[name='unitcost']").val("")
+		$("input[name='quantity']").val(1)
+		$("input[name='totalcost']").val("")
+	}
+
+	function initButton() {
+		//addExpense button
+		$("#addExpenseButton").click(function() {
+			$("#addExpenseModel").modal("toggle");
+		});
+
+		$("#exportExpenseButton").click(function() {
+			$("#exportExpenseModel").modal("toggle");
+		});
+
+		$("#runExpenseReport")
+				.click(
+						function() {
+
+							if (validateExport() == false) {//유효성검사
+								return false;
+							} else {
+								var url = "/timex/expenses/exportExpenses";
+								var params = {};
+								params["date"] = $("#timeframe").val();
+								params["project_id"] = $(
+										"#selectProject2 option:selected")
+										.val();
+								params["expense_id"] = $(
+										"#selectExpense2 option:selected")
+										.val();
+								params["start_date"] = $("#start_date").val();
+								params["end_date"] = $("#end_date").val();
+								params["user_id"] = user_id;
+
+								$
+										.ajax({
+											type : "POST",
+											url : url,
+											data : JSON.stringify(params),
+											contentType : "application/json",
+											success : function(data) {
+
+												window.location = "/timex/expenses/downloadReport"
+											},
+											error : function(err) {
+												console.log(err);
+											}
+										});
+							}
+						})
+
+		//saveExpenseButton
+		$("#saveExpenseButton").click(
+				function() {
+					var url = "/timex/expenses/saveExpenses";
+
+					var form = $('#uploadForm')[0];
+					var data = new FormData(form);
+
+					if (validate() == false) {//유효성검사
+						return false;
+					} else {
+
+						data.set("date2", $("#inputMDEx").val());
+						data.set("user_id2", user_id);
+						data.set("project_id2", $(
+								"#selectProject option:selected").val());
+						data.set("expense_id2", $(
+								"#selectExpense option:selected").val());
+						data.set("qty2", $("#quantity").val());
+						data.set("total_amount2", $("#totalcost").val());
+
+						$.ajax({
+							type : "POST",
+							enctype : 'multipart/form-data',
+							url : url,
+							data : data,
+							processData : false,
+							contentType : false,
+							cache : false,
+							timeout : 600000,
+							success : function(data) {
+
+								if (!data) {
+									alert("select data");
+								} else {
+									expenseListId = data;
+									alert("Saved")
+									$("#addExpenseModel").modal('toggle');
+									location.reload();
+
+								}
+							},
+							error : function(err) {
+								console.log(err);
+
+							}
+						});
+					}
+				})
+
+	};
+
+	function validateExport() {
+		const startdate = document.getElementById("start_date");
+		const enddate = document.getElementById("end_date");
+
+		if ($('#timeframe').val() == "custom") {
+			console.log("only custom")
+			if (document.getElementById("start_date").validity.valueMissing) {
+				startdate.setCustomValidity('Select Start Date');
+				startdate.reportValidity();
+				return false;
+			} else {
+				startdate.setCustomValidity('');
+			}
+
+			if (document.getElementById("end_date").validity.valueMissing) {
+				enddate.setCustomValidity('Select End Date');
+				enddate.reportValidity();
+				return false;
+			} else {
+				enddate.setCustomValidity('');
+			}
+
+		}
+
+	}
+
+	function validate() {
+
+		const date = document.getElementById("inputMDEx");
+		const project = document.getElementById("selectProject");
+		const expense = document.getElementById("selectExpense");
+		const totalcost = document.getElementById("totalcost");
+
+		if (document.getElementById("inputMDEx").validity.valueMissing) {
+			date.setCustomValidity('Select Date');
+			date.reportValidity();
+			return false;
+		} else {
+			date.setCustomValidity('');
+		}
+
+		if (document.getElementById("selectProject").validity.valueMissing) {
+			project.setCustomValidity('Select Project');
+			project.reportValidity();
+			return false;
+		} else {
+			project.setCustomValidity('');
+		}
+
+		if (document.getElementById("selectExpense").validity.valueMissing) {
+			expense.setCustomValidity('Select Expense');
+			expense.reportValidity();
+			return false;
+		} else {
+			expense.setCustomValidity('');
+		}
+
+		if (document.getElementById("totalcost").validity.valueMissing) {	
+			totalcost.setCustomValidity('Enter Cost');
+			totalcost.reportValidity();
+			return false;
+		} else {
+			totalcost.setCustomValidity('');
+		}
+	}
+
+	var total = 1;
+	
+	function calculatePrice(cnt) {		
+		total = this.total + cnt;
+		if (total < 1)
+			total = 1;
+		this.total = total;
+		$("input[name='qty']").val(total)
+		var totalamount = total * expenseDetail.amount;
+		$("input[name='totalcost']").val(totalamount)
+	}
+	
+	function uploadFile(expenseListId) {
+		var form = $('#uploadForm')[0];
+		var data = new FormData(form);
+
+	}
 </script>

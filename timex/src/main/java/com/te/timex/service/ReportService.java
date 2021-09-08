@@ -28,13 +28,11 @@ public class ReportService {
 	TimesheetRepository timesheetRepository;
 	@Autowired
 	WeekRepository weekRepository;
-
 	
 	public List<ExpenseList> getExpenseList(HashMap<String, Object> param) {
 
-		System.out.println(param.get("project_id").toString());
-		System.out.println(param.get("expense_id").toString());
 		int project_id, expense_id;
+		
 		if (param.get("project_id").toString().equals("allproject")) {
 			project_id = 0;
 		} else {
@@ -55,15 +53,15 @@ public class ReportService {
 		String month = date[1];
 		String lastmonth = String.valueOf(Integer.parseInt(month) - 1);
 		String lastyear = String.valueOf(Integer.parseInt(year) - 1);
-		String day = date[2];
-		
+		String day = date[2];		
 		int user_id =  Integer.parseInt((String) param.get("user_id").toString());
-	//	System.out.println(user_id2);
+		
 		Common common = new Common();
 		ArrayList weekinfo;
 		Week currentWeek;
 		String period;
 		String[] period2;
+		
 		switch (timeframe) {
 		case "thisweek":
 			weekinfo = common.getWeekNumber2(today);
@@ -121,10 +119,8 @@ public class ReportService {
 		case "custom":
 			startDay = (String) param.get("start_date");
 			endDay = (String) param.get("end_date");
-
 			break;
 		default:
-			System.out.println("everyoneher?");
 		}
 
 		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
@@ -133,21 +129,11 @@ public class ReportService {
 			Date convertedStartDate = sdf.parse(startDay);
 			start_date = sdf.format(convertedStartDate);
 			Date convertedEndDate = sdf.parse(endDay);
-			end_date = sdf.format(convertedEndDate);
-			// System.out.println(start_date);
-			 System.out.println("startDay = " + start_date + " endDay = " + end_date);
-
+			end_date = sdf.format(convertedEndDate);			
 		} catch (ParseException e1) {
-
 			e1.printStackTrace();
 		}
-		System.out.println("&&&&&&&&&&&&&&2");
-
-		 System.out.println("user_id" + user_id);
-		 System.out.println(project_id);
-		 System.out.println(expense_id);
-		 System.out.println(start_date);
-		 System.out.println(end_date);
+	
 		List<ExpenseList> expenseReport = null;
 		if (project_id == 0 && expense_id != 0) {
 			System.out.println("here1");
@@ -164,10 +150,7 @@ public class ReportService {
 			System.out.println("here4");
 			expenseReport = expenseListRepository.findByUserIdAndProjectIdAndExpenseIdAndDate(user_id, project_id,
 					expense_id, start_date, end_date);
-
 		}
-
-		System.out.println(expenseReport);
 
 		return expenseReport;
 	}
@@ -191,10 +174,10 @@ public class ReportService {
 		int monthInt = Integer.parseInt(month);
 		List<Timesheet> timesheetReport = null;
 		int user_id =  Integer.parseInt((String) param.get("user_id"));
+		
 		Common common = new Common();
 		ArrayList weekinfo;
 		Week currentWeek;
-
 		int weekId;
 
 		switch (timeframe) {
@@ -219,8 +202,7 @@ public class ReportService {
 				timesheetReport = timesheetRepository.findByUserIdAndWeekIdAndProjectId(user_id, weekId, project_id);
 			}
 			break;
-		case "thismonth":
-			System.out.println(month);
+		case "thismonth":			
 			ArrayList weeknumbers = common.thisMonth(year, month);
 			int startWeekNum = (int) weeknumbers.get(0);
 			int endWeekNum = (int) weeknumbers.get(weeknumbers.size() - 1);
@@ -236,10 +218,8 @@ public class ReportService {
 						endWeekId, project_id);
 			}
 			break;
-		case "lastmonth":
-			System.out.println(month);
+		case "lastmonth":			
 			String lastMonth = String.valueOf(monthInt - 1);
-
 			ArrayList weeknumbers2 = common.thisMonth(year, lastMonth);
 			int startWeekNum2 = (int) weeknumbers2.get(0);
 			int endWeekNum2 = (int) weeknumbers2.get(weeknumbers2.size() - 1);
@@ -252,51 +232,30 @@ public class ReportService {
 				timesheetReport = timesheetRepository.findByUserIdAndWeekIdsAndProjectId(user_id, startWeekId2,
 						endWeekId2, project_id);
 			}
-
 			break;
 		case "thisyear":
-
 			if (project_id == 0) {
 				timesheetReport = timesheetRepository.findByUserIdAndYear(user_id, yearInt);
-
 			} else {
 				timesheetReport = timesheetRepository.findByUserIdAndYearAndProjectId(user_id, yearInt, project_id);
 			}
-
 			break;
 		case "lastyear":
-			if (project_id == 0) {
-			
-				timesheetReport = timesheetRepository.findByUserIdAndYear(user_id, yearInt - 1);
-			
+			if (project_id == 0) {			
+				timesheetReport = timesheetRepository.findByUserIdAndYear(user_id, yearInt - 1);			
 			} else {
 				timesheetReport = timesheetRepository.findByUserIdAndYearAndProjectId(user_id, yearInt - 1, project_id);
-
 			}
 			break;
 		case "alltime":
-			if (project_id == 0) {
-			//	System.out.println("project_id? = "+project_id);
-			//	System.out.println("user_id=?");
-			//	System.out.println(user_id);
+			if (project_id == 0) {	
 				timesheetReport = timesheetRepository.findByUserIdOrderByWeekIdDesc(user_id);
-
 			} else {
 				timesheetReport = timesheetRepository.findByUserIdAndProjectId(user_id, project_id);
 			}
 			break;
-//		case "custom":
-//			startDay = (String) param.get("start_date");
-//			endDay = (String) param.get("end_date");
-//
-//			break;
 		default:
-			System.out.println("everyoneher?");
 		}
-
-	//	System.out.println("*************!!!! timesheetreport");
-		//System.out.println(timesheetReport);
-
 		return timesheetReport;
 	}
 

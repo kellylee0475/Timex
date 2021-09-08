@@ -18,7 +18,6 @@ public class Task{
 	@GeneratedValue(strategy = GenerationType.IDENTITY)	
 	private int id;
 	
-	
 	private String name;
 	private boolean enabled;
 	
@@ -29,16 +28,7 @@ public class Task{
 	public String toString() {
 		return "Task [id=" + id + ", name=" + name + ", enabled=" + enabled + "]";
 	}
-	//	@OneToMany(mappedBy = "task")
-//	private List<ProjectTask> protask = new ArrayList<>();
-//	
-//
-//	public List<ProjectTask> getProtask() {
-//		return protask;
-//	}
-//	public void setProtask(List<ProjectTask> protask) {
-//		this.protask = protask;
-//	}
+
 	public int getId() {
 		return id;
 	}
@@ -58,8 +48,4 @@ public class Task{
 		this.enabled = enabled;
 	}
 
-
-
-	
-	
 }

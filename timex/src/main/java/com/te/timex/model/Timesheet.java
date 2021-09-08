@@ -26,29 +26,34 @@ public class Timesheet{
 	private int weekId;
 	
 	private String sun;
-
 	private String mon;
 	private String tue;
 	private String wed;
 	private String thur;
 	private String fri;
 	private String sat;
-
 	
 	@ManyToOne
     @JoinColumn(name="project_task_id",referencedColumnName="id", insertable = false, updatable = false)
     private ProjectTask projecttask;
 	
-	public Week getWeek() {
+	@ManyToOne
+    @JoinColumn(name="week_id",referencedColumnName="id", insertable = false, updatable = false)
+    private Week week;
+		
+	@Override
+	public String toString() {
+		return "Timesheet [id=" + id + ", userId=" + userId + ", projecttaskId=" + projecttaskId + ", weekId=" + weekId
+				+ ", sun=" + sun + ", mon=" + mon + ", tue=" + tue + ", wed=" + wed + ", thur=" + thur + ", fri=" + fri
+				+ ", sat=" + sat + ", projecttask=" + projecttask + "]";
+	}
+	
+		public Week getWeek() {
 		return week;
 	}
 	public void setWeek(Week week) {
 		this.week = week;
 	}
-	@ManyToOne
-    @JoinColumn(name="week_id",referencedColumnName="id", insertable = false, updatable = false)
-    private Week week;
-	
 	public ProjectTask getProjecttask() {
 		return projecttask;
 	}
@@ -61,8 +66,6 @@ public class Timesheet{
 	public void setId(int id) {
 		this.id = id;
 	}
-
-
 	public int getProjecttaskId() {
 		return projecttaskId;
 	}
@@ -123,18 +126,6 @@ public class Timesheet{
 	public void setSat(String sat) {
 		this.sat = sat;
 	}
-	@Override
-	public String toString() {
-		return "Timesheet [id=" + id + ", userId=" + userId + ", projecttaskId=" + projecttaskId + ", weekId=" + weekId
-				+ ", sun=" + sun + ", mon=" + mon + ", tue=" + tue + ", wed=" + wed + ", thur=" + thur + ", fri=" + fri
-				+ ", sat=" + sat + ", projecttask=" + projecttask + "]";
-	}
-	
-
-	
-	
 	
 }
-
-
 	

@@ -1,14 +1,10 @@
 package com.te.timex.model;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
 @Entity
@@ -24,22 +20,17 @@ public class Week{
 	private int year;
 	private String period;
 	
-
-	
 	@Override
 	public String toString() {
 		return "Week [id=" + id + ", weekNumber=" + weekNumber + ", year=" + year + ", period=" + period + "]";
 	}
+	
 	public int getId() {
 		return id;
 	}
 	public void setId(int id) {
 		this.id = id;
-	}
-	
-	
-	
-	
+	}		
 	public int getWeekNumber() {
 		return weekNumber;
 	}
@@ -58,7 +49,5 @@ public class Week{
 	public void setPeriod(String period) {
 		this.period = period;
 	}
-	
-	
 	
 }
