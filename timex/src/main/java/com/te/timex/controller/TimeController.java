@@ -259,8 +259,8 @@ public class TimeController {
 	@GetMapping("/downloadReport")
 	public void downloadZip(HttpServletResponse response, HttpServletRequest request) throws IOException {
 		//Change5
-		//String path = "C:\\Users\\Administrator\\Desktop\\Timex\\time_report";
-		String path = "C:\\Users\\pc1\\Desktop\\Timex Spring Boot\\time_report";
+		String path = "C:\\Users\\Administrator\\Desktop\\Timex\\time_report";
+		//String path = "C:\\Users\\pc1\\Desktop\\Timex Spring Boot\\time_report";
 		DateFormat dateFormatter = new SimpleDateFormat("yyyy-MM-dd");
 		String currentDateTime = dateFormatter.format(new Date());
 

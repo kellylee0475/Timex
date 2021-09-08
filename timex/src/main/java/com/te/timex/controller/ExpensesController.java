@@ -115,8 +115,8 @@ public class ExpensesController {
 		String fileName = file.getOriginalFilename();
 		
 		//Change3
-		//String upload_path = "C:\\Users\\Administrator\\Desktop\\Timex\\expense_receipt";
-		String upload_path = "C:\\Users\\pc1\\Desktop\\Timex Spring Boot\\expense_receipt";
+		String upload_path = "C:\\Users\\Administrator\\Desktop\\Timex\\expense_receipt";
+		//String upload_path = "C:\\Users\\pc1\\Desktop\\Timex Spring Boot\\expense_receipt";
 		
 		// save the file on the local file system
 		try {
@@ -163,8 +163,8 @@ public class ExpensesController {
 	public void downloadZip(HttpServletResponse response, HttpServletRequest request) throws IOException {
 		
 		//Change4
-		//String path = "C:\\Users\\Administrator\\Desktop\\Timex\\expense_report";
-		String path = "C:\\Users\\pc1\\Desktop\\Timex Spring Boot\\expense_report";
+		String path = "C:\\Users\\Administrator\\Desktop\\Timex\\expense_report";
+		//String path = "C:\\Users\\pc1\\Desktop\\Timex Spring Boot\\expense_report";
 		DateFormat dateFormatter = new SimpleDateFormat("yyyy-MM-dd");
         String currentDateTime = dateFormatter.format(new Date());         
 		String fileName = "Expense Report_"+ currentDateTime + ".xls";

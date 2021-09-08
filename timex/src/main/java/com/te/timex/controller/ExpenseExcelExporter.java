@@ -37,8 +37,8 @@ public class ExpenseExcelExporter {
 		writeDataLines();
 
 		//Change2
-		//String path = "C:\\Users\\Administrator\\Desktop\\Timex\\expense_report";
-		String path = "C:\\Users\\pc1\\Desktop\\Timex Spring Boot\\expense_report";
+		String path = "C:\\Users\\Administrator\\Desktop\\Timex\\expense_report";
+		//String path = "C:\\Users\\pc1\\Desktop\\Timex Spring Boot\\expense_report";
 		DateFormat dateFormatter = new SimpleDateFormat("yyyy-MM-dd");
         String currentDateTime = dateFormatter.format(new Date());
  
